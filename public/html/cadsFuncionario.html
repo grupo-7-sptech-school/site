@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/funcionario.css">
+  <title>Cadastro Funcionário</title>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="container-blocos">
+
+      <div class="partUm">
+      <div class="mensagem">
+        <h2> Seja bem-vindo!</h2>
+        <br>
+      </div>
+      </div>
+
+      <div class="partDois">
+        <div class="cadastroFunc">
+
+          <h2>Registro do Funcionário</h2>
+          <label>Nome: </label><input id="nome" placeholder="Julia Lima" type="text"><br>
+          <label>Cargo: </label><input id="persona" placeholder="Técnica de Operações" type="text"><br>
+          <label>E-mail: </label><input id="email" placeholder="example.conta@org.com" type="email"><br>
+          <label>Telefone: </label> <input id="contato" placeholder="+55 11 991075190" type="number">
+          <br><!--VERIFICAR SE HÁ DE TER UMA TABELA DE TELEFONE, DD PAÍS  E NÚMERO, tabela composta-->
+          <label>Senha: </label><input id="senha" placeholder="*******" type="password"><br>
+          <label> Confirmar senha: </label><input id="confirmar_senha" placeholder="*******" type="password">
+          <p>
+            <button onclick="cadastrar()">Cadastrar </button><br><!--direcionar para página de login.html-->
+          <h4>Já possui uma conta? <a href="login.html"><u>Acesse aqui. </u> </a></h4><!--lincar com:  login.html-->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+</html>
+<script>
+  function cadastrar() {
+    window.location.href = "login.html";
+  }
+</script>

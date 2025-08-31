@@ -1,0 +1,140 @@
+ * {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+     font-family: Arial, sans-serif;
+ }
+
+ body {
+     background-color: #d39191;
+ }
+
+ .container {
+display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Alinha ao topo */
+  padding-top: 60px;       /* Afasta do topo */
+  min-height: 100vh;       /* Altura mínima igual à altura da tela */
+   overflow: hidden;  
+  background-color: #ffffff;
+  background-image: url('../assets/img/azul.webp');
+  background-size: cover;
+  background-position: center;
+ 
+ }
+
+ .container-blocos {
+
+     display: flex;
+     justify-content: center;
+     background-color: #cabe0d;
+     border: 2px solid red;
+     border-radius: 20px;
+     overflow: hidden;
+          width: 60%; /* ou um valor fixo, como 1000px LATERAL*/
+  max-width: 1200px;
+  /*height: auto; /* ou 100vh para altura da tela inteira */
+  margin: 50px auto;
+  overflow: hidden;  
+
+     /*isso que define e garantiza o arrendondamento dos containers flhos*/
+     /*border-radius: 12px;*/
+ }
+
+ .imagem {
+     flex: 1;
+     background-image: url('ba13f2a0-a071-4745-9916-06ad024ad90e.png');
+     background-size: cover;
+     background-position: center;
+     min-height: 600px;
+     border-top-left-radius: 20px;
+     border-bottom-left-radius: 20px;
+ }
+
+.partUm {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #cabe0d;
+  color: white;
+}
+
+.partDois {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #319e8d;
+  color: white;
+}
+.mensagem {
+  width: 100%;
+  max-width: 90%;
+  text-align: center;
+  padding: 40px;
+}
+
+.cadastroFunc {
+  width: 100%;
+  max-width: 90%;
+  padding: 40px;
+}
+
+ h2 {
+     margin-bottom: 20px;
+ }
+
+ label {
+     display: block;
+     margin-top: 10px;
+     font-weight: bold;
+ }
+
+ input {
+     width: 100%;
+     padding: 10px;
+     border-radius: 20px;
+     border: none;
+     margin-top: 5px;
+ }
+
+ button {
+     width: 100%;
+     margin-top: 20px;
+     padding: 12px;
+     background-color: #2ecc71;
+     color: white;
+     font-weight: bold;
+     border: none;
+     border-radius: 20px;
+     cursor: pointer;
+ }
+
+ h4 {
+     margin-top: 10px;
+     font-weight: normal;
+ }
+
+ a {
+     color: #ffdc73;
+     text-decoration: none;
+ }
+
+ a:hover {
+     text-decoration: underline;
+ }
+
+ @media (max-width: 768px) {
+     .container {
+         flex-direction: column;
+     }
+
+     .imagem {
+         border-radius: 20px 20px 0 0;
+     }
+
+     .formulario {
+         border-radius: 0 0 20px 20px;
+     }
+ }
