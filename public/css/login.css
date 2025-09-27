@@ -1,0 +1,122 @@
+body,
+input,
+button,
+label {
+    font-family: 'Inter', sans-serif;
+}
+
+.input-group-custom {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-custom {
+    background: #fff;
+    border: none;
+    border-bottom: 2px solid #222;
+    border-radius: 0;
+    font-weight: 600;
+    color: #222;
+    padding-left: 40px;
+    padding-right: 40px;
+    height: 48px;
+    font-size: 1rem;
+    box-shadow: none;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 80%;
+}
+
+.input-custom:focus {
+    border-bottom: 2px solid #18B187;
+    background: #fff;
+    outline: none;
+}
+
+.input-custom::placeholder {
+    color: #666;
+    font-weight: 500;
+    opacity: 1;
+}
+
+.input-icon-left {
+    position: absolute;
+    left: 12px;
+    top: 3.4rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.input-icon-right {
+    position: absolute;
+    top: 3.4rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+
+.login-container {
+    height: 100vh;
+}
+
+
+.image-col {
+    background-image: url('../assets/imgs/loginSD.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    border-top-right-radius: 0.8rem;
+    border-bottom-right-radius: 0.8rem;
+    position: relative;
+    display: none;
+}
+.image-col::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 177, 135, 0.25); 
+    pointer-events: none;
+    border-top-right-radius: 0.8rem;
+    border-bottom-right-radius: 0.8rem;
+}
+
+.image-col {
+    display: flex;
+}
+
+
+.form-col {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.login-title {
+    position: relative;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.login-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 3px;
+    border-radius: 7px;
+}
+
+
+.btn-green {
+    background-color: #18B187;
+    border-color: #18B187;
+    color: white;
+}
+
+.btn-green:hover {
+    background-color: #18B187;
+    border-color: #18B187;
+    color: white;
+}
