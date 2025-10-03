@@ -16,11 +16,12 @@
 <body>
   <div class="container-fluid h-100">
     <div class="row h-100">
-      
+
       <div class="col-12 col-md-6 form-col">
         <div class="login-box">
 
-          <a href="index.html" class="text-decoration-none text-dark mb-3 d-inline-block back-icon">
+          <a href="#" onclick="voltarComAnimacao()"
+            class="text-decoration-none text-dark mb-3 d-inline-block back-icon">
             <i class="bi bi-arrow-left"></i>
           </a>
 
@@ -70,7 +71,8 @@
                 <input type="password" class="form-control border-start-0" id="senha_input"
                   placeholder="Insira sua senha">
                 <span class="input-group-text bg-white border-start-0">
-                  <i class="bi bi-eye-slash toggle-password text-success" onclick="togglePassword('senha_input', this)"></i>
+                  <i class="bi bi-eye-slash toggle-password text-success"
+                    onclick="togglePassword('senha_input', this)"></i>
                 </span>
               </div>
             </div>
@@ -84,7 +86,8 @@
                 <input type="password" class="form-control border-start-0" id="confirmacao_senha_input"
                   placeholder="Confirme sua senha">
                 <span class="input-group-text bg-white border-start-0">
-                  <i class="bi bi-eye-slash toggle-password text-success" onclick="togglePassword('confirmacao_senha_input', this)"></i>
+                  <i class="bi bi-eye-slash toggle-password text-success"
+                    onclick="togglePassword('confirmacao_senha_input', this)"></i>
                 </span>
               </div>
             </div>
@@ -115,6 +118,18 @@
     }
   </script>
 
+  <script>
+    function voltarComAnimacao() {
+      const container = document.querySelector('.container-fluid');
+      container.classList.add('fade-out'); 
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 600); 
+    }
+  </script>
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
@@ -125,7 +140,7 @@
 
 <script>
   // Array para armazenar empresas cadastradas para validação de código de ativação 
-  let listaEmpresasCadastradas = []; 
+  let listaEmpresasCadastradas = [];
 
   function cadastrar() {
     // Recuperando valores dos campos
@@ -151,7 +166,7 @@
       setInterval(sumirMensagem, 5000);
     }
 
-  
+
     if (!listaEmpresasCadastradas.includes(codigoVar)) {
       cardErro.style.display = "block";
       mensagem_erro.innerHTML = "Código de ativação inválido. Verifique com a empresa.";
