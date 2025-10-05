@@ -1,0 +1,35 @@
+.box-valores{
+    height: 50vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.todos-valores{
+    display: flex;
+    flex-direction: row;
+    height: 45vh;
+    align-items: center;
+}
+
+.valor1, .valor2,.valor3{
+    padding: 2%;
+}
+
+.valor1 h1, .valor2 h1,.valor3 h1{
+    font-size: 50px;
+    color: #0B795B;
+}
+
+.valor1 p, .valor2 p,.valor3 p{
+    font-size: 30px;
+}
+
+.box-valores li{
+    color: gray;
+    line-height: 45vh;
+}
+
+.linha-valores{
+    background-color: red;
+    width: 100px;
+}
