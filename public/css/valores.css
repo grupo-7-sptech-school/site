@@ -7,26 +7,40 @@
 .todos-valores{
     display: flex;
     flex-direction: row;
-    height: 45vh;
+    padding: 5%;
     align-items: center;
+    gap: 3%;
 }
 
 .valor1, .valor2,.valor3{
+    height: 40vh;
+    width: 30%;
     padding: 2%;
 }
 
 .valor1 h1, .valor2 h1,.valor3 h1{
-    font-size: 50px;
+    font-size: 43px;
     color: #0B795B;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .valor1 p, .valor2 p,.valor3 p{
-    font-size: 30px;
+    margin-top: 2rem;
+    font-size: 25px;
+    color: rgb(80, 80, 80);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
-.box-valores li{
-    color: gray;
-    line-height: 45vh;
+.linha{
+    height: 40vh;
+    background-color: gray;
+    width: 0.2%;
 }
 
 .linha-valores{

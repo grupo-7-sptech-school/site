@@ -143,3 +143,10 @@ li{
     border: 2px solid #e3b062;
     border-radius: 12px;
 }
+
+.home-botao:hover{
+  background-color: #e3b062;
+  color: #00503E;
+  transition: 90ms;
+  box-shadow: 3px 3px 3px #00241c;
+}
