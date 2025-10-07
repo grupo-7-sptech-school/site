@@ -1,4 +1,4 @@
-/* Fonte global */
+/* fonte global */
 * {
   font-family: 'Poppins', sans-serif;
   margin: 0;
@@ -45,7 +45,7 @@
   color: #fff;
 }
 
-/* hero */
+/*  inicio */
 .hero {
   min-height: 100vh;
   background: url('/public/assets/imgs/background1SD.png') no-repeat center center/cover;
