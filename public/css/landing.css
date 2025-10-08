@@ -1,4 +1,3 @@
-/* fonte global */
 * {
   font-family: 'Poppins', sans-serif;
   margin: 0;
@@ -6,7 +5,7 @@
   box-sizing: border-box;
 }
 
-/* header */
+/* HEADER */
 .solar-header {
   background-color: #00503E;
   padding: 0.8rem 0;
@@ -45,7 +44,7 @@
   color: #fff;
 }
 
-/*  inicio */
+/* HERO (INÍCIO) */
 .hero {
   min-height: 100vh;
   background: url('/public/assets/imgs/background1SD.png') no-repeat center center/cover;
@@ -55,11 +54,11 @@
 }
 
 .hero-title {
-  font-size: 3.8rem;
+  font-size: 2.5rem;
   font-weight: 700;
   line-height: 1.2;
   color: #D4E157;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0rem;
 }
 
 .hero-subtitle {
@@ -88,15 +87,15 @@
   color: #00503E;
 }
 
-/* Responsividade */
+/* Responsividade específica do Hero */
 @media (max-width: 768px) {
   .hero-title {
-    font-size: 2.8rem;
+    font-size: 2.2rem;
     text-align: center;
   }
 
   .hero-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     text-align: center;
     margin: 0 auto 2rem;
   }
@@ -105,9 +104,13 @@
     display: block;
     margin: 0 auto;
   }
+
+  .hero {
+    padding: 0 1rem;
+  }
 }
 
-/* sobre nos */
+/* SOBRE NÓS */
 .sobre {
   position: relative;
   background-color: #ffffff;
@@ -137,11 +140,11 @@
 
 .sobre::after {
   bottom: -60px;
-  transform: skewY(-3deg); 
+  transform: skewY(-3deg);
 }
 
 .sobre-titulo {
-  font-size: 3rem;
+  font-size: 2.7rem;
   font-weight: 700;
   line-height: 1.2;
   color: #0B795B;
@@ -164,15 +167,34 @@
   background-color: #fff;
 }
 
+/* Responsividade Sobre */
+@media (max-width: 768px) {
+  .sobre {
+    flex-direction: column;
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+  .sobre-img {
+    margin-top: 2rem;
+    max-width: 100%;
+  }
+}
 
-/* valores */
+/* VALORES */
 .valores {
   background-color: #ffffff;
   padding: 6rem 0;
 }
 
+.valores-titulo {
+  font-size: 2.6rem;
+  font-weight: 600;
+  color: #0B795B;
+  margin-bottom: 1.5rem;
+}
+
 .valor-item {
-  text-align: left; 
+  text-align: left;
   padding: 0 2rem;
 }
 
@@ -187,7 +209,7 @@
   font-size: 1.3rem;
   color: #555555;
   line-height: 1.6;
-  max-width: 260px; 
+  max-width: 260px;
 }
 
 .valor-linha {
@@ -198,22 +220,274 @@
   border-radius: 2px;
 }
 
-/* Responsividade */
+/* Responsividade Valores */
 @media (max-width: 992px) {
   .valor-linha {
     display: none;
   }
   .valor-item {
     margin-bottom: 3rem;
-    text-align: center; 
+    text-align: center;
   }
   .valor-texto {
     max-width: 100%;
   }
 }
 
+/* SERVIÇOS */
+.servicos {
+  position: relative;
+  background: url('/public/assets/imgs/background2SD.png') no-repeat center center/cover;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
 
+.servicos-overlay {
+  background: rgba(0, 80, 62, 0.75);
+  width: 100%;
+  height: 100%;
+  padding: 5rem 0;
+}
 
+.servicos-titulo {
+  color: #D4E157;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
 
+.servicos-caixa {
+  background-color: rgba(0, 40, 30, 0.75);
+  border-radius: 25px;
+  padding: 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
 
+.servico-icone {
+  font-size: 3rem;
+  color: #D4E157;
+}
+
+.servico-titulo {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #D4E157;
+}
+
+.servico-texto {
+  font-size: 1rem;
+  color: #e0e0e0;
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+
+/* Responsividade Serviços */
+@media (max-width: 768px) {
+  .servicos-caixa {
+    padding: 2rem 1rem;
+  }
+  .servicos-titulo {
+    font-size: 2rem;
+  }
+  .servico-icone {
+    font-size: 2.5rem;
+  }
+}
+@media (max-width: 576px) {
+  .servicos-caixa {
+    padding: 2rem 0.5rem;
+  }
+}
+
+/* CONTATO */
+.contato {
+  background-color: #ffffff;
+  padding: 6rem 0;
+  color: #00503E;
+}
+
+.contato-subtitulo {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.contato-titulo {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #0B795B;
+  line-height: 1.3;
+}
+
+.contato-info {
+  font-size: 1.15rem;
+  color: #555;
+}
+
+.contato-form .form-control {
+  border: 2px solid #0B795B;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.contato-form .form-control:focus {
+  border-color: #18B187;
+  box-shadow: 0 0 0 0.2rem rgba(24, 177, 135, 0.25);
+}
+
+.btn-enviar {
+  background-color: #18B187;
+  color: #fff;
+  border-radius: 6px;
+  padding: 10px 25px;
+  font-weight: 600;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-enviar:hover {
+  background-color: #0d7a60;
+}
+
+/* elementos */
+.contato-img {
+  border-radius: 12px;
+  max-width: 80%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* ENDEREÇO */
+.contato-endereco {
+  font-size: 0.95rem;
+  color: #555;
+  text-align: left;
+  max-width: 380px;
+  margin: 0 auto 1rem auto;
+  line-height: 1.6;
+}
+
+.contato-endereco i {
+  color: #18B187;
+  margin-right: 8px;
+  font-size: 1.2rem;
+  vertical-align: middle;
+}
+
+/* REDES SOCIAIS */
+.contato-redes {
+  display: flex;
+  justify-content: flex-start;
+  gap: 18px;
+  margin-top: 10px;
+  margin-left: 30px;
+}
+
+.contato-redes a {
+  color: #18B187;
+  font-size: 2rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.contato-redes a:hover {
+  color: #0B795B;
+  transform: scale(1.1);
+}
+
+/* Responsividade Contato */
+@media (max-width: 992px) {
+  .contato-endereco {
+    text-align: center;
+    margin: 0 auto;
+  }
+  .contato-redes {
+    justify-content: center;
+    margin-left: 0;
+  }
+}
+@media (max-width: 576px) {
+  .contato-endereco {
+    max-width: 90%;
+  }
+  .contato-img {
+    max-width: 100%;
+  }
+}
+
+/* FIQUE INFORMADO */
+.newsletter {
+  background-color: #3EB38F;
+  padding: 4rem 1rem 0;
+  color: #ffffff;
+  border-top: 5px solid #0B795B;
+}
+
+.newsletter-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.newsletter-form {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.newsletter-form .form-control {
+  width: 100%;
+  max-width: 250px;
+  border-radius: 6px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.btn-cadastrar-newsletter {
+  background-color: #0B795B;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 25px;
+  border-radius: 6px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-cadastrar-newsletter:hover {
+  background-color: #055f47;
+  color: #fff;
+}
+
+.newsletter-footer {
+  background-color: #0B795B;
+  color: #dcdcdc;
+  text-align: center;
+  font-size: 0.95rem;
+  padding: 0.8rem 1rem;
+  margin-top: 3rem;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+  .newsletter-form {
+    flex-direction: column;
+  }
+
+  .newsletter-form .form-control {
+    max-width: 100%;
+  }
+
+  .btn-cadastrar-newsletter {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
 
