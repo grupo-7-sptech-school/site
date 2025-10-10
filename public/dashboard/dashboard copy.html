@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="shortcut icon" href="../assets/icon/logo-branca.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarData | Painel de controle</title>
+
+    
+    <link rel="stylesheet" href="./../css/dashboards.css">
+    <link rel="stylesheet" href="./../css/dash-alto.css">
+    <script src="../js/sessao.js"></script>
+    <script src="./../js/alerta.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- scripts do Chart.js - 2022-1 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!--FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+</head>
+
+<!-- <body onload=" atualizarFeed()"> -->
+
+<body>
+    <div class="dashboard-bg">
+        <div class="dashboard-sidebar">
+            <div class="dashboard-logo"></div>
+            <div class="dashboard-sidebar-btns">
+                <a href="alertas.html"class="dashboard-sidebar-btn">
+                    <div class="icon-alert"></div>
+                    <h3>Alertas</h3>
+                </a>
+                <a href="conta.html" class="dashboard-sidebar-btn">
+                    <div class="icon-user"></div>
+                    <h3>Conta</h3>
+                </a>
+                <a href="dashboard.html" class="dashboard-sidebar-btn">
+                    <div class="icon-dashboard"></div>
+                    <h3>Painel de Controle</h3>
+                </a>
+                <a href="relatorios.html" class="dashboard-sidebar-btn">
+                    <div class="icon-relatory"></div>
+                    <h3>Relatórios</h3>
+                </a>
+                <a href="suporte.html" class="dashboard-sidebar-btn">
+                    <div class="icon-support"></div>
+                    <h3>Suporte</h3>
+                </a>
+            </div>
+            <a href="index.html" class="dashboard-logout">
+                <div class="icon-logout"></div>
+                <h3>Logout</h3>
+            </a>
+        </div>
+        <div class="dashboard-low-right-side">
+        <div class="dashboard-topbar">
+            <h2>Painel de controle - Servidor</h2>
+            <div class="btns-topbar">
+            <a href="relatorios.html" class="btn-gerar-relatorio">
+                Gerar relatorio
+            </a>
+            <button class="btn-notificacao" >
+                <div class="icon-notificacao"></div>
+            </button>
+            <a href="conta.html" class="btn-conta">
+                <div class="icon-user2"></div>
+            </a>
+            </div>
+        </div>
+        <div class="box-dashboard">
+            
+            <div class="box-notificacao">
+
+            <!-- Topo  quadro de monitoramento -->
+        <div class="topo-notificacao">
+            <div class="box-id">
+                <p>ID</p>
+            </div>
+            <div class="box-nome">
+                <p>NOME</p>
+            </div>
+            <div class="box-uptime">
+                <p>UPTIME</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>ULTIMA OCORRÊNCIA</p>
+            </div>
+            <div class="box-rack">
+                <p>USO DO RACK</p>
+            </div>
+            <div class="box-rank">
+                <p>STATUS</p>
+            </div>
+        </div>
+
+        <!-- Linha 1-->
+        <div class="line-notifica">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 Anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+        <!-- Linha 2-->
+                 <div class="line-notifica">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 Anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+                <!-- Linha 3-->
+                 <div class="line-notifica">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 Anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+                <!-- Linha 4-->
+                 <div class="line-notifica">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 Anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+                <!-- Linha 5-->
+                 <div class="line-notifica">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 Anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+                <!-- Linha 6-->
+                 <div class="line-notifica">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 Anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+                <!-- Linha 7-->
+                 <div class="line-notifica">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 Anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+                <!-- Linha 8-->
+                 <div class="line-notifica">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 Anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+                <!-- Linha 9-->
+                 <div class="line-notifica-final">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 Anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+        </div></div>
+        </div>
+    </div>
+</body>
+
+
+    
