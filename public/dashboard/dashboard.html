@@ -56,6 +56,7 @@
                 <h3>Logout</h3>
             </a>
         </div>
+        <div class="dashboard-low-right-side">
         <div class="dashboard-topbar">
             <h2>Painel de controle - Servidor</h2>
             <div class="btns-topbar">
@@ -70,10 +71,60 @@
             </a>
             </div>
         </div>
+        <div class="dashboard-charts">
+            <div class="line-charts">
+        <div class="grafico-cpu">
+            <canvas id="graficoCpuCanvas"></canvas>
+        </div>
+        <div class="grafico-ram">
+            <canvas id="graficoRamCanvas"></canvas>
+            </div>
+        </div>
+            <div class="cup-charts">
+                <div class="grafico-disco">
+                    <canvas id="graficoDisco"></canvas>
+                </div>
+            </div>
+        </div>
+        </div>
     </div>
 </body>
 <script>
 
+
+    
+    new Chart(
+    document.getElementById('acquisitions'), {
+  type: 'line',
+  data: {
+    datasets: [{
+      borderColor: Utils.CHART_COLORS.red,
+      borderWidth: 1,
+      radius: 0,
+      data: data,
+    },
+    {
+      borderColor: Utils.CHART_COLORS.blue,
+      borderWidth: 1,
+      radius: 0,
+      data: data2,
+    }]
+  },
+  options: {
+    animation,
+    interaction: {
+      intersect: false
+    },
+    plugins: {
+      legend: false
+    },
+    scales: {
+      x: {
+        type: 'linear'
+      }
+    }
+  }
+});
     
     b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 

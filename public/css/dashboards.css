@@ -14,6 +14,7 @@ body{
   height: 100vh;
   width: 100vw;
   display: flex;
+  background-color: #EDEDED;
 }
 
 .dashboard-sidebar{
@@ -53,9 +54,10 @@ body{
   
 }
 
+
+
 .dashboard-topbar{
   height: 12vh;
-  width: 84vw;
   display: flex;
   background-color: #18B187;
   justify-self: flex-end;
@@ -83,6 +85,12 @@ body{
   display: flex;
 }
 
+.btn-notificacao:hover{
+  transition: scale 0.3s ease-in-out;
+  scale: 1.1;
+  background-color: #c8c8c8;
+}
+
 .btn-gerar-relatorio{
   width: 9vw;
   height: 5vh;
@@ -93,6 +101,12 @@ body{
   text-decoration: none;
   color: white;
   background-color: #0B795B;
+}
+
+.btn-gerar-relatorio:hover{
+  transition: scale 0.3s ease-in-out;
+  scale: 1.1;
+  background-color: #06503d;
 }
 
 .btns-topbar{
@@ -108,6 +122,14 @@ body{
   display: flex;
   align-items: center;
   padding-left: 2vw;
+  
+}
+
+.dashboard-sidebar-btn:hover{
+  transition: background-color 0.3s ease-in-out;
+  color: #D4E157; 
+  background-color: #d3e15731;
+  border-radius: 20px;
 }
 
 .icon-alert{
@@ -155,6 +177,13 @@ body{
   background-repeat: no-repeat;
 }
 
+.dashboard-logout:hover{
+  transition: background-color 0.3s ease-in-out;
+  color: rgb(235, 0, 0);
+  background-color: rgba(216, 0, 0, 0.322);
+  border-radius: 10px;
+  
+}
 .icon-user2{
   background-image: url(../assets/icon/icon-user2.png);
   height: 6vh;
@@ -170,6 +199,12 @@ body{
   justify-content: center;
 }
 
+.btn-conta:hover{
+  transition: scale 0.3s ease-in-out;
+  scale: 1.1;
+  background-color: #c8c8c8;
+}
+
 .icon-notificacao{
   background-image: url(../assets/icon/icon-notification.png);
   height: 6vh;
@@ -178,3 +213,29 @@ body{
   margin-left: 0.6vw;
   margin-top: 1.4vh;
 }
+
+.grafico-cpu{
+  height: 20vh;
+  width: 40vw;
+  background-color: white;
+}
+
+.dashboard-low-right-side{
+  display: flex;
+  width: 84vw;
+  flex-direction: column;
+}
+
+.grafico-ram{
+  display: flex;
+  width: 84vw;
+  flex-direction: column;
+}
+
+.grafico-disco{
+  display: flex;
+  width: 84vw;
+  flex-direction: column;
+}
+
+
