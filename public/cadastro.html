@@ -27,11 +27,13 @@
 
           <h2 class="login-title">Cadastro</h2>
 
-          <div id="msgErro" class="alert alert-danger alert-dismissible fade" role="alert"
-            style="position: fixed; top: 20px; right: 20px; min-width: 250px; opacity: 0;">
+          <div id="msgErro" class="alert alert-danger alert-dismissible" role="alert"
+            style="position: fixed; top: 20px; left: 20px; min-width: 250px; display: none; opacity: 0; transition: opacity 0.5s ease-in-out;">
             <strong>Erro!</strong> Algo deu errado no login/cadastro.
             <button type="button" class="btn-close" aria-label="Close" onclick="fecharMsgErro()"></button>
           </div>
+
+
 
 
           <!-- <form onsubmit="return cadastrar();"> -->
@@ -110,8 +112,14 @@
       <div class="col-md-6 d-none d-md-block image-col"></div>
     </div>
   </div>
-
   <script>
+
+    const nome_input = document.getElementById('nome_input');
+    const email_input = document.getElementById('email_input');
+    const codigo_input = document.getElementById('codigo_input');
+    const senha_input = document.getElementById('senha_input');
+    const confirmacao_senha_input = document.getElementById('confirmacao_senha_input');
+
     function togglePassword(id, el) {
       const input = document.getElementById(id);
       const icon = el;
@@ -136,10 +144,11 @@
     function mostrarMsgErro(texto) {
       const msg = document.getElementById('msgErro');
       msg.innerHTML = `<strong>Erro!</strong> ${texto} <button type="button" class="btn-close" aria-label="Close" onclick="fecharMsgErro()"></button>`;
-      msg.style.opacity = '1';
-      msg.classList.add('show'); 
+      msg.style.display = 'block';  
+      setTimeout(() => {
+        msg.style.opacity = '1';
+      }, 10);
 
-      // Opcional: sumir depois de 5 segundos
       setTimeout(() => {
         fecharMsgErro();
       }, 5000);
@@ -148,8 +157,11 @@
     function fecharMsgErro() {
       const msg = document.getElementById('msgErro');
       msg.style.opacity = '0';
-      msg.classList.remove('show');
+      setTimeout(() => {
+        msg.style.display = 'none';
+      }, 500);
     }
+
 
 
     function cadastrar() {
@@ -168,7 +180,7 @@
         confirmacaoSenhaVar == "" ||
         confirmacaoSenhaVar != senhaVar ||
         senhaVar.length < 6 ||
-        nomeVar < 3
+        nomeVar.length < 3 
       ) {
         mostrarMsgErro("Preencha os campos corretamente.");
         return false;
@@ -226,7 +238,6 @@
           console.error("Erro no processo de cadastro:", erro);
         });
     }
-
   </script>
 
 
