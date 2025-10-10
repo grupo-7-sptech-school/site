@@ -148,3 +148,14 @@ body {
   border-bottom-left-radius: 0;
 }
 
+#msgErro {
+  background-color: #f8d7da; /* vermelho claro */
+  color: #721c24; /* texto vermelho escuro */
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+

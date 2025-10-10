@@ -10,7 +10,7 @@ body {
   min-height: 100vh;
   position: relative;
   border-top-left-radius: 40px;
-  border-bottom-left-radius: 40px; /* ✅ invertido */
+  border-bottom-left-radius: 40px;
   overflow: hidden;
 }
 
@@ -99,25 +99,16 @@ body {
 .toggle-password {
   cursor: pointer;
   transition: color 0.2s, transform 0.2s;
-}
+} 
 
-.fade-out {
+#msgErro {
+  background-color: #f8d7da; /* vermelho claro */
+  color: #721c24; /* texto vermelho escuro */
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
   opacity: 0;
-  transform: translateX(-50px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.5s ease-in-out;
 }
 
-/* Animação de entrada da página de login */
-.fade-in {
-  opacity: 0;
-  transform: translateX(50px);
-  animation: fadeInSlide 0.6s ease forwards;
-}
-
-@keyframes fadeInSlide {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 
