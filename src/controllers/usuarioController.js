@@ -46,13 +46,12 @@ function autenticar(req, res) {
 }
 
 function cadastrar(req, res) {
-    // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
     var nome = req.body.nomeServer;
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
+    var fkEmpresa = req.body.fkEmpresaServer;
     
 
-    // Faça as validações dos valores
     if (nome == undefined) {
         res.status(400).send("Seu nome está undefined!");
     } else if (email == undefined) {
@@ -61,8 +60,7 @@ function cadastrar(req, res) {
         res.status(400).send("Sua senha está undefined!");
     } else {
 
-        // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, email, senha)
+        usuarioModel.cadastrar(nome, email, senha, fkEmpresa)
             .then(
                 function (resultado) {
                     res.json(resultado);
@@ -80,7 +78,28 @@ function cadastrar(req, res) {
     }
 }
 
+
+function validarCodigo(req, res) {
+
+    var codigoAtivacao = req.body.codigoAtivacao;
+
+    console.log(`Recuperando código de ativação`);
+
+    usuarioModel.validarCodigo(codigoAtivacao).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar o código de ativação.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrar,
+    validarCodigo
 }
