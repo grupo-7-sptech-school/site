@@ -57,7 +57,7 @@ body{
 
 
 .dashboard-topbar{
-  height: 12vh;
+  height: 13vh;
   display: flex;
   background-color: #18B187;
   justify-self: flex-end;
@@ -214,11 +214,6 @@ body{
   margin-top: 1.4vh;
 }
 
-.grafico-cpu{
-  height: 20vh;
-  width: 40vw;
-  background-color: white;
-}
 
 .dashboard-low-right-side{
   display: flex;
@@ -226,16 +221,139 @@ body{
   flex-direction: column;
 }
 
+.kpis{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 3vw;
+  padding-left: 3vw;
+  width: 78vw;
+  height: 20vh;
+  align-items: center;
+  padding-top: 3vh;
+  padding-bottom: 3vh;
+}
+.kpi{
+  background-color: white;
+  width: 18vw;
+  height: 15vh;
+  border-radius: 25px;
+}
+
+.dashboard-charts{
+  display: flex;
+  height: 80vh;
+  width: 78vw;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 3vw;
+  padding-right: 3vw;
+}
+
+.grafico-cpu{
+    display: flex;
+  height: 24vh;
+  width: 44vw;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 25px;
+  padding: 1%;
+}
+
+#graficoCpuCanvas{
+  width: 100%;
+  height: 100%;
+}
+#graficoDiscoCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 2;
+}
 .grafico-ram{
   display: flex;
-  width: 84vw;
+  height: 24vh;
+  width: 44vw;
   flex-direction: column;
+  background-color: white;
+  border-radius: 25px;
+  padding: 1%;
 }
 
 .grafico-disco{
   display: flex;
-  width: 84vw;
-  flex-direction: column;
+  width: 30vw;
+  height: 60vh;
+  border-radius: 25px;
+  background-color: white;
+  justify-content: space-evenly;
+  align-items: center;
+  
 }
 
+.uso-livre-disco h2{
+  display: flex;
+  gap: 0.5vw;
+}
+.uso-livre-disco div{
+  align-self: center;
+}
+.uso-livre-disco{
+   font-family: "montserrat", sans-serif;
+   color: rgba(0, 0, 0, 0.593);
+   
+}
 
+#h1_usoLivre{
+  font-family: "montserrat", sans-serif;
+  color: rgba(0, 0, 0, 0.39);
+}
+#h1_usoDisco{
+  font-family: "montserrat", sans-serif;
+  color: #18B187;
+}
+
+.line-charts{
+  width: 45vw;
+  display: flex;
+  flex-direction: column;
+  gap: 8vh;
+  
+}
+
+.cup-charts{
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+}
+
+ .copo {
+      position: relative;
+      width: 25%;
+      height: 76%;
+      background: linear-gradient(to right, #dedede 0%, #ffffff 33%, #dedede 85%);
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.25);
+      
+    }
+
+    .elipse-topo, .elipse-base {
+      position: absolute;
+      width: 100%;
+      height: 40px;
+      border-radius: 50%;
+      left: 0;
+    }
+
+    .elipse-topo {
+      top: -20px;
+      background-color: #c0c0c0;
+    }
+ 
+    .elipse-base {
+      bottom: -20px;
+      background: linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%);  
+      z-index: 1;
+    }

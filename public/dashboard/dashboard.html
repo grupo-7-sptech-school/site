@@ -8,16 +8,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SolarData | Painel de controle</title>
 
-    
+
     <link rel="stylesheet" href="./../css/dashboards.css">
     <script src="../js/sessao.js"></script>
     <script src="./../js/alerta.js"></script>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
 
     <!-- scripts do Chart.js - 2022-1 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.x/dist/pixi.min.js"></script>
 
     <!--FONT AWESOME-->
     <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
@@ -30,7 +34,7 @@
         <div class="dashboard-sidebar">
             <div class="dashboard-logo"></div>
             <div class="dashboard-sidebar-btns">
-                <a href="alertas.html"class="dashboard-sidebar-btn">
+                <a href="alertas.html" class="dashboard-sidebar-btn">
                     <div class="icon-alert"></div>
                     <h3>Alertas</h3>
                 </a>
@@ -57,75 +61,276 @@
             </a>
         </div>
         <div class="dashboard-low-right-side">
-        <div class="dashboard-topbar">
-            <h2>Painel de controle - Servidor</h2>
-            <div class="btns-topbar">
-            <a href="relatorios.html" class="btn-gerar-relatorio">
-                Gerar relatorio
-            </a>
-            <button class="btn-notificacao" >
-                <div class="icon-notificacao"></div>
-            </button>
-            <a href="conta.html" class="btn-conta">
-                <div class="icon-user2"></div>
-            </a>
-            </div>
-        </div>
-        <div class="dashboard-charts">
-            <div class="line-charts">
-        <div class="grafico-cpu">
-            <canvas id="graficoCpuCanvas"></canvas>
-        </div>
-        <div class="grafico-ram">
-            <canvas id="graficoRamCanvas"></canvas>
-            </div>
-        </div>
-            <div class="cup-charts">
-                <div class="grafico-disco">
-                    <canvas id="graficoDisco"></canvas>
+            <div class="dashboard-topbar">
+                <h2>Painel de controle - Servidor</h2>
+                <div class="btns-topbar">
+                    <a href="relatorios.html" class="btn-gerar-relatorio">
+                        Gerar relatorio
+                    </a>
+                    <button class="btn-notificacao">
+                        <div class="icon-notificacao"></div>
+                    </button>
+                    <a href="conta.html" class="btn-conta">
+                        <div class="icon-user2"></div>
+                    </a>
                 </div>
             </div>
-        </div>
+            <div class="kpis">
+                <div class="kpi"></div>
+                <div class="kpi"></div>
+                <div class="kpi"></div>
+                <div class="kpi"></div>
+            </div>
+            <div class="dashboard-charts">
+                <div class="line-charts">
+                    <div class="grafico-cpu">
+                        <canvas id="graficoCpuCanvas"></canvas>
+                    </div>
+                    <div class="grafico-ram">
+                        <canvas id="graficoRamCanvas"></canvas>
+                    </div>
+                </div>
+                <div class="cup-charts">
+                    <div class="grafico-disco">
+                        <div class="copo">
+                            <div class="elipse-topo" id="elipseTopo"></div>
+                            <canvas id="graficoDiscoCanvas"></canvas>
+                            <div class="elipse-base" id="elipseBase"></div>
+                        </div>
+                        <div class="uso-livre-disco">
+                        <h2><div style="background-color: #939393;
+                        border-radius: 90px;
+                        height: 2vh;
+                        width: 1vw;"></div><br>Armazenamento <br> Livre
+                            <h1 id="h1_usoLivre">
+                                
+                            </h1>
+                        </h2>
+                        <h2><div style="background-color: #18B187;
+                        border-radius: 90px;
+                        height: 2vh;
+                        width: 1vw;
+                        
+                        "></div><br>Armazenamento <br> usado
+                            <h1 id="h1_usoDisco">
+                                
+                            </h1>
+                        </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
 <script>
 
-
-    
-    new Chart(
-    document.getElementById('acquisitions'), {
-  type: 'line',
-  data: {
-    datasets: [{
-      borderColor: Utils.CHART_COLORS.red,
-      borderWidth: 1,
-      radius: 0,
-      data: data,
-    },
-    {
-      borderColor: Utils.CHART_COLORS.blue,
-      borderWidth: 1,
-      radius: 0,
-      data: data2,
-    }]
-  },
-  options: {
-    animation,
-    interaction: {
-      intersect: false
-    },
-    plugins: {
-      legend: false
-    },
-    scales: {
-      x: {
-        type: 'linear'
-      }
+    const data = [];
+    const data2 = [];
+    let prev = 100;
+    let prev2 = 80;
+    for (let i = 0; i < 1000; i++) {
+        prev += 5 - Math.random() * 10;
+        data.push({ x: i, y: prev });
+        prev2 += 5 - Math.random() * 10;
+        data2.push({ x: i, y: prev2 });
     }
-  }
-});
-    
+
+    const totalDuration = 10000;
+    const delayBetweenPoints = totalDuration / data.length;
+    const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+    const animation = {
+        x: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: NaN,
+            delay(ctx) {
+                if (ctx.type !== 'data' || ctx.xStarted) {
+                    return 0;
+                }
+                ctx.xStarted = true;
+                return ctx.index * delayBetweenPoints;
+            }
+        },
+        y: {
+            type: 'number',
+            easing: 'linear',
+            duration: delayBetweenPoints,
+            from: previousY,
+            delay(ctx) {
+                if (ctx.type !== 'data' || ctx.yStarted) {
+                    return 0;
+                }
+                ctx.yStarted = true;
+                return ctx.index * delayBetweenPoints;
+            }
+        }
+    };
+
+    const ctxCpu = document.getElementById('graficoCpuCanvas');
+
+    const configCpu = {
+        type: 'line',
+        data: {
+            datasets: [{
+                borderColor: 'blue',
+                borderWidth: 1,
+                radius: 0,
+                data: data,
+            }]
+
+        },
+        options: {
+
+            maintainAspectRatio: false,
+            animation,
+            interaction: {
+                intersect: false
+            },
+            plugins: {
+                legend: false
+            },
+            scales: {
+                x: {
+                    type: 'linear'
+                }
+            }
+        }
+    };
+
+    new Chart(ctxCpu, configCpu);
+
+    const ctxRam = document.getElementById('graficoRamCanvas');
+
+    const configRam = {
+        type: 'line',
+        data: {
+            datasets: [{
+                borderColor: 'red',
+                borderWidth: 1,
+                radius: 0,
+                data: data2,
+            }]
+
+        },
+        options: {
+
+            maintainAspectRatio: false,
+            animation,
+            interaction: {
+                intersect: false
+            },
+            plugins: {
+                legend: false
+            },
+            scales: {
+                x: {
+                    type: 'linear'
+                }
+            }
+        }
+    };
+
+    new Chart(ctxRam, configRam);
+
+const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
+    var usoDisco = Math.floor(Math.random() * 100);
+    var usoLivre = 100 - usoDisco;
+    h1_usoDisco.innerHTML=usoDisco+"%"
+    h1_usoLivre.innerHTML=usoLivre+"%"
+    if (usoDisco < 5) {
+      elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
+    } else if (usoDisco > 95) {
+      setTimeout(() => {
+        elipseTopo.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
+      }, 609);
+      setTimeout(() => {
+        elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
+      }, 15);
+    } else {
+      setTimeout(() => {
+        elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
+      }, 15);
+    }
+
+    new Chart(ctxDisco, {
+      type: 'bar',
+      data: {
+        labels: [''],
+        datasets: [{
+          data: [usoDisco],
+          backgroundColor: 'transparent'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: true } },
+        scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } },
+        animation: true
+      },
+      plugins: [{
+        id: 'liquidoDisco',
+        beforeDatasetsDraw(graficoDisco) {
+          const ctx = graficoDisco.ctx;
+          const area = graficoDisco.chartArea;
+          const meta = graficoDisco.getDatasetMeta(0);
+          const barra = meta.data[0];
+
+          const yTopo = barra.y;
+          const yBase = area.bottom;
+
+          ctx.beginPath();
+          ctx.ellipse(
+            (area.left + area.right) / 2,
+            yTopo,
+            (area.right - area.left) / 2,
+            14,
+            0,
+            0,
+            Math.PI * 2
+          );
+
+          const gradienteHorizontal = ctx.createLinearGradient(area.left, 0, area.right, 0);
+          gradienteHorizontal.addColorStop(0, '#25a683');
+          gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
+          gradienteHorizontal.addColorStop(0.85, '#25a683');
+
+          ctx.fillStyle = gradienteHorizontal;
+          ctx.fillRect(area.left, yTopo, area.right - area.left, yBase - yTopo);
+
+          ctx.beginPath();
+          ctx.ellipse(
+            (area.left + area.right) / 2,
+            yTopo,
+            (area.right - area.left) / 2,
+            14,
+            0,
+            0,
+            Math.PI * 2
+          );
+
+          const gradienteEscuro = ctx.createLinearGradient(area.left, 0, area.right, 0);
+          gradienteEscuro.addColorStop(0, '#1d8066');
+          gradienteEscuro.addColorStop(0.33, '#18a47d');
+          gradienteEscuro.addColorStop(0.85, '#1d8066');
+
+          ctx.fillStyle = gradienteEscuro;
+          ctx.fill();
+
+          ctx.restore();
+        }
+      }]
+    });
+
+
+
+
+
+
+
+
     b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 
     let proximaAtualizacao;
