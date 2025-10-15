@@ -1,0 +1,114 @@
+.relatorios-container {
+  background-color: #f6f7f7;
+  padding: 30px 50px;
+  height: 100%;
+}
+
+.relatorios-header {
+  background-color: #00a880;
+  color: white;
+  font-weight: 600;
+  font-size: 22px;
+  padding: 25px 40px;
+  border-radius: 0 0 12px 12px;
+}
+
+.filtros-container {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 25px 0 35px 0;
+}
+
+.filtro-btn {
+  background-color: #00a880;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.filtro-btn:hover {
+  background-color: #00906f;
+  transform: translateY(-2px);
+}
+
+.filtro-btn.ativo {
+  background-color: #007a5a;
+}
+
+.relatorios-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 60px 40px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+}
+
+.relatorios-card p {
+  color: #777;
+  font-size: 15px;
+  text-align: center;
+}
+
+.relatorios-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+  margin-top: 10px;
+}
+
+.relatorio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1.5px solid #e2e2e2;
+  border-radius: 10px;
+  padding: 15px 20px;
+  transition: all 0.2s ease-in-out;
+}
+
+.relatorio-item:hover {
+  background-color: #f8fdfb;
+  border-color: #00a880;
+}
+
+.relatorio-info h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.relatorio-info p {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.btn-visualizar {
+  background-color: #00a880;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-visualizar:hover {
+  background-color: #008d6c;
+  transform: translateY(-2px);
+}
