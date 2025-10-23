@@ -29,8 +29,18 @@ function validarCodigo(codigoAtivacao) {
 }
 
 
+function puxarProcesso() {
+    var instrucaoSql = `SELECT * FROM Processo ORDER BY dtregistro DESC LIMIT 100;`;  
+    
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
+
 module.exports = {
     autenticar,
     cadastrar,
-    validarCodigo
+    validarCodigo,
+    puxarProcesso
 };

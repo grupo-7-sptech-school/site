@@ -64,7 +64,7 @@
             <div class="dashboard-topbar">
                 <h2>Painel de controle - Servidor</h2>
                 <div class="btns-topbar">
-                    <a href="relatorios.html" class="btn-gerar-relatorio">
+                    <a class="btn-gerar-relatorio" onclick="gerarResposta()" type="button">
                         Gerar relatorio
                     </a>
                     <button class="btn-notificacao">
@@ -98,24 +98,26 @@
                             <div class="elipse-base" id="elipseBase"></div>
                         </div>
                         <div class="uso-livre-disco">
-                        <h2><div style="background-color: #939393;
+                            <h2>
+                                <div style="background-color: #939393;
                         border-radius: 90px;
                         height: 2vh;
                         width: 1vw;"></div><br>Armazenamento <br> Livre
-                            <h1 id="h1_usoLivre">
-                                
-                            </h1>
-                        </h2>
-                        <h2><div style="background-color: #18B187;
+                                <h1 id="h1_usoLivre">
+
+                                </h1>
+                            </h2>
+                            <h2>
+                                <div style="background-color: #18B187;
                         border-radius: 90px;
                         height: 2vh;
                         width: 1vw;
                         
                         "></div><br>Armazenamento <br> usado
-                            <h1 id="h1_usoDisco">
-                                
-                            </h1>
-                        </h2>
+                                <h1 id="h1_usoDisco">
+
+                                </h1>
+                            </h2>
                         </div>
                     </div>
                 </div>
@@ -234,94 +236,94 @@
 
     new Chart(ctxRam, configRam);
 
-const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
+    const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
     var usoDisco = Math.floor(Math.random() * 100);
     var usoLivre = 100 - usoDisco;
-    h1_usoDisco.innerHTML=usoDisco+"%"
-    h1_usoLivre.innerHTML=usoLivre+"%"
+    h1_usoDisco.innerHTML = usoDisco + "%"
+    h1_usoLivre.innerHTML = usoLivre + "%"
     if (usoDisco < 3) {
-      elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
+        elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
     } else if (usoDisco > 97) {
-      setTimeout(() => {
-        elipseTopo.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
-      }, 609);
-      setTimeout(() => {
-        elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
-      }, 15);
+        setTimeout(() => {
+            elipseTopo.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
+        }, 609);
+        setTimeout(() => {
+            elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
+        }, 15);
     } else {
-      setTimeout(() => {
-        elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
-      }, 15);
+        setTimeout(() => {
+            elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
+        }, 15);
     }
 
     new Chart(ctxDisco, {
-      type: 'bar',
-      data: {
-        labels: [''],
-        datasets: [{
-          data: [usoDisco],
-          backgroundColor: 'transparent'
+        type: 'bar',
+        data: {
+            labels: [''],
+            datasets: [{
+                data: [usoDisco],
+                backgroundColor: 'transparent'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: true } },
+            scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } },
+            animation: true
+        },
+        plugins: [{
+            id: 'liquidoDisco',
+            beforeDatasetsDraw(graficoDisco) {
+                const ctx = graficoDisco.ctx;
+                const area = graficoDisco.chartArea;
+                const meta = graficoDisco.getDatasetMeta(0);
+                const barra = meta.data[0];
+
+                const yTopo = barra.y;
+                const yBase = area.bottom;
+
+                ctx.beginPath();
+                ctx.ellipse(
+                    (area.left + area.right) / 2,
+                    yTopo,
+                    (area.right - area.left) / 2,
+                    14,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
+
+                const gradienteHorizontal = ctx.createLinearGradient(area.left, 0, area.right, 0);
+                gradienteHorizontal.addColorStop(0, '#25a683');
+                gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
+                gradienteHorizontal.addColorStop(0.85, '#25a683');
+
+                ctx.fillStyle = gradienteHorizontal;
+                ctx.fillRect(area.left, yTopo, area.right - area.left, yBase - yTopo);
+
+                ctx.beginPath();
+                ctx.ellipse(
+                    (area.left + area.right) / 2,
+                    yTopo,
+                    (area.right - area.left) / 2,
+                    14,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
+
+                const gradienteEscuro = ctx.createLinearGradient(area.left, 0, area.right, 0);
+                gradienteEscuro.addColorStop(0, '#1d8066');
+                gradienteEscuro.addColorStop(0.33, '#18a47d');
+                gradienteEscuro.addColorStop(0.85, '#1d8066');
+
+                ctx.fillStyle = gradienteEscuro;
+                ctx.fill();
+
+                ctx.restore();
+            }
         }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { enabled: true } },
-        scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } },
-        animation: true
-      },
-      plugins: [{
-        id: 'liquidoDisco',
-        beforeDatasetsDraw(graficoDisco) {
-          const ctx = graficoDisco.ctx;
-          const area = graficoDisco.chartArea;
-          const meta = graficoDisco.getDatasetMeta(0);
-          const barra = meta.data[0];
-
-          const yTopo = barra.y;
-          const yBase = area.bottom;
-
-          ctx.beginPath();
-          ctx.ellipse(
-            (area.left + area.right) / 2,
-            yTopo,
-            (area.right - area.left) / 2,
-            14,
-            0,
-            0,
-            Math.PI * 2
-          );
-
-          const gradienteHorizontal = ctx.createLinearGradient(area.left, 0, area.right, 0);
-          gradienteHorizontal.addColorStop(0, '#25a683');
-          gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
-          gradienteHorizontal.addColorStop(0.85, '#25a683');
-
-          ctx.fillStyle = gradienteHorizontal;
-          ctx.fillRect(area.left, yTopo, area.right - area.left, yBase - yTopo);
-
-          ctx.beginPath();
-          ctx.ellipse(
-            (area.left + area.right) / 2,
-            yTopo,
-            (area.right - area.left) / 2,
-            14,
-            0,
-            0,
-            Math.PI * 2
-          );
-
-          const gradienteEscuro = ctx.createLinearGradient(area.left, 0, area.right, 0);
-          gradienteEscuro.addColorStop(0, '#1d8066');
-          gradienteEscuro.addColorStop(0.33, '#18a47d');
-          gradienteEscuro.addColorStop(0.85, '#1d8066');
-
-          ctx.fillStyle = gradienteEscuro;
-          ctx.fill();
-
-          ctx.restore();
-        }
-      }]
     });
 
 
@@ -566,4 +568,36 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
             });
 
     }
+
+
+
+async function gerarResposta() { // assincrona pra pegar junto com os processos e não dar ruim se é que me entende...
+    try {
+        console.log("Gerando análise detalhada...");
+        
+        const response = await fetch('/analisar-processos');
+        
+        if (!response.ok) {
+            throw new Error(`Erro: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("📨 Análise recebida:", data);
+        
+        if (data.success) {
+            const mensagem = `${data.analise}`;
+            console.log(mensagem);
+        } else {
+            alert(`Erro: ${data.message || data.error}`);
+        }
+        
+    } catch (error) {
+        alert('Erro ao gerar análise: ' + error.message);
+    }
+}
+
+
+
+
+
 </script>

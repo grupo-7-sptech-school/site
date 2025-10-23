@@ -1,4 +1,15 @@
 var usuarioModel = require("../models/usuarioModel");
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'techsolardata@gmail.com', 
+        pass: 'edzh ucgj mdat bahl' //senha de aplicativo gerada
+    }
+});
+
+
 
 function autenticar(req, res) {
     var email = req.body.emailServer;
@@ -19,15 +30,15 @@ function autenticar(req, res) {
                     if (resultadoAutenticar.length == 1) {
                         console.log(resultadoAutenticar);
 
-                        
-                               
-                                    res.json({
-                                        idusuario: resultadoAutenticar[0].idusuario,
-                                        email: resultadoAutenticar[0].email,
-                                        nome: resultadoAutenticar[0].nome,
-                                        senha: resultadoAutenticar[0].senha
-                                    });
-                                
+
+
+                        res.json({
+                            idusuario: resultadoAutenticar[0].idusuario,
+                            email: resultadoAutenticar[0].email,
+                            nome: resultadoAutenticar[0].nome,
+                            senha: resultadoAutenticar[0].senha
+                        });
+
                     } else if (resultadoAutenticar.length == 0) {
                         res.status(403).send("Email e/ou senha inválido(s)");
                     } else {
@@ -50,7 +61,7 @@ function cadastrar(req, res) {
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
     var fkEmpresa = req.body.fkEmpresaServer;
-    
+
 
     if (nome == undefined) {
         res.status(400).send("Seu nome está undefined!");
@@ -98,8 +109,63 @@ function validarCodigo(req, res) {
     });
 }
 
+
+
+function puxarProcesso(req, res) {
+    usuarioModel.puxarProcesso()
+        .then(resultado => {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).send("Nenhum processo encontrado!");
+            }
+        })
+        .catch(erro => {
+            console.error("❌ Erro:", erro);
+            res.status(500).json({
+                message: "Erro ao buscar processos",
+                erro: erro.sqlMessage || erro.message
+            });
+        });
+}
+
+
+
+function sendEmail(req, res) {
+    const { representante, email, assunto, telefone, mensagem } = req.body;
+
+    if (!representante || !email || !assunto || !telefone || !mensagem) {
+        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
+    }
+
+    const mailOptions = {
+        from: email,
+        to: 'techsolardata@gmail.com',
+        subject: assunto,
+        text: `Nome: ${representante}\nEmail: ${email}\nTelefone: ${telefone}\nMensagem: ${mensagem}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log('Erro ao enviar email:', error);
+            return res.status(500).json({ 
+                message: 'Erro ao enviar o e-mail', 
+                error: error.message 
+            });
+        }
+
+        res.status(200).json({ 
+            message: 'E-mail enviado com sucesso!',
+            previewUrl: nodemailer.getTestMessageUrl(info)
+        });
+    });
+}
+
+
 module.exports = {
     autenticar,
     cadastrar,
-    validarCodigo
+    validarCodigo,
+    sendEmail,
+    puxarProcesso,
 }

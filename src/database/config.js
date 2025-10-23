@@ -33,6 +33,19 @@ function executar(instrucao) {
     });
 }
 
+
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'techsolardata@gmail.com',
+        pass: 'edzh ucgj mdat bahl' 
+    }
+});
+
 module.exports = {
-    executar
+    executar,
+    transporter 
 };
+
