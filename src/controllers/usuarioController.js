@@ -121,7 +121,7 @@ function puxarProcesso(req, res) {
             }
         })
         .catch(erro => {
-            console.error("❌ Erro:", erro);
+            console.error("Erro:", erro);
             res.status(500).json({
                 message: "Erro ao buscar processos",
                 erro: erro.sqlMessage || erro.message
