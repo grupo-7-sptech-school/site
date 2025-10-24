@@ -167,5 +167,5 @@ module.exports = {
     cadastrar,
     validarCodigo,
     sendEmail,
-    puxarProcesso,
+    puxarProcesso
 }
