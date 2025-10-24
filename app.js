@@ -29,9 +29,23 @@ app.use("/avisos", avisosRouter);
 app.use("/medidas", medidasRouter);
 app.use("/empresas", empresasRouter);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.get("/analisar-processos", async (req, res) => {
     try {
-        const usuarioModel = require("./src/models/usuarioModel");
+        const usuarioModel = require("./src/models/usuarioModel.js");
         const processos = await usuarioModel.puxarProcesso();
 
         if (!processos || processos.length === 0) {
@@ -66,11 +80,6 @@ app.get("/analisar-processos", async (req, res) => {
         });
     }
 });
-
-
-
-
-
 
 
 
