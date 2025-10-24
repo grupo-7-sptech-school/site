@@ -276,6 +276,44 @@
                     console.error(error);
                 });
         });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const nomeUsuario = sessionStorage.NOME_USUARIO;
+            const nav = document.querySelector(".navbar-nav");
+
+            // Se estiver logado:
+            if (nomeUsuario) {
+                const btnLogin = document.querySelector('a[href="./login.html"]');
+                const btnCadastrar = document.querySelector('a[href="./cadastro.html"]');
+                if (btnLogin) btnLogin.remove();
+                if (btnCadastrar) btnCadastrar.remove();
+
+                // Cria o ícone do perfil
+                const li = document.createElement("li");
+                li.classList.add("nav-item", "dropdown");
+
+                li.innerHTML = `
+        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="perfilDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-person-circle fs-4"></i>
+          <span class="ms-2">${nomeUsuario.split(" ")[0]}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
+          <li><a class="dropdown-item" href="./perfil.html">Meu perfil</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="#" id="logout">Sair</a></li>
+        </ul>
+      `;
+
+                nav.appendChild(li);
+
+                document.getElementById("logout").addEventListener("click", function () {
+                    sessionStorage.clear();
+                    window.location.reload();
+                });
+            }
+        });
+
     </script>
 </body>
 

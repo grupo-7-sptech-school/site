@@ -491,3 +491,34 @@
   }
 }
 
+.nav-item.dropdown .nav-link {
+  color: white !important;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-item.dropdown .nav-link:hover {
+  color: #f4d35e !important; /* Douradinho solar 😎 */
+}
+
+.nav-item.dropdown i.bi-person-circle {
+  font-size: 1.8rem;
+}
+
+.nav-item.dropdown .dropdown-menu {
+  background-color: #1c1c1c;
+  border: none;
+  border-radius: 10px;
+  min-width: 180px;
+}
+
+.nav-item.dropdown .dropdown-item {
+  color: #fff;
+}
+
+.nav-item.dropdown .dropdown-item:hover {
+  background-color: #f4d35e;
+  color: #000;
+}
+
+
