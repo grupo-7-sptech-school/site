@@ -111,6 +111,46 @@ function validarCodigo(req, res) {
 
 
 
+
+
+function validarEmailRecuperar(req, res) {
+
+    var emailRecuperar = req.body.emailServer;
+
+    console.log(`Recuperando código de ativação`);
+
+    usuarioModel.validarEmailRecuperar(emailRecuperar).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar o código de ativação.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+
+function inserirRecuperacao(req, res) {
+    var email = req.body.emailServer;
+    var token = req.body.tokenServer;
+
+    if (!email || !token) {
+        res.status(400).send("Email ou token não definidos!");
+    } else {
+        usuarioModel.inserirRecuperacao(email, token)
+            .then(resultado => res.json(resultado))
+            .catch(erro => {
+                console.log("Erro ao inserir token:", erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
+
+
 function puxarProcesso(req, res) {
     usuarioModel.puxarProcesso()
         .then(resultado => {
@@ -162,10 +202,28 @@ function sendEmail(req, res) {
 }
 
 
+function enviarRecuperacao(email, token) {
+    const mailOptions = {
+        from: 'techsolardata@gmail.com', 
+        to: email,               
+        subject: 'Recuperação de senha',
+        text: `Seu token de recuperação é: ${token}`
+    };
+
+    return transporter.sendMail(mailOptions);
+}
+
+
+
+
+
 module.exports = {
     autenticar,
     cadastrar,
     validarCodigo,
     sendEmail,
-    puxarProcesso
+    puxarProcesso,
+    validarEmailRecuperar,
+    inserirRecuperacao,
+    enviarRecuperacao
 }

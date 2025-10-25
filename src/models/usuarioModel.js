@@ -29,6 +29,27 @@ function validarCodigo(codigoAtivacao) {
 }
 
 
+function validarEmailRecuperar(emailRecuperar) {
+
+    var instrucaoSql = `SELECT *from Usuario where email = '${emailRecuperar}' LIMIT 1`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+function inserirRecuperacao(email, token) {
+    console.log("Inserindo token de recuperação para:", email, token);
+    
+    var instrucaoSql = `
+        UPDATE Usuario 
+        SET tokenRecuperacao = '${token}'
+        WHERE email = '${email}';
+    `;
+    console.log("Executando SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
 function puxarProcesso() {
     var instrucaoSql = `SELECT * FROM Processo ORDER BY dtregistro DESC LIMIT 100;`;  
     
@@ -42,5 +63,7 @@ module.exports = {
     autenticar,
     cadastrar,
     validarCodigo,
-    puxarProcesso
+    puxarProcesso,
+    validarEmailRecuperar,
+    inserirRecuperacao
 };

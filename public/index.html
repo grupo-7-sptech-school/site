@@ -253,7 +253,7 @@
 
 
     <script>
-        document.getElementById('contato-form').addEventListener('submit', function (event) {
+            document.getElementById('contato-form').addEventListener('submit', function (event) {
             event.preventDefault();
 
             const representante = document.getElementById('representante').value;
@@ -262,7 +262,7 @@
             const telefone = document.getElementById('telefone').value;
             const mensagem = document.getElementById('mensagem').value;
 
-            fetch('http://localhost:3333/usuarios/enviar-email', {
+            fetch('/usuarios/enviar-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
