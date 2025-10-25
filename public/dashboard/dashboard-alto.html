@@ -9,7 +9,7 @@
     <title>SolarData | Painel de controle</title>
 
     
-    <link rel="stylesheet" href="./../css/dashboards.css">
+    <link rel="stylesheet" href="./../css/cabecalho1.css">
     <link rel="stylesheet" href="./../css/dash-alto.css">
     <script src="../js/sessao.js"></script>
     <script src="./../js/alerta.js"></script>
@@ -27,6 +27,7 @@
 <!-- <body onload=" atualizarFeed()"> -->
 
 <body>
+    <!-- Cabeçalho -->
     <div class="dashboard-bg">
         <div class="dashboard-sidebar">
             <div class="dashboard-logo"></div>
@@ -57,10 +58,16 @@
                 <h3>Logout</h3>
             </a>
         </div>
-        <div class="dashboard-visao-direita">
+        <!-- Cabeçalho topo -->
+        <div class="dashboard-low-right-side">
         <div class="dashboard-topbar">
-            <h2>Painel de controle dos servidores</h2>
-            <div class="btns-topbar">
+            <a href="dashboard-alto.html" class="btn-voltar">
+                Painel de controle - Servidor
+            </a>
+            <div class="btns-topbar">            
+            <a href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
+                Cadastrar Máquina
+            </a>
             <a href="relatorios.html" class="btn-gerar-relatorio">
                 Gerar relatorio
             </a>
@@ -72,9 +79,234 @@
             </a>
             </div>
         </div>
+        <!-- Fim Cabeçalho -->
+        <div class="box-dashboard">
+            
+            <div class="box-notificacao">
 
+            <!-- Topo  quadro de monitoramento -->
+        <div class="topo-notificacao">
+            <div class="box-id">
+                <p>ID</p>
+            </div>
+            <div class="box-nome">
+                <p>NOME</p>
+            </div>
+            <div class="box-uptime">
+                <p>UPTIME</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>ULTIMA OCORRÊNCIA</p>
+            </div>
+            <div class="box-rack">
+                <p>USO DO RACK</p>
+            </div>
+            <div class="box-uptime">
+                <p>STATUS</p>
+            </div>
+        </div>
+
+        <!-- Linha 1-->
+        <div class="line-notifica1">
+            <div class="box-id">
+                <p>0001</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>5 anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>50%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+        <!-- Linha 2-->
+                 <div class="line-notifica2">
+            <div class="box-id">
+                <p>0002</p>
+            </div>
+            <div class="box-nome">
+                <p>HTML-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>1 mês</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>09/09/2025</p>
+            </div>
+            <div class="box-rack">
+                <p>17%</p>
+            </div>
+            <div class="box-status">
+                <div>Ocioso</div>
+            </div>
+        </div>
+
+                <!-- Linha 3-->
+                 <div class="line-notifica3">
+            <div class="box-id">
+                <p>0003</p>
+            </div>
+            <div class="box-nome">
+                <p>DEV-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>2 semanas</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>07/10/2025</p>
+            </div>
+            <div class="box-rack">
+                <p>90%</p>
+            </div>
+            <div class="box-status">
+                <div>Crítico</div>
+            </div>
+        </div>
+
+                <!-- Linha 4-->
+                 <div class="line-notifica4">
+            <div class="box-id">
+                <p>0004</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-DB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>2 anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>21/02/2023</p>
+            </div>
+            <div class="box-rack">
+                <p>70%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+                <!-- Linha 5-->
+                 <div class="line-notifica5">
+            <div class="box-id">
+                <p>0005</p>
+            </div>
+            <div class="box-nome">
+                <p>HTML-DB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>4 dias</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>12/10/2025</p>
+            </div>
+            <div class="box-rack">
+                <p>20%</p>
+            </div>
+            <div class="box-status">
+                <div>Ocioso</div>
+            </div>
+        </div>
+
+                <!-- Linha 6-->
+                 <div class="line-notifica6">
+            <div class="box-id">
+                <p>0006</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-APP-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>3 anos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>Sem ocorrências</p>
+            </div>
+            <div class="box-rack">
+                <p>60%</p>
+            </div>
+            <div class="box-status">
+                <div>Operando</div>
+            </div>
+        </div>
+
+                <!-- Linha 7-->
+                 <div class="line-notifica7">
+            <div class="box-id">
+                <p>0007</p>
+            </div>
+            <div class="box-nome">
+                <p>PROD-WEB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>Inativo</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>06/06/2024</p>
+            </div>
+            <div class="box-rack">
+                <p>0%</p>
+            </div>
+            <div class="box-status">
+                <div>Inoperante</div>
+            </div>
+        </div>
+
+                <!-- Linha 8-->
+                 <div class="line-notifica8">
+            <div class="box-id">
+                <p>0008</p>
+            </div>
+            <div class="box-nome">
+                <p>DEV-DB-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>12 horas</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>27/10/2025</p>
+            </div>
+            <div class="box-rack">
+                <p>75%</p>
+            </div>
+            <div class="box-status">
+                <div>Alerta</div>
+            </div>
+        </div>
+
+                <!-- Linha 9-->
+                 <div class="line-notifica-final">
+            <div class="box-id">
+                <p>0009</p>
+            </div>
+            <div class="box-nome">
+                <p>DEV-APP-01</p>
+            </div>
+            <div class="box-uptime">
+                <p>25 minutos</p>
+            </div>
+            <div class="box-ocorrencia">
+                <p>16/07/2025</p>
+            </div>
+            <div class="box-rack">
+                <p>18%</p>
+            </div>
+            <div class="box-status">
+                <div>Ocioso</div>
+            </div>
+        </div>
+        </div></div>
         </div>
     </div>
 </body>
-<script>
-</script>
+
+
+    

@@ -91,7 +91,6 @@ app.get("/analisar-processos", async (req, res) => {
 
 
 
-// gerado por IA
 
 
 function gerarAnaliseLocalDetalhada(processos) {

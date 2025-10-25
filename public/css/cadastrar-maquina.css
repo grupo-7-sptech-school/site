@@ -1,0 +1,86 @@
+.total-dash{
+    height: 100vh;
+    width: 100vh;
+    display: flex;
+}
+
+.dashboard-bg{
+   display: flex;
+   flex: 1;
+   background-color: #f4f4f4;
+}
+
+
+.box-fundo-dash{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #eeeeee;
+}
+
+.box-fundo{
+    background-color: #006b4b;
+    width: 60vh;
+    max-width: 600px;
+    border-radius: 20px;
+    box-shadow: 0 0 8px black;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box-cadastrar{
+    width: 100%;
+    color: white;
+    text-align: center;
+}
+
+.box-cadastrar h2{
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.form-maquina{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    align-items: stretch;
+}
+
+.form-maquina label{
+    text-align: left;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: white;
+    margin-top: 10px;
+}
+
+.form-maquina input{
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    box-sizing: 1px 1px 3px black;
+}
+
+.btd-cadastrar{
+    margin-top: 2.5rem;
+    padding: 12px;
+    background-color: #009e60;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btd-cadastrar:hover{
+    background-color: #013421;
+}
+
