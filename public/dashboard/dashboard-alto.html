@@ -8,20 +8,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SolarData | Painel de controle</title>
 
-    
+
     <link rel="stylesheet" href="./../css/dashboards.css">
     <link rel="stylesheet" href="./../css/dash-alto.css">
     <script src="../js/sessao.js"></script>
     <script src="./../js/alerta.js"></script>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
 
     <!-- scripts do Chart.js - 2022-1 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!--FONT AWESOME-->
     <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <!-- <body onload=" atualizarFeed()"> -->
@@ -31,7 +36,7 @@
         <div class="dashboard-sidebar">
             <div class="dashboard-logo"></div>
             <div class="dashboard-sidebar-btns">
-                <a href="alertas.html"class="dashboard-sidebar-btn">
+                <a href="alertas.html" class="dashboard-sidebar-btn">
                     <div class="icon-alert"></div>
                     <h3>Alertas</h3>
                 </a>
@@ -58,23 +63,59 @@
             </a>
         </div>
         <div class="dashboard-visao-direita">
-        <div class="dashboard-topbar">
-            <h2>Painel de controle dos servidores</h2>
-            <div class="btns-topbar">
-            <a href="relatorios.html" class="btn-gerar-relatorio">
-                Gerar relatorio
-            </a>
-            <button class="btn-notificacao" >
-                <div class="icon-notificacao"></div>
-            </button>
-            <a href="conta.html" class="btn-conta">
-                <div class="icon-user2"></div>
-            </a>
+            <div class="dashboard-topbar">
+                <h2>Painel de controle dos servidores</h2>
+                <div class="btns-topbar">
+                    <a href="relatorios.html" class="btn-gerar-relatorio">
+                        Gerar relatorio
+                    </a>
+                    <button class="btn-notificacao">
+                        <div class="icon-notificacao"></div>
+                    </button>
+                    <a href="conta.html" class="btn-conta">
+                        <div class="icon-user2"></div>
+                    </a>
+                </div>
             </div>
         </div>
 
+        <div class="modal fade" id="modalNotificacoes" tabindex="-1" aria-labelledby="modalNotificacoesLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-success">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="modalNotificacoesLabel">Últimos Alertas</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success mb-2" role="alert">
+                            <strong>Servidor A:</strong> Temperatura elevada detectada.
+                        </div>
+                        <div class="alert alert-success mb-2" role="alert">
+                            <strong>Servidor B:</strong> Pico de energia registrado.
+                        </div>
+                        <div class="alert alert-success mb-2" role="alert">
+                            <strong>Servidor C:</strong> Falha de disco identificada.
+                        </div>
+                        <div class="alert alert-success" role="alert">
+                            <strong>Servidor D:</strong> Manutenção agendada para hoje.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    const btnNotificacao = document.querySelector('.btn-notificacao');
+    btnNotificacao.addEventListener('click', () => {
+        const modal = new bootstrap.Modal(document.getElementById('modalNotificacoes'));
+        modal.show();
+    });
 </script>

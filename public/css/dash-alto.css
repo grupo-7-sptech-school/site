@@ -138,3 +138,9 @@ width: 10%;
   font-size: 16px;
   font-weight: 600;
 }
+
+.alert-success {
+  background-color: #d1f2e0;
+  color: #145c3f;
+  border-color: #a3e4c1;
+}
