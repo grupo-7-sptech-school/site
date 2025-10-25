@@ -163,6 +163,10 @@
                 .then(data => {
                     new bootstrap.Modal(document.getElementById('modalSucesso')).show();
                     console.log(data);
+
+                    setTimeout(function() {
+                        window.location.href = 'recuperarCodigo.html?email=' + encodeURIComponent(emailVar);
+                    }, 3000);
                 })
                 .catch(error => {
                     new bootstrap.Modal(document.getElementById('modalErro')).show();
