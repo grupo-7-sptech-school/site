@@ -55,7 +55,7 @@
                     <h3>Suporte</h3>
                 </a>
             </div>
-            <a href="index.html" class="dashboard-logout">
+            <a onclick="sessionStorage.clear()" href="../index.html" class="dashboard-logout">
                 <div class="icon-logout"></div>
                 <h3>Logout</h3>
             </a>
@@ -64,22 +64,22 @@
             <div class="dashboard-topbar">
                 <h2>Painel de controle - Servidor</h2>
                 <div class="btns-topbar">
-                    <a class="btn-gerar-relatorio" onclick="gerarResposta()" type="button">
+                    <a onclick="gerarResposta()" class="btn-gerar-relatorio">
                         Gerar relatorio
                     </a>
                     <button class="btn-notificacao">
                         <div class="icon-notificacao"></div>
                     </button>
                     <a href="conta.html" class="btn-conta">
-                        <div class="icon-user2"></div>
+                        
                     </a>
                 </div>
             </div>
             <div class="kpis">
-                <div class="kpi"></div>
-                <div class="kpi"></div>
-                <div class="kpi"></div>
-                <div class="kpi"></div>
+                <div class="kpi"><h3>Uptime do sistema</h3><div class="kpi1" ><h2 style="color: #18B187;" id="dias">652</h2> Dias e <h2 style="color: #18B187;" id="horas">14</h2> horas</div></div>
+                <div class="kpi"><h3>Status UPS</h3> <h2 id="statusUps" style="color: #18B187;">Normal</h2></div>
+                <div class="kpi"><h3>P.U.E</h3><h2 style="color: #18B187;">1.2 </h2></div>
+                <div class="kpi"><h3>Utilização do rack</h3><h2 style="color: #18B187;"><p id="porcentagemRack">60</p>%</h2></div>
             </div>
             <div class="dashboard-charts">
                 <div class="line-charts">
@@ -98,26 +98,24 @@
                             <div class="elipse-base" id="elipseBase"></div>
                         </div>
                         <div class="uso-livre-disco">
-                            <h2>
-                                <div style="background-color: #939393;
+                        <h2><div style="background-color: #939393;
                         border-radius: 90px;
                         height: 2vh;
                         width: 1vw;"></div><br>Armazenamento <br> Livre
-                                <h1 id="h1_usoLivre">
-
-                                </h1>
-                            </h2>
-                            <h2>
-                                <div style="background-color: #18B187;
+                            <h1 id="h1_usoLivre">
+                                
+                            </h1>
+                        </h2>
+                        <h2><div style="background-color: #18B187;
                         border-radius: 90px;
                         height: 2vh;
                         width: 1vw;
                         
                         "></div><br>Armazenamento <br> usado
-                                <h1 id="h1_usoDisco">
-
-                                </h1>
-                            </h2>
+                            <h1 id="h1_usoDisco">
+                                
+                            </h1>
+                        </h2>
                         </div>
                     </div>
                 </div>
@@ -236,94 +234,94 @@
 
     new Chart(ctxRam, configRam);
 
-    const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
+const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
     var usoDisco = Math.floor(Math.random() * 100);
     var usoLivre = 100 - usoDisco;
-    h1_usoDisco.innerHTML = usoDisco + "%"
-    h1_usoLivre.innerHTML = usoLivre + "%"
+    h1_usoDisco.innerHTML=usoDisco+"%"
+    h1_usoLivre.innerHTML=usoLivre+"%"
     if (usoDisco < 3) {
-        elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
+      elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
     } else if (usoDisco > 97) {
-        setTimeout(() => {
-            elipseTopo.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
-        }, 609);
-        setTimeout(() => {
-            elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
-        }, 15);
+      setTimeout(() => {
+        elipseTopo.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
+      }, 609);
+      setTimeout(() => {
+        elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
+      }, 15);
     } else {
-        setTimeout(() => {
-            elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
-        }, 15);
+      setTimeout(() => {
+        elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
+      }, 15);
     }
 
     new Chart(ctxDisco, {
-        type: 'bar',
-        data: {
-            labels: [''],
-            datasets: [{
-                data: [usoDisco],
-                backgroundColor: 'transparent'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: { enabled: true } },
-            scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } },
-            animation: true
-        },
-        plugins: [{
-            id: 'liquidoDisco',
-            beforeDatasetsDraw(graficoDisco) {
-                const ctx = graficoDisco.ctx;
-                const area = graficoDisco.chartArea;
-                const meta = graficoDisco.getDatasetMeta(0);
-                const barra = meta.data[0];
-
-                const yTopo = barra.y;
-                const yBase = area.bottom;
-
-                ctx.beginPath();
-                ctx.ellipse(
-                    (area.left + area.right) / 2,
-                    yTopo,
-                    (area.right - area.left) / 2,
-                    14,
-                    0,
-                    0,
-                    Math.PI * 2
-                );
-
-                const gradienteHorizontal = ctx.createLinearGradient(area.left, 0, area.right, 0);
-                gradienteHorizontal.addColorStop(0, '#25a683');
-                gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
-                gradienteHorizontal.addColorStop(0.85, '#25a683');
-
-                ctx.fillStyle = gradienteHorizontal;
-                ctx.fillRect(area.left, yTopo, area.right - area.left, yBase - yTopo);
-
-                ctx.beginPath();
-                ctx.ellipse(
-                    (area.left + area.right) / 2,
-                    yTopo,
-                    (area.right - area.left) / 2,
-                    14,
-                    0,
-                    0,
-                    Math.PI * 2
-                );
-
-                const gradienteEscuro = ctx.createLinearGradient(area.left, 0, area.right, 0);
-                gradienteEscuro.addColorStop(0, '#1d8066');
-                gradienteEscuro.addColorStop(0.33, '#18a47d');
-                gradienteEscuro.addColorStop(0.85, '#1d8066');
-
-                ctx.fillStyle = gradienteEscuro;
-                ctx.fill();
-
-                ctx.restore();
-            }
+      type: 'bar',
+      data: {
+        labels: [''],
+        datasets: [{
+          data: [usoDisco],
+          backgroundColor: 'transparent'
         }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: true } },
+        scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } },
+        animation: true
+      },
+      plugins: [{
+        id: 'liquidoDisco',
+        beforeDatasetsDraw(graficoDisco) {
+          const ctx = graficoDisco.ctx;
+          const area = graficoDisco.chartArea;
+          const meta = graficoDisco.getDatasetMeta(0);
+          const barra = meta.data[0];
+
+          const yTopo = barra.y;
+          const yBase = area.bottom;
+
+          ctx.beginPath();
+          ctx.ellipse(
+            (area.left + area.right) / 2,
+            yTopo,
+            (area.right - area.left) / 2,
+            14,
+            0,
+            0,
+            Math.PI * 2
+          );
+
+          const gradienteHorizontal = ctx.createLinearGradient(area.left, 0, area.right, 0);
+          gradienteHorizontal.addColorStop(0, '#25a683');
+          gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
+          gradienteHorizontal.addColorStop(0.85, '#25a683');
+
+          ctx.fillStyle = gradienteHorizontal;
+          ctx.fillRect(area.left, yTopo, area.right - area.left, yBase - yTopo);
+
+          ctx.beginPath();
+          ctx.ellipse(
+            (area.left + area.right) / 2,
+            yTopo,
+            (area.right - area.left) / 2,
+            14,
+            0,
+            0,
+            Math.PI * 2
+          );
+
+          const gradienteEscuro = ctx.createLinearGradient(area.left, 0, area.right, 0);
+          gradienteEscuro.addColorStop(0, '#1d8066');
+          gradienteEscuro.addColorStop(0.33, '#18a47d');
+          gradienteEscuro.addColorStop(0.85, '#1d8066');
+
+          ctx.fillStyle = gradienteEscuro;
+          ctx.fill();
+
+          ctx.restore();
+        }
+      }]
     });
 
 
@@ -571,33 +569,34 @@
 
 
 
-async function gerarResposta() { // assincrona pra pegar junto com os processos e não dar ruim se é que me entende...
+
+
+    async function gerarResposta() { // assincrona pra pegar junto com os processos e não dar ruim se é que me entende...
     try {
         console.log("Gerando análise detalhada...");
-        
         const response = await fetch('/analisar-processos');
-        
         if (!response.ok) {
             throw new Error(`Erro: ${response.status}`);
         }
-
         const data = await response.json();
-        console.log("📨 Análise recebida:", data);
-        
+        console.log("Análise recebida:", data);
         if (data.success) {
             const mensagem = `${data.analise}`;
             console.log(mensagem);
+
+            try {
+                retornoJson = data.analise
+                console.log(retornoJson)
+            } catch {
+                console.log("Erro ao converter para JSON")
+            }
+
         } else {
             alert(`Erro: ${data.message || data.error}`);
         }
-        
     } catch (error) {
         alert('Erro ao gerar análise: ' + error.message);
     }
 }
-
-
-
-
 
 </script>

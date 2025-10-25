@@ -3,7 +3,7 @@ var database = require("../database/config")
 function autenticar(email, senha) {
     console.log("ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ", email, senha)
     var instrucaoSql = `
-        SELECT idusuario, nome, email FROM usuario WHERE email = '${email}' AND senha = '${senha}';
+        SELECT idusuario, nome, email FROM Usuario WHERE email = '${email}' AND senha = '${senha}';
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
@@ -29,6 +29,27 @@ function validarCodigo(codigoAtivacao) {
 }
 
 
+function validarEmailRecuperar(emailRecuperar) {
+
+    var instrucaoSql = `SELECT *from Usuario where email = '${emailRecuperar}' LIMIT 1`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+function inserirRecuperacao(email, token) {
+    console.log("Inserindo token de recuperação para:", email, token);
+    
+    var instrucaoSql = `
+        UPDATE Usuario 
+        SET tokenRecuperacao = '${token}'
+        WHERE email = '${email}';
+    `;
+    console.log("Executando SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
 function puxarProcesso() {
     var instrucaoSql = `SELECT * FROM Processo ORDER BY dtregistro DESC LIMIT 100;`;  
     
@@ -42,5 +63,7 @@ module.exports = {
     autenticar,
     cadastrar,
     validarCodigo,
-    puxarProcesso
+    puxarProcesso,
+    validarEmailRecuperar,
+    inserirRecuperacao
 };

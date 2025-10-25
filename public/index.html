@@ -40,7 +40,7 @@
                     <li class="nav-item"><a class="nav-link" href="#valores">Valores</a></li>
                     <li class="nav-item"><a class="nav-link" href="#servicos">Solução</a></li>
                     <li class="nav-item"><a class="nav-link" href="./login.html">Login</a></li>
-                    <li class="nav-item"><a class="btn btn-cadastrar" href="./cadastro.html">Cadastrar</a></li>
+                    <li class="nav-item"><a class="btn btn-cadastrar" href="./cadastro.html">Cadastre-se</a></li>
                 </ul>
             </div>
         </div>
@@ -210,19 +210,35 @@
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- FIQUE INFORMADO -->
-    <section class="newsletter text-center">
-        <div class="container">
-            <h2 class="newsletter-title">Fique Informado</h2>
-            <form
-                class="newsletter-form d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-4">
-                <input type="text" class="form-control" placeholder="Nome" required>
-                <input type="email" class="form-control" placeholder="Email" required>
-                <button type="submit" class="btn btn-cadastrar-newsletter">Cadastrar</button>
-            </form>
+        <div class="modal fade" id="modalSucesso" tabindex="-1" aria-labelledby="modalSucessoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content text-center p-4">
+                    <div class="modal-body">
+                        <i class="bi bi-check-circle-fill text-success fs-1 mb-3"></i>
+                        <h5 id="modalSucessoLabel" class="mb-3">Mensagem enviada com sucesso!</h5>
+                        <p class="text-muted mb-4">Entraremos em contato o mais breve possível.</p>
+                        <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Modal de erro -->
+        <div class="modal fade" id="modalErro" tabindex="-1" aria-labelledby="modalErroLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content text-center p-4">
+                    <div class="modal-body">
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-1 mb-3"></i>
+                        <h5 id="modalErroLabel" class="mb-3">Não foi possível enviar o email!</h5>
+                        <p class="text-muted mb-4">Verifique as informações e tente novamente.</p>
+                        <button type="button" class="btn btn-danger px-4" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
 
         <!-- Rodapé informativo -->
         <div class="newsletter-footer">
@@ -237,7 +253,7 @@
 
 
     <script>
-        document.getElementById('contato-form').addEventListener('submit', function (event) {
+            document.getElementById('contato-form').addEventListener('submit', function (event) {
             event.preventDefault();
 
             const representante = document.getElementById('representante').value;
@@ -246,7 +262,7 @@
             const telefone = document.getElementById('telefone').value;
             const mensagem = document.getElementById('mensagem').value;
 
-            fetch('http://localhost:3333/usuarios/enviar-email', {
+            fetch('/usuarios/enviar-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -268,14 +284,52 @@
                     return response.json();
                 })
                 .then(data => {
-                    alert('Mensagem enviada com sucesso!');
+                    new bootstrap.Modal(document.getElementById('modalSucesso')).show();
                     console.log(data);
                 })
                 .catch(error => {
-                    alert('Erro ao enviar a mensagem!');
+                    new bootstrap.Modal(document.getElementById('modalErro')).show();
                     console.error(error);
                 });
         });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const nomeUsuario = sessionStorage.NOME_USUARIO;
+            const nav = document.querySelector(".navbar-nav");
+
+            // Se estiver logado:
+            if (nomeUsuario) {
+                const btnLogin = document.querySelector('a[href="./login.html"]');
+                const btnCadastrar = document.querySelector('a[href="./cadastro.html"]');
+                if (btnLogin) btnLogin.remove();
+                if (btnCadastrar) btnCadastrar.remove();
+
+                // Cria o ícone do perfil
+                const li = document.createElement("li");
+                li.classList.add("nav-item", "dropdown");
+
+                li.innerHTML = `
+        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="perfilDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-person-circle fs-4"></i>
+          <span class="ms-2">${nomeUsuario.split(" ")[0]}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
+          <li><a class="dropdown-item" href="./perfil.html">Meu perfil</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="#" id="logout">Sair</a></li>
+        </ul>
+      `;
+
+                nav.appendChild(li);
+
+                document.getElementById("logout").addEventListener("click", function () {
+                    sessionStorage.clear();
+                    window.location.reload();
+                });
+            }
+        });
+
     </script>
 </body>
 

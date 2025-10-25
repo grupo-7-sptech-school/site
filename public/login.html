@@ -39,6 +39,12 @@
             <button type="button" class="btn-close" aria-label="Close" onclick="fecharMsgErro()"></button>
           </div>
 
+          <div id="msgSucesso" class="alert alert-success alert-dismissible" role="alert"
+            style="position: fixed; top: 20px; right: 20px; min-width: 250px; display: none; opacity: 0; transition: opacity 0.5s ease-in-out;">
+            <strong>Sucesso!</strong> Cadastro realizado com sucesso.
+            <button type="button" class="btn-close" aria-label="Close" onclick="fecharMsgSucesso()"></button>
+          </div>
+
 
           <form onsubmit="return entrar();">
             <div class="mb-3">
@@ -115,6 +121,27 @@
       msg.classList.remove('show');
     }
 
+    function mostrarMsgSucesso(texto) {
+      const msg = document.getElementById('msgSucesso');
+      msg.innerHTML = `<strong>Sucesso!</strong> ${texto} <button type="button" class="btn-close" aria-label="Close" onclick="fecharMsgSucesso()"></button>`;
+      msg.style.display = 'block';
+      setTimeout(() => {
+        msg.style.opacity = '1';
+      }, 10);
+
+      setTimeout(() => {
+        fecharMsgSucesso();
+      }, 5000);
+    }
+
+    function fecharMsgSucesso() {
+      const msg = document.getElementById('msgSucesso');
+      msg.style.opacity = '0';
+      setTimeout(() => {
+        msg.style.display = 'none';
+      }, 500);
+    }
+
 
     function entrar() {
       var emailVar = document.getElementById("email_input").value;
@@ -142,7 +169,7 @@
               sessionStorage.NOME_USUARIO = json.nome;
               sessionStorage.ID_USUARIO = json.idusuario;
               setTimeout(function () {
-                window.location = "../dashboard/cards.html";
+                window.location = "../dashboard/dashboard-alto.html";
               }, 1000);
             });
           } else {

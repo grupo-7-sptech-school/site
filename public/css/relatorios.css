@@ -18,6 +18,7 @@
   gap: 15px;
   flex-wrap: wrap;
   margin: 25px 0 35px 0;
+  padding-left: 3vw;
 }
 
 .filtro-btn {

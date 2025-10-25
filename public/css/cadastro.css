@@ -23,7 +23,7 @@ body {
 }
 
 .form-col {
-  height: 100vh;
+  height: 95vh;
   box-sizing: border-box;
   padding: 1.5rem 2rem;
   display: flex;
@@ -69,8 +69,8 @@ body {
   border-left: none;
   border-right: none;
   height: auto;
-  padding: 0.2rem 0.5rem;
-  font-size: 0.9rem;
+  padding: 0.7rem 0.5rem;
+  font-size: 0.7rem;
 }
 
 .input-group .form-control:focus {
@@ -98,6 +98,7 @@ body {
   margin-right: 0.5rem;
   color: #18B187;
   transition: transform 0.2s;
+  
 }
 
 .back-icon:hover i {
@@ -115,6 +116,21 @@ body {
   border: 1px solid #f5c6cb;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  min-width: 250px;
+  z-index: 9999;
+}
+
+#msgSucesso {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 128, 0, 0.2);
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
   position: fixed;
