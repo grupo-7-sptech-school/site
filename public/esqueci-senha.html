@@ -140,8 +140,6 @@
 
             function MandarParaEmail (emailVar, tokenVar) {
 
-              alert("ENTRANDO AQ")
-
             fetch('/usuarios/enviarRecuperacao', {
                 method: 'POST',
                 headers: {
@@ -165,7 +163,7 @@
                     console.log(data);
 
                     setTimeout(function() {
-                        window.location.href = 'recuperarCodigo.html?email=' + encodeURIComponent(emailVar);
+                        window.location.href = 'recuperarCodigo.html ? email=' + encodeURIComponent(emailVar);
                     }, 3000);
                 })
                 .catch(error => {

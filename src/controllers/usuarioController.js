@@ -34,6 +34,7 @@ function autenticar(req, res) {
 
                         res.json({
                             idusuario: resultadoAutenticar[0].idusuario,
+                            fkEmpresa: resultadoAutenticar[0].fkEmpresa,
                             email: resultadoAutenticar[0].email,
                             nome: resultadoAutenticar[0].nome,
                             senha: resultadoAutenticar[0].senha
@@ -150,6 +151,27 @@ function inserirRecuperacao(req, res) {
 }
 
 
+function cadastrarMaquinaController(req, res) {
+
+    var identificador = req.body.identificador;
+    var hostname = req.body.hostNumerico;
+    var mac = req.body.mac;
+    var ip = req.body.ip;
+    var fkEmpresa = req.body.fkEmpresa
+
+    if (!identificador || !hostname || !mac || !ip) {
+        res.status(400).send("Dados não definidos");
+    } else {
+        usuarioModel.cadastrarMaquina(identificador, hostname, mac, ip, fkEmpresa)
+            .then(resultado => res.json(resultado))
+            .catch(erro => {
+                console.log("Erro ao inserir token:", erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
+
 
 function puxarProcesso(req, res) {
     usuarioModel.puxarProcesso()
@@ -169,6 +191,24 @@ function puxarProcesso(req, res) {
         });
 }
 
+
+function puxarAlerta(req, res) {
+    usuarioModel.puxarAlerta()
+        .then(resultado => {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).send("Nenhum alerta encontrado!");
+            }
+        })
+        .catch(erro => {
+            console.error("Erro:", erro);
+            res.status(500).json({
+                message: "Erro ao buscar alerta",
+                erro: erro.sqlMessage || erro.message
+            });
+        });
+}
 
 
 function sendEmail(req, res) {
@@ -225,5 +265,7 @@ module.exports = {
     puxarProcesso,
     validarEmailRecuperar,
     inserirRecuperacao,
-    enviarRecuperacao
+    enviarRecuperacao,
+    puxarAlerta,
+    cadastrarMaquinaController
 }

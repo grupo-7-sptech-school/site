@@ -24,6 +24,10 @@ router.get("/puxarProcesso", function (req, res) {
     usuarioController.puxarProcesso(req, res);
 });
 
+router.get("/puxarAlerta", function (req, res) {
+    usuarioController.puxarAlerta(req, res);
+});
+
 router.post("/validarEmailRecuperar", function (req, res) {
     usuarioController.validarEmailRecuperar(req, res);
 });
@@ -42,5 +46,10 @@ router.post("/enviarRecuperacao", async function (req, res) {
         console.error(erro);
         res.status(500).json({ message: "Erro ao enviar e-mail", error: erro.message });
     }});
+
+
+router.post("/cadastrarMaquina", function (req, res) {
+    usuarioController.cadastrarMaquinaController(req, res);
+});
 
 module.exports = router;

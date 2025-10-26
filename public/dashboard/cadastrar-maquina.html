@@ -1,86 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Máquina</title>
     <link rel="stylesheet" href="./../css/cabecalho2.css">
     <link rel="stylesheet" href="./../css/cadastrar-maquina.css">
-    
+
 </head>
+
 <body>
-       <!-- Cabeçalho -->
-        <div class="total-dash">
-    <div class="dashboard-bg">
-        <div class="dashboard-sidebar">
-            <div class="dashboard-logo"></div>
-            <div class="dashboard-sidebar-btns">
-                <a href="alertas.html"class="dashboard-sidebar-btn">
-                    <div class="icon-alert"></div>
-                    <h3>Alertas</h3>
-                </a>
-                <a href="conta.html" class="dashboard-sidebar-btn">
-                    <div class="icon-user"></div>
-                    <h3>Conta</h3>
-                </a>
-                <a href="dashboard.html" class="dashboard-sidebar-btn">
-                    <div class="icon-dashboard"></div>
-                    <h3>Painel de <br> Controle</h3>
-                </a>
-                <a href="relatorios.html" class="dashboard-sidebar-btn">
-                    <div class="icon-relatory"></div>
-                    <h3>Relatórios</h3>
-                </a>
-                <a href="suporte.html" class="dashboard-sidebar-btn">
-                    <div class="icon-support"></div>
-                    <h3>Suporte</h3>
+    <!-- Cabeçalho -->
+    <div class="total-dash">
+        <div class="dashboard-bg">
+            <div class="dashboard-sidebar">
+                <div class="dashboard-logo"></div>
+                <div class="dashboard-sidebar-btns">
+                    <a href="alertas.html" class="dashboard-sidebar-btn">
+                        <div class="icon-alert"></div>
+                        <h3>Alertas</h3>
+                    </a>
+                    <a href="conta.html" class="dashboard-sidebar-btn">
+                        <div class="icon-user"></div>
+                        <h3>Conta</h3>
+                    </a>
+                    <a href="dashboard.html" class="dashboard-sidebar-btn">
+                        <div class="icon-dashboard"></div>
+                        <h3>Painel de <br> Controle</h3>
+                    </a>
+                    <a href="relatorios.html" class="dashboard-sidebar-btn">
+                        <div class="icon-relatory"></div>
+                        <h3>Relatórios</h3>
+                    </a>
+                    <a href="suporte.html" class="dashboard-sidebar-btn">
+                        <div class="icon-support"></div>
+                        <h3>Suporte</h3>
+                    </a>
+                </div>
+                <a href="index.html" class="dashboard-logout">
+                    <div class="icon-logout"></div>
+                    <h3>Logout</h3>
                 </a>
             </div>
-            <a href="index.html" class="dashboard-logout">
-                <div class="icon-logout"></div>
-                <h3>Logout</h3>
-            </a>
-       </div>
-        <!-- Cabeçalho topo -->
-        <div class="dashboard-low-right-side">
-        <div class="dashboard-topbar">
-            <a href="dashboard-alto.html" class="btn-voltar">
-                Painel de controle - Servidor
-            </a>
-            <div class="btns-topbar">            
-            <a href="relatorios.html" class="btn-gerar-relatorio">
-                Gerar relatorio
-            </a>
-            <button class="btn-notificacao" >
-                <div class="icon-notificacao"></div>
-            </button>
-            <a href="conta.html" class="btn-conta">
-                <div class="icon-user2"></div>
-            </a>
-            </div>
-        </div>
-        <!-- Fim Cabeçalho -->
+            <!-- Cabeçalho topo -->
+            <div class="dashboard-low-right-side">
+                <div class="dashboard-topbar">
+                    <a href="dashboard-alto.html" class="btn-voltar">
+                        Painel de controle - Servidor
+                    </a>
+                    <div class="btns-topbar">
+                        <a href="relatorios.html" class="btn-gerar-relatorio">
+                            Gerar relatorio
+                        </a>
+                        <button class="btn-notificacao">
+                            <div class="icon-notificacao"></div>
+                        </button>
+                        <a href="conta.html" class="btn-conta">
+                            <div class="icon-user2"></div>
+                        </a>
+                    </div>
+                </div>
+                <!-- Fim Cabeçalho -->
 
-        <div class="box-fundo-dash">
-            <div class="box-fundo">
-            <div class="box-cadastrar">
-                <h2>CADASTRO DE MÁQUINA</h2>
+                <div class="box-fundo-dash">
+                    <div class="box-fundo">
+                        <div class="box-cadastrar">
+                            <h2>CADASTRO DE MÁQUINA</h2>
 
-                <form class="form-maquina">
-                <div class="campo-maquina"></div>
-                <label for="nome-maquina">Nome</label>
-                <input type="text" id="nome-maquina" name="nome" placeholder="PROD-WEB-01">
-
-                <div class="campo-maquina"></div>
-                <label for="mac-maquina">Mac Adress</label>
-                <input type="text" id="mac-maquina" placeholder="001A2B3C4D5E">
+                            <form class="form-maquina">
+                                <div class="campo-maquina"></div>
+                                <label for="nome-maquina">Nome</label>
+                                <input type="text" id="nome-maquina" name="nome" placeholder="PROD-WEB-01">
 
                                 <div class="campo-maquina"></div>
-                <label for="ip-maquina">Endereço de IP</label>
-                <input type="text" id="ip-maquina" placeholder="192.168.1.10">
-            
-                <button type="submit" class="btd-cadastrar">Cadastrar</button>
-                </form></div></div>
-                 </div></div></div></div>
+                                <label for="nome-maquina">HostName</label>
+                                <input type="text" id="host-maquina" placeholder="SERVER-001">
+
+                                <div class="campo-maquina"></div>
+                                <label for="mac-maquina">Mac Adress</label>
+                                <input type="text" id="mac-maquina" placeholder="001A2B3C4D5E">
+
+                                <div class="campo-maquina"></div>
+                                <label for="ip-maquina">Endereço de IP</label>
+                                <input type="text" id="ip-maquina" placeholder="192.168.1.10">
+
+                                <button onclick="cadastrarMaquina()" type="submit"
+                                    class="btd-cadastrar">Cadastrar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+
+        function javaStringHashCodeNonNegative(s) {
+            let h = 0;
+            for (let i = 0; i < s.length; i++) {
+                h = Math.imul(31, h) + s.charCodeAt(i);
+                h |= 0;
+            }
+            return h & 0x7FFFFFFF; // equivalente ao & 0x7FFFFFFF do Java
+        }
+
+        async function cadastrarMaquina() {
+            event.preventDefault();
+
+            const nome = document.getElementById('nome-maquina').value.trim();
+            const hostname = document.getElementById('host-maquina').value.trim();
+            const mac = document.getElementById('mac-maquina').value.trim();
+            const ip = document.getElementById('ip-maquina').value.trim();
+
+            if (!nome || !hostname || !mac || !ip) {
+                alert('Preencha todos os campos!');
+                return;
+            }
+
+            const hostNumerico = javaStringHashCodeNonNegative(hostname);
+
+            const fkEmpresa = sessionStorage.getItem("FK_EMPRESA");
+
+            try {
+                const response = await fetch(`/usuarios/cadastrarMaquina`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ identificador: nome, hostNumerico, mac, ip, fkEmpresa}),
+                });
+
+                if (!response.ok) throw new Error('Erro ao cadastrar máquina');
+
+                const result = await response.json();
+            } catch (error) {
+                console.error(error);
+                alert('Erro ao cadastrar máquina: ' + error.message);
+            }
+        }
+
+    </script>
+
 </body>
+
 </html>
