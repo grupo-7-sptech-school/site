@@ -29,7 +29,7 @@
 
 <!-- <body onload=" atualizarFeed()"> -->
 
-<body>
+<body onload="filtrarRelatorio()">
     <div class="dashboard-bg">
         <div class="dashboard-sidebar">
             <div class="dashboard-logo"></div>
@@ -64,11 +64,11 @@
             <div class="dashboard-topbar">
                 <h2>Painel de controle - Servidor</h2>
                 <div class="btns-topbar">
-                    <a onclick="gerarResposta()" class="btn-gerar-relatorio">
+                    <a id="btnGerarRelatorio" onclick="gerarResposta()" class="btn-gerar-relatorio">
                         Gerar relatorio
                     </a>
                     <button class="btn-notificacao">
-                        <div class="icon-notificacao"></div>
+                        <div id="btn-notificacao" class="icon-notificacao"></div>
                     </button>
                     <a href="conta.html" class="btn-conta">
                         
@@ -335,7 +335,6 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
 
     let proximaAtualizacao;
 
-    window.onload = exibirAquariosDoUsuario();
 
     function exibirAquariosDoUsuario() {
         var aquarios = JSON.parse(sessionStorage.AQUARIOS);
@@ -567,6 +566,17 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
 
     }
 
+
+    function filtrarRelatorio() {
+    const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
+    btnGerarRelatorio = document.getElementById("btnGerarRelatorio")
+        console.log("TESTE1")
+
+    if(fktipoUsuario == 1) {
+        console.log("TESTE")
+        btnGerarRelatorio.style.display = 'none'
+    }
+    }
 
 
 

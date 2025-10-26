@@ -34,7 +34,7 @@
 
 <!-- <body onload=" atualizarFeed()"> -->
 
-<body>
+<body onload="filtrarCadastroMaquina()">
     <!-- Cabeçalho -->
     <div class="dashboard-bg">
         <div class="dashboard-sidebar">
@@ -73,7 +73,7 @@
                     Painel de controle - Servidor
                 </a>
                 <div class="btns-topbar">
-                    <a href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
+                    <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
                         Cadastrar Máquina
                     </a>
                     <a href="relatorios.html" class="btn-gerar-relatorio">
@@ -367,6 +367,16 @@
     });
 
 
+    function filtrarCadastroMaquina() {
+    const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
+    btnCadsatrarMaquina = document.getElementById("btnCadsatrarMaquina")
+
+    if(fktipoUsuario == 1) {
+        btnCadsatrarMaquina.style.display = 'none'
+    }
+    }
+
+
 
     async function carregarAlertas() {
         const alertasExibir = document.getElementById('alertasContainer');
@@ -374,8 +384,11 @@
 
         try {
             const response = await fetch(`/usuarios/puxarAlerta`, { cache: 'no-store' });
-            if (!response.ok) throw new Error('Erro ao buscar alertas');
 
+            if (!response.ok) {
+                throw new Error('Erro ao buscar alertas');
+            }
+            
             const alertas = await response.json();
 
             if (alertas.length == 0) {

@@ -37,7 +37,8 @@ function autenticar(req, res) {
                             fkEmpresa: resultadoAutenticar[0].fkEmpresa,
                             email: resultadoAutenticar[0].email,
                             nome: resultadoAutenticar[0].nome,
-                            senha: resultadoAutenticar[0].senha
+                            senha: resultadoAutenticar[0].senha,
+                            fktipoUsuario: resultadoAutenticar[0].fktipoUsuario
                         });
 
                     } else if (resultadoAutenticar.length == 0) {
