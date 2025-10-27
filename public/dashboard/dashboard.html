@@ -67,8 +67,8 @@
                     <a id="btnGerarRelatorio" onclick="gerarResposta()" class="btn-gerar-relatorio">
                         Gerar relatorio
                     </a>
-                    <button class="btn-notificacao">
-                        <div id="btn-notificacao" class="icon-notificacao"></div>
+                    <button class="btn-notificacao" >
+                        <div class="icon-notificacao" ></div>
                     </button>
                     <a href="conta.html" class="btn-conta">
                         
@@ -583,17 +583,19 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
 
     async function gerarResposta() { // assincrona pra pegar junto com os processos e não dar ruim se é que me entende...
     try {
+
         console.log("Gerando análise detalhada...");
         const response = await fetch('/analisar-processos');
+
         if (!response.ok) {
             throw new Error(`Erro: ${response.status}`);
         }
         const data = await response.json();
         console.log("Análise recebida:", data);
+
         if (data.success) {
             const mensagem = `${data.analise}`;
             console.log(mensagem);
-
             try {
                 retornoJson = data.analise
                 console.log(retornoJson)
