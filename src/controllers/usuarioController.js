@@ -172,6 +172,26 @@ function cadastrarMaquinaController(req, res) {
     }
 }
 
+
+function cadastrarComponentes(req, res) {
+
+    var fkMaquina = req.body.hostNumerico
+
+    if (!fkMaquina) {
+        res.status(400).send("Dados não definidos");
+    } else {
+        usuarioModel.cadastrarComponentes(fkMaquina)
+            .then(resultado => res.json(resultado))
+            .catch(erro => {
+                console.log("Erro ao inserir token:", erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+
+}
+
+
+
 function puxarMaquinas(req, res) {
     usuarioModel.puxarMaquinas()
         .then(resultado => {
@@ -287,5 +307,6 @@ module.exports = {
     enviarRecuperacao,
     puxarAlerta,
     cadastrarMaquinaController,
-    puxarMaquinas
+    puxarMaquinas,
+    cadastrarComponentes
 }

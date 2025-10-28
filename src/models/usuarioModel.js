@@ -130,6 +130,20 @@ function cadastrarMaquina(identificador, hostname, mac, ip, fkEmpresa) {
     return database.executar(instrucaoSql);
 }
 
+function cadastrarComponentes(fkMaquina) {
+    var instrucaoSql = `
+        INSERT INTO Componente (nome, quantidade, unidadeDeMedida, fkMaquina)
+        VALUES 
+        ('CPU', 1, '%', ${fkMaquina}),
+        ('RAM', 1, '%', ${fkMaquina}),
+        ('DISCO', 1, '%', ${fkMaquina});
+        `;
+
+    console.log("Executando SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
 module.exports = {
     autenticar,
     cadastrar,
@@ -139,5 +153,6 @@ module.exports = {
     inserirRecuperacao,
     puxarAlerta,
     cadastrarMaquina,
-    puxarMaquinas
+    puxarMaquinas,
+    cadastrarComponentes
 };

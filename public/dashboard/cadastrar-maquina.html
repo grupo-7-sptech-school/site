@@ -72,7 +72,7 @@
                         <div class="box-cadastrar">
                             <h2>CADASTRO DE MÁQUINA</h2>
 
-                            <form class="form-maquina">
+                            <form class="form-maquina" onsubmit="cadastrarMaquina(event)">
                                 <div class="campo-maquina"></div>
                                 <label for="nome-maquina">Nome</label>
                                 <input type="text" id="nome-maquina" name="nome" placeholder="PROD-WEB-01">
@@ -89,7 +89,7 @@
                                 <label for="ip-maquina">Endereço de IP</label>
                                 <input type="text" id="ip-maquina" placeholder="192.168.1.10">
 
-                                <button onclick="cadastrarMaquina()" type="submit"
+                                <button type="submit"
                                     class="btd-cadastrar">Cadastrar</button>
                             </form>
                         </div>
@@ -112,37 +112,54 @@
             return h & 0x7FFFFFFF; // equivalente ao & 0x7FFFFFFF do Java
         }
 
-        async function cadastrarMaquina() {
-            event.preventDefault();
+        async function cadastrarMaquina(event) {
+        event.preventDefault();
 
-            const nome = document.getElementById('nome-maquina').value.trim();
-            const hostname = document.getElementById('host-maquina').value.trim();
-            const mac = document.getElementById('mac-maquina').value.trim();
-            const ip = document.getElementById('ip-maquina').value.trim();
 
-            if (!nome || !hostname || !mac || !ip) {
-                alert('Preencha todos os campos!');
-                return;
-            }
+        const nome = document.getElementById('nome-maquina').value.trim();
+        const hostname = document.getElementById('host-maquina').value.trim();
+        const mac = document.getElementById('mac-maquina').value.trim();
+        const ip = document.getElementById('ip-maquina').value.trim();
 
-            const hostNumerico = javaStringHashCodeNonNegative(hostname);
+        if (!nome || !hostname || !mac || !ip) {
+            alert('Preencha todos os campos!');
+            return;
+        }
 
-            const fkEmpresa = sessionStorage.getItem("FK_EMPRESA");
+        const hostNumerico = javaStringHashCodeNonNegative(hostname);
+        const fkEmpresa = sessionStorage.getItem("FK_EMPRESA");
 
-            try {
-                const response = await fetch(`/usuarios/cadastrarMaquina`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ identificador: nome, hostNumerico, mac, ip, fkEmpresa}),
-                });
+        try {
+            const response = await fetch(`/usuarios/cadastrarMaquina`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ identificador: nome, hostNumerico, mac, ip, fkEmpresa }),
+            });
 
-                if (!response.ok) throw new Error('Erro ao cadastrar máquina');
+            if (!response.ok) throw new Error('Erro ao cadastrar máquina');
 
-                const result = await response.json();
-            } catch (error) {
-                console.error(error);
-                alert('Erro ao cadastrar máquina: ' + error.message);
-            }
+            await cadastrarComponente(hostNumerico);
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao cadastrar máquina: ' + error.message);
+        }
+    }
+
+
+
+
+        async function cadastrarComponente(hostNumerico) {
+        try {
+            const response = await fetch(`/usuarios/cadastrarComponentes`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ hostNumerico }),
+            });
+            if (!response.ok) throw new Error('Erro ao cadastrar Componente');
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao cadastrar componente: ' + error.message);
+        }
         }
 
     </script>
