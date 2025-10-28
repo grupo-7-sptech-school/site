@@ -11,10 +11,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="./../css/cabecalho3.css">
     <link rel="stylesheet" href="./../css/dash-alto.css">
-        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="./../css/dashboards.css">
 
-
-        <!-- Script -->
+    <!-- Script -->
     <script src="../js/sessao.js"></script>
     <script src="./../js/alerta.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -35,8 +34,9 @@
 </head>
 
 <!-- <body onload=" atualizarFeed()"> -->
+
 <body onload="filtrarCadastroMaquina()">
-  <!-- Cabeçalho -->
+    <!-- Cabeçalho -->
     <div class="total-dash">
         <div class="dashboard-bg">
             <div class="dashboard-sidebar">
@@ -75,61 +75,62 @@
                         Painel de controle - Servidor
                     </a>
                     <div class="btns-topbar">
-                    <!-- <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
+                        <!-- <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
                         Cadastrar Máquina
                     </a> -->
-                    <a href="relatorios.html" class="btn-gerar-relatorio">
-                        Gerar relatorio
-                    </a>
+                        <a href="relatorios.html" class="btn-gerar-relatorio">
+                            Gerar relatorio
+                        </a>
                         <div class="btn-padrao">
-                                <button class="btn-notificacao">
-                                </button>
-                                <a href="conta.html" class="btn-conta">
-                                </a>
+                            <button class="btn-notificacao">
+                            </button>
+                            <a href="conta.html" class="btn-conta">
+                            </a>
                         </div>
                     </div>
                 </div>
-                <!-- Fim Cabeçalho -->   
-                  <div class="box-dashboard">
+                <!-- Fim Cabeçalho -->
+                <div class="box-dashboard">
 
-                <div class="box-notificacao">
+                    <div class="box-notificacao">
 
-                    <!-- Topo  quadro de monitoramento -->
-                    <div class="container-maquinas">
-                        <div class="header-maquinas">
-                            <div class="box-id">
-                                <p>HOSTNAME</p>
+                        <!-- Topo  quadro de monitoramento -->
+                        <div class="container-maquinas">
+                            <div class="header-maquinas">
+                                <div class="box-id">
+                                    <p>HOSTNAME</p>
+                                </div>
+                                <div class="box-nome">
+                                    <p>IDENTIFICADOR</p>
+                                </div>
+                                <div class="box-uptime">
+                                    <p>IP</p>
+                                </div>
+                                <div class="box-uptime">
+                                    <p>DATA DE CRIAÇÃO</p>
+                                </div>
+                                <div class="box-ocorrencia">
+                                    <p>ULTIMA OCORRÊNCIA</p>
+                                </div>
+                                <div class="box-rack">
+                                    <p>USO DE CPU</p>
+                                </div>
+                                <div class="box-rack">
+                                    <p>USO DE RAM</p>
+                                </div>
+                                <div class="box-status">
+                                    <p>STATUS</p>
+                                </div>
                             </div>
-                            <div class="box-nome">
-                                <p>IDENTIFICADOR</p>
-                            </div>
-                            <div class="box-uptime">
-                                <p>IP</p>
-                            </div>
-                            <div class="box-uptime">
-                                <p>DATA DE CRIAÇÃO</p>
-                            </div>
-                            <div class="box-ocorrencia">
-                                <p>ULTIMA OCORRÊNCIA</p>
-                            </div>
-                            <div class="box-rack">
-                                <p>USO DE CPU</p>
-                            </div>
-                            <div class="box-rack">
-                                <p>USO DE RAM</p>
-                            </div>
-                            <div class="box-status">
-                                <p>STATUS</p>
-                            </div>
+
+                            <!-- as linhas virão aqui -->
+                            <div id="lista-maquinas"></div>
                         </div>
-
-                        <!-- as linhas virão aqui -->
-                        <div id="lista-maquinas"></div> 
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-    </div></div>
     Cabeçalho
     <div class="dashboard-bg">
         <div class="dashboard-sidebar">
@@ -177,182 +178,133 @@
                         <div class="icon-user2"></div>
                     </a>
 
-                </div> 
-            </div> 
-             Fim Cabeçalho 
-           
-                     </div>
-
-                </div>
-            </div>  
-
-            <div class="modal fade" id="modalNotificacoes" tabindex="-1" aria-labelledby="modalNotificacoesLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content border-success">
-                        <div class="modal-header bg-success text-white">
-                            <h5 class="modal-title" id="modalNotificacoesLabel">Últimos Alertas</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                aria-label="Fechar"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div id="alertasContainer">
-                                <p class="text-center text-muted">Carregando alertas...</p>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-success"
-                                data-bs-dismiss="modal">Fechar</button>
-                        </div>
-                    </div>
                 </div>
             </div>
+            Fim Cabeçalho
 
         </div>
+
+    </div>
+    </div>
+    <div id="modalNotificacoes">
+        <div class="modal-content">
+            <div id="alertasContainer"></div>
+            <button id="btnFecharModal">Fechar</button>
+        </div>
+    </div>
 </body>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const btnNotificacao = document.querySelector('.btn-notificacao');
+    const modal = document.getElementById('modalNotificacoes');
+    const btnFecharModal = document.getElementById('btnFecharModal');
+    const alertasContainer = document.getElementById('alertasContainer');
+
+    // Função para abrir o modal
     btnNotificacao.addEventListener('click', () => {
-        const modal = new bootstrap.Modal(document.getElementById('modalNotificacoes'));
-        modal.show();
-        carregarAlertas()
+        modal.classList.add('active');
+        carregarAlertas();
     });
 
+    // Fechar o modal
+    btnFecharModal.addEventListener('click', () => modal.classList.remove('active'));
 
-    function filtrarCadastroMaquina() {
-        const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
-        btnCadsatrarMaquina = document.getElementById("btnCadsatrarMaquina")
+    // Fecha ao clicar fora da caixa
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
 
-        if (fktipoUsuario == 1) {
-            btnCadsatrarMaquina.style.display = 'none'
-        }
+    // Carregar alertas simulados
+    function carregarAlertas() {
+        alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
+
+        setTimeout(() => {
+            const alertas = [
+                { titulo: "Servidor 3 reiniciado", data: "25/10/2025 - 14:20", tipo: "info" },
+                { titulo: "Temperatura acima do limite", data: "25/10/2025 - 13:55", tipo: "warning" },
+                { titulo: "Falha na UPS detectada", data: "25/10/2025 - 12:40", tipo: "danger" },
+                { titulo: "Backup concluído com sucesso", data: "25/10/2025 - 11:10", tipo: "success" }
+            ];
+
+            alertasContainer.innerHTML = "";
+
+            alertas.forEach(alerta => {
+                const div = document.createElement('div');
+                div.classList.add('alerta-item', alerta.tipo);
+                div.innerHTML = `
+        <strong>${alerta.titulo}</strong><br>
+        <small>${alerta.data}</small>
+      `;
+                alertasContainer.appendChild(div);
+            });
+        }, 800);
+    }
+
+    function formatarData(dataISO) {
+        if (!dataISO) return "—";  // filtra para ver se tem o dado ou não
+        const data = new Date(dataISO);
+        if (isNaN(data)) return "—";  // filtra para ver se tem o dado ou não
+        return data.toLocaleString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
     }
 
 
 
-    async function carregarAlertas() {
-        const alertasExibir = document.getElementById('alertasContainer');
-        alertasExibir.innerHTML = `<p class="text-center text-muted">Carregando alertas...</p>`;
+
+
+    async function carregarMaquinas() {
+
+        var container = document.getElementById("lista-maquinas");
+        container.innerHTML = "<p class='text-muted text-center'>Carregando máquinas...</p>";
 
         try {
-            const response = await fetch(`/usuarios/puxarAlerta`, { cache: 'no-store' });
+            var respostaRecebida = await fetch("/usuarios/puxarMaquinas");
+            var maquinas = await respostaRecebida.json();
 
-            if (!response.ok) {
-                throw new Error('Erro ao buscar alertas');
-            }
-
-            const alertas = await response.json();
-
-            if (alertas.length == 0) {
-                alertasExibir.innerHTML = `<p class="text-center text-muted">Nenhum alerta recente.</p>`;
+            if (maquinas.length == 0) {
+                container.innerHTML = "<p class='text-center text-muted'>Nenhuma máquina cadastrada.</p>";
                 return;
             }
 
-            alertasExibir.innerHTML = '';
+            container.innerHTML = "";
 
-            for (let index = 0; index < alertas.length; index++) {
-                var alerta = alertas[index];
+            for (let index = 0; index < maquinas.length; index++) {
+                const m = maquinas[index];
 
-                var div = document.createElement('div');
+                var host = m["HostName"] || "—";
+                var ident = m["Identificador"] || "—";
+                var ip = m["IP"] || "—";
+                var dataCriacao = m["Data de Criação"];
+                var ultimaOcorrencia = m["Data do Último Alerta"];
 
-                var tipoClasse = 'alert-secondary';
+                var dataCriacaoFormatada = formatarData(dataCriacao);
+                var ultimaOcorrenciaFormatada = formatarData(ultimaOcorrencia);
 
-                if (alerta.estado == 'CRITICO') {
-                    tipoClasse = 'alert-danger';
-                } else if (alerta.estado == 'ALERTA') {
-                    tipoClasse = 'alert-warning';
-                } else if (alerta.estado == 'NORMAL') {
-                    tipoClasse = 'alert-success';
+                var cpuValor = m["CPU Atual (%)"] || 0;
+                var ramValor = m["RAM Atual (%)"] || 0;
+                var usoCPU = `${cpuValor}%`;
+                var usoRAM = `${ramValor}%`;
+
+                var estado = "";
+                if (cpuValor > 80 || ramValor > 90) {
+                    estado = "critico";
+                } else if ((cpuValor >= 70 && cpuValor <= 80) || (ramValor >= 80 && ramValor <= 90)) {
+                    estado = "alerta";
+                } else if (cpuValor < 10 && ramValor < 10) {
+                    estado = "ocioso";
+                } else {
+                    estado = "normal";
                 }
 
-                div.className = `alert ${tipoClasse} mb-2`;
-                div.role = 'alert';
+                const linhaBagulho = document.createElement("div"); // chama a div especifica para cada linha
+                linhaBagulho.classList.add("line-notifica");  // adiciona css a linha especifica 
 
-                div.innerHTML = `
-                <strong>Identificador da máquina: </strong> <small> ${alerta.identificador || 'Maquina desconhecida'} </small> <br>
-                <strong>${alerta.componenteNome || 'Componente desconhecido'}:
-                </strong> ${alerta.captura || 'Sem captura.'} <br>
-                <strong> Estado: </strong> <small> ${alerta.estado || 'DESCONHECIDO'} </small>
-                <br><small>${new Date(alerta.dtHora).toLocaleString()}</small>
-            `;
-                alertasExibir.appendChild(div);
-            }
-
-        } catch (error) {
-            console.error('Erro ao carregar alertas:', error);
-            alertasExibir.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
-        }
-    }
-
-
-
-function formatarData(dataISO) {
-  if (!dataISO) return "—";  // filtra para ver se tem o dado ou não
-  const data = new Date(dataISO);
-  if (isNaN(data)) return "—";  // filtra para ver se tem o dado ou não
-  return data.toLocaleString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-
-
-
-
-  async function carregarMaquinas() {
-
-  var container = document.getElementById("lista-maquinas");
-  container.innerHTML = "<p class='text-muted text-center'>Carregando máquinas...</p>";
-
-  try {
-    var respostaRecebida = await fetch("/usuarios/puxarMaquinas");
-    var maquinas = await respostaRecebida.json();
-
-    if (maquinas.length == 0) {
-      container.innerHTML = "<p class='text-center text-muted'>Nenhuma máquina cadastrada.</p>";
-      return;
-    }
-
-    container.innerHTML = "";
-
-    for (let index = 0; index < maquinas.length; index++) {
-      const m = maquinas[index];
-
-      var host = m["HostName"] || "—";
-      var ident = m["Identificador"] || "—";
-      var ip = m["IP"] || "—";
-      var dataCriacao = m["Data de Criação"];
-      var ultimaOcorrencia = m["Data do Último Alerta"];
-
-      var dataCriacaoFormatada = formatarData(dataCriacao);
-      var ultimaOcorrenciaFormatada = formatarData(ultimaOcorrencia);
-
-      var cpuValor = m["CPU Atual (%)"] || 0;
-      var ramValor = m["RAM Atual (%)"] || 0;
-      var usoCPU = `${cpuValor}%`;
-      var usoRAM = `${ramValor}%`;
-
-      var estado = "";
-      if (cpuValor > 80 || ramValor > 90) {
-        estado = "critico";
-      } else if ((cpuValor >= 70 && cpuValor <= 80) || (ramValor >= 80 && ramValor <= 90)) {
-        estado = "alerta";
-      } else if (cpuValor < 10 && ramValor < 10) {
-        estado = "ocioso";
-      } else {
-        estado = "normal";
-      }
-
-      const linhaBagulho = document.createElement("div"); // chama a div especifica para cada linha
-      linhaBagulho.classList.add("line-notifica");  // adiciona css a linha especifica 
-
-      linhaBagulho.innerHTML = `
+                linhaBagulho.innerHTML = `
         <div class="box-id"><p>${host}</p></div>
         <div class="box-nome"><p>${ident}</p></div>
         <div class="box-uptime"><p>${ip}</p></div>
@@ -363,20 +315,20 @@ function formatarData(dataISO) {
         <div class="box-status"><p class="status ${estado}">${estado.toUpperCase()}</p></div>
       `;
 
-      linhaBagulho.onclick = function() {
-      location.replace(`dashboard.html?id=${m["host"]}`);  // assim que ele clica ele vai para a a dash especifica do ID
-      }
+                linhaBagulho.onclick = function () {
+                    location.replace(`dashboard.html?id=${m["host"]}`);  // assim que ele clica ele vai para a a dash especifica do ID
+                }
 
-      container.appendChild(linhaBagulho);  // adiciona a nova linha de info no fim da página, com as coisas especificas e tal
+                container.appendChild(linhaBagulho);  // adiciona a nova linha de info no fim da página, com as coisas especificas e tal
+            }
+        } catch (e) {
+            console.error(e);
+            container.innerHTML = "<p style='color:red;'>Erro ao carregar máquinas.</p>";
+        }
     }
-  } catch (e) {
-    console.error(e);
-    container.innerHTML = "<p style='color:red;'>Erro ao carregar máquinas.</p>";
-  }
-}
 
 
-filtrarCadastroMaquina();
-carregarMaquinas();
+    filtrarCadastroMaquina();
+    carregarMaquinas();
 
 </script>

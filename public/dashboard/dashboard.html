@@ -89,7 +89,7 @@
                     <h3>Uptime do sistema</h3>
                     <div class="kpi1">
                         <h2 style="color: #18B187;" id="dias">652 dias e 14 horas
-                        </h2> 
+                        </h2>
                     </div>
                 </div>
                 <div class="kpi">
@@ -151,42 +151,93 @@
             </div>
         </div>
     </div>
+    <div id="modalNotificacoes">
+        <div class="modal-content">
+            <div id="alertasContainer"></div>
+            <button id="btnFecharModal">Fechar</button>
+        </div>
+    </div>
 </body>
 <script>
 
-   async function baixarPDF() {
-    try {
-        console.log("Iniciando download do PDF...");
+    const btnNotificacao = document.querySelector('.btn-notificacao');
+    const modal = document.getElementById('modalNotificacoes');
+    const btnFecharModal = document.getElementById('btnFecharModal');
+    const alertasContainer = document.getElementById('alertasContainer');
 
-        
-        alert("Gerando PDF... Isso pode levar alguns segundos.");
-        
-        const response = await fetch('/relatorio/pdf');
+    // Função para abrir o modal
+    btnNotificacao.addEventListener('click', () => {
+        modal.classList.add('active');
+        carregarAlertas();
+    });
 
-        if (!response.ok) {
-            throw new Error(`Erro: ${response.status}`);
-        }
+    // Fechar o modal
+    btnFecharModal.addEventListener('click', () => modal.classList.remove('active'));
 
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `relatorio_solardata_${new Date().toISOString().split('T')[0]}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+    // Fecha ao clicar fora da caixa
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
 
-        console.log('PDF baixado com sucesso!');
-        
-        // Feedback visual 
-        alert("PDF baixado com sucesso");
+    // Carregar alertas simulados
+    function carregarAlertas() {
+        alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
 
-    } catch (error) {
-        console.error('Erro ao baixar PDF:', error);
-        alert('Erro ao baixar PDF: ' + error.message);
+        setTimeout(() => {
+            const alertas = [
+                { titulo: "Servidor 3 reiniciado", data: "25/10/2025 - 14:20", tipo: "info" },
+                { titulo: "Temperatura acima do limite", data: "25/10/2025 - 13:55", tipo: "warning" },
+                { titulo: "Falha na UPS detectada", data: "25/10/2025 - 12:40", tipo: "danger" },
+                { titulo: "Backup concluído com sucesso", data: "25/10/2025 - 11:10", tipo: "success" }
+            ];
+
+            alertasContainer.innerHTML = "";
+
+            alertas.forEach(alerta => {
+                const div = document.createElement('div');
+                div.classList.add('alerta-item', alerta.tipo);
+                div.innerHTML = `
+        <strong>${alerta.titulo}</strong><br>
+        <small>${alerta.data}</small>
+      `;
+                alertasContainer.appendChild(div);
+            });
+        }, 800);
     }
-}
+
+    async function baixarPDF() {
+        try {
+            console.log("Iniciando download do PDF...");
+
+
+            alert("Gerando PDF... Isso pode levar alguns segundos.");
+
+            const response = await fetch('/relatorio/pdf');
+
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_solardata_${new Date().toISOString().split('T')[0]}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            console.log('PDF baixado com sucesso!');
+
+            // Feedback visual 
+            alert("PDF baixado com sucesso");
+
+        } catch (error) {
+            console.error('Erro ao baixar PDF:', error);
+            alert('Erro ao baixar PDF: ' + error.message);
+        }
+    }
 
     // Função para gerar labels dos ultimos 10 min
     function labelsTempoReal() {
@@ -259,7 +310,7 @@
                     },
                     ticks: {
                         callback: function (value) { return value + '%'; }
-                        
+
                     }
                 },
                 x: {
@@ -402,7 +453,7 @@
     new Chart(ctxDisco, {
         type: 'bar',
         data: {
-            labels: [usoDisco +'%'],
+            labels: [usoDisco + '%'],
             datasets: [{
                 data: [usoDisco],
                 backgroundColor: 'transparent'
@@ -414,9 +465,9 @@
             plugins: { legend: { display: false }, tooltip: { enabled: true } },
             scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } },
             animation: {
-    duration: 800,
-    easing: 'easeInOutQuad'
-  }
+                duration: 800,
+                easing: 'easeInOutQuad'
+            }
         },
         plugins: [{
             id: 'liquidoDisco',
@@ -477,7 +528,7 @@
 
 
 
-   // b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+    // b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 
     let proximaAtualizacao;
 
@@ -698,21 +749,21 @@
 
     }
 
-  function filtrarRelatorio() {
-    const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
-    btnGerarRelatorio = document.getElementById("btnGerarRelatorio");
-    const dropdownContainer = document.querySelector(".btn-relatorio-container");
+    function filtrarRelatorio() {
+        const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
+        btnGerarRelatorio = document.getElementById("btnGerarRelatorio");
+        const dropdownContainer = document.querySelector(".btn-relatorio-container");
 
-    console.log("TESTE1");
+        console.log("TESTE1");
 
-    if(fktipoUsuario == 1) {
-        console.log("TESTE");
-        btnGerarRelatorio.style.display = 'none';
-        if(dropdownContainer) {
-            dropdownContainer.style.display = 'none'; 
+        if (fktipoUsuario == 1) {
+            console.log("TESTE");
+            btnGerarRelatorio.style.display = 'none';
+            if (dropdownContainer) {
+                dropdownContainer.style.display = 'none';
+            }
         }
     }
-}
 
 
 
