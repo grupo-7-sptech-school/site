@@ -10,6 +10,7 @@
 
 
     <link rel="stylesheet" href="./../css/dashboards.css">
+    <link rel="stylesheet" href="./../css/cabecalho3.css">
     <script src="../js/sessao.js"></script>
     <script src="./../js/alerta.js"></script>
 
@@ -30,62 +31,63 @@
 <!-- <body onload=" atualizarFeed()"> -->
 
 <body onload="filtrarRelatorio()">
-    <div class="dashboard-bg">
-        <div class="dashboard-sidebar">
-            <div class="dashboard-logo"></div>
-            <div class="dashboard-sidebar-btns">
-                <a href="alertas.html" class="dashboard-sidebar-btn">
-                    <div class="icon-alert"></div>
-                    <h3>Alertas</h3>
-                </a>
-                <a href="conta.html" class="dashboard-sidebar-btn">
-                    <div class="icon-user"></div>
-                    <h3>Conta</h3>
-                </a>
-                <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
-                    <div class="icon-dashboard"></div>
-                    <h3>Painel de Controle</h3>
-                </a>
-                <a href="relatorios.html" class="dashboard-sidebar-btn">
-                    <div class="icon-relatory"></div>
-                    <h3>Relatórios</h3>
-                </a>
-                <a href="suporte.html" class="dashboard-sidebar-btn">
-                    <div class="icon-support"></div>
-                    <h3>Suporte</h3>
-                </a>
-            </div>
-            <a onclick="sessionStorage.clear()" href="../index.html" class="dashboard-logout">
-                <div class="icon-logout"></div>
-                <h3>Logout</h3>
-            </a>
-        </div>
-        <div class="dashboard-low-right-side">
-            <div class="dashboard-topbar">
-                <h2>Painel de controle - Servidor</h2>
-                <div class="btns-topbar">
-                    <div class="btn-relatorio-container">
-                        <a id="btnGerarRelatorio" onclick="gerarResposta()" class="btn-gerar-relatorio">
-                            Gerar relatorio
-                        </a>
-                        <div class="dropdown-pdf">
-                            <button class="btn-pdf-dropdown">
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                            <div class="dropdown-content">
-                                <a onclick="baixarPDF()"><i class="fas fa-file-pdf"></i> Baixar PDF</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="btn-notificacao">
-                        <div id="btn-notificacao" class="icon-notificacao"></div>
-                    </button>
-                    <a href="conta.html" class="btn-conta">
-
+ <!-- Cabeçalho -->
+    <div class="total-dash">
+        <div class="dashboard-bg">
+            <div class="dashboard-sidebar">
+                <div class="dashboard-logo"></div>
+                <div class="dashboard-sidebar-btns">
+                    <a href="alertas.html" class="dashboard-sidebar-btn">
+                        <div class="icon-alert"></div>
+                        <h3>Alertas</h3>
+                    </a>
+                    <a href="conta.html" class="dashboard-sidebar-btn">
+                        <div class="icon-user"></div>
+                        <h3>Conta</h3>
+                    </a>
+                    <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+                        <div class="icon-dashboard"></div>
+                        <h3>Painel de <br> Controle</h3>
+                    </a>
+                    <a href="relatorios.html" class="dashboard-sidebar-btn">
+                        <div class="icon-relatory"></div>
+                        <h3>Relatórios</h3>
+                    </a>
+                    <a href="suporte.html" class="dashboard-sidebar-btn">
+                        <div class="icon-support"></div>
+                        <h3>Suporte</h3>
                     </a>
                 </div>
+                <a href="/public/index.html" class="dashboard-logout">
+                    <div class="icon-logout"></div>
+                    <h3>Logout</h3>
+                </a>
             </div>
+            <!-- Cabeçalho topo -->
+            <div class="dashboard-low-right-side">
+                <div class="dashboard-topbar">
+                    <a href="dashboard-alto.html" class="btn-voltar">
+                        Painel de controle - Servidor
+                    </a>
+                    <div class="btns-topbar">
+                    <!-- <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
+                        Cadastrar Máquina
+                    </a> -->
+                    <a href="relatorios.html" class="btn-gerar-relatorio">
+                        Gerar relatorio
+                    </a>
+                        <div class="btn-padrao">
+                                <button class="btn-notificacao">
+                                </button>
+                                <a href="conta.html" class="btn-conta">
+                                </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fim Cabeçalho -->    
+
+    
+
             <div class="kpis">
                 <div class="kpi">
                     <h3>Uptime do sistema</h3>
@@ -150,6 +152,7 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 <script>
 

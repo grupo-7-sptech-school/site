@@ -36,7 +36,7 @@
                         <h3>Suporte</h3>
                     </a>
                 </div>
-                <a href="index.html" class="dashboard-logout">
+                <a href="/public/index.html" class="dashboard-logout">
                     <div class="icon-logout"></div>
                     <h3>Logout</h3>
                 </a>
@@ -66,52 +66,6 @@
         </div>
         </div></div>
     
-    <script>
-
-
-        function javaStringHashCodeNonNegative(s) {
-            let h = 0;
-            for (let i = 0; i < s.length; i++) {
-                h = Math.imul(31, h) + s.charCodeAt(i);
-                h |= 0;
-            }
-            return h & 0x7FFFFFFF; // equivalente ao & 0x7FFFFFFF do Java
-        }
-
-        async function cadastrarMaquina() {
-            event.preventDefault();
-
-            const nome = document.getElementById('nome-maquina').value.trim();
-            const hostname = document.getElementById('host-maquina').value.trim();
-            const mac = document.getElementById('mac-maquina').value.trim();
-            const ip = document.getElementById('ip-maquina').value.trim();
-
-            if (!nome || !hostname || !mac || !ip) {
-                alert('Preencha todos os campos!');
-                return;
-            }
-
-            const hostNumerico = javaStringHashCodeNonNegative(hostname);
-
-            const fkEmpresa = sessionStorage.getItem("FK_EMPRESA");
-
-            try {
-                const response = await fetch(`/usuarios/cadastrarMaquina`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ identificador: nome, hostNumerico, mac, ip, fkEmpresa}),
-                });
-
-                if (!response.ok) throw new Error('Erro ao cadastrar máquina');
-
-                const result = await response.json();
-            } catch (error) {
-                console.error(error);
-                alert('Erro ao cadastrar máquina: ' + error.message);
-            }
-        }
-
-    </script>
 
 </body>
 

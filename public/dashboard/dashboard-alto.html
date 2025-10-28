@@ -8,84 +8,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SolarData | Painel de controle</title>
 
-
-    <link rel="stylesheet" href="./../css/cabecalho1.css">
-
-
-    <link rel="stylesheet" href="./../css/dashboards.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="./../css/cabecalho3.css">
     <link rel="stylesheet" href="./../css/dash-alto.css">
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+
+        <!-- Script -->
     <script src="../js/sessao.js"></script>
     <script src="./../js/alerta.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!--FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
 
+    <!-- Links -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
 
-    <!-- scripts do Chart.js - 2022-1 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!--FONT AWESOME-->
-    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
 
 </head>
 
 <!-- <body onload=" atualizarFeed()"> -->
-
 <body onload="filtrarCadastroMaquina()">
-    <!-- Cabeçalho -->
-    <div class="dashboard-bg">
-        <div class="dashboard-sidebar">
-            <div class="dashboard-logo"></div>
-            <div class="dashboard-sidebar-btns">
-                <a href="alertas.html" class="dashboard-sidebar-btn">
-                    <div class="icon-alert"></div>
-                    <h3>Alertas</h3>
-                </a>
-                <a href="conta.html" class="dashboard-sidebar-btn">
-                    <div class="icon-user"></div>
-                    <h3>Conta</h3>
-                </a>
-                <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
-                    <div class="icon-dashboard"></div>
-                    <h3>Painel de Controle</h3>
-                </a>
-                <a href="relatorios.html" class="dashboard-sidebar-btn">
-                    <div class="icon-relatory"></div>
-                    <h3>Relatórios</h3>
-                </a>
-                <a href="suporte.html" class="dashboard-sidebar-btn">
-                    <div class="icon-support"></div>
-                    <h3>Suporte</h3>
-                </a>
-            </div>
-            <a href="index.html" class="dashboard-logout">
-                <div class="icon-logout"></div>
-                <h3>Logout</h3>
-            </a>
-        </div>
-        <!-- Cabeçalho topo -->
-        <div class="dashboard-low-right-side">
-            <div class="dashboard-topbar">
-                <a href="dashboard-alto.html" class="btn-voltar">
-                    Painel de controle - Servidor
-                </a>
-                <div class="btns-topbar">
-                    <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
-                        Cadastrar Máquina
+  <!-- Cabeçalho -->
+    <div class="total-dash">
+        <div class="dashboard-bg">
+            <div class="dashboard-sidebar">
+                <div class="dashboard-logo"></div>
+                <div class="dashboard-sidebar-btns">
+                    <a href="alertas.html" class="dashboard-sidebar-btn">
+                        <div class="icon-alert"></div>
+                        <h3>Alertas</h3>
                     </a>
-                    <button class="btn-notificacao">
-                    </button>
-                    <a href="conta.html" class="btn-conta">
-                        <div class="icon-user2"></div>
+                    <a href="conta.html" class="dashboard-sidebar-btn">
+                        <div class="icon-user"></div>
+                        <h3>Conta</h3>
                     </a>
-
+                    <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+                        <div class="icon-dashboard"></div>
+                        <h3>Painel de <br> Controle</h3>
+                    </a>
+                    <a href="relatorios.html" class="dashboard-sidebar-btn">
+                        <div class="icon-relatory"></div>
+                        <h3>Relatórios</h3>
+                    </a>
+                    <a href="suporte.html" class="dashboard-sidebar-btn">
+                        <div class="icon-support"></div>
+                        <h3>Suporte</h3>
+                    </a>
                 </div>
+                <a href="/public/index.html" class="dashboard-logout">
+                    <div class="icon-logout"></div>
+                    <h3>Logout</h3>
+                </a>
             </div>
-            <!-- Fim Cabeçalho -->
-            <div class="box-dashboard">
+            <!-- Cabeçalho topo -->
+            <div class="dashboard-low-right-side">
+                <div class="dashboard-topbar">
+                    <a href="dashboard-alto.html" class="btn-voltar">
+                        Painel de controle - Servidor
+                    </a>
+                    <div class="btns-topbar">
+                    <!-- <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
+                        Cadastrar Máquina
+                    </a> -->
+                    <a href="relatorios.html" class="btn-gerar-relatorio">
+                        Gerar relatorio
+                    </a>
+                        <div class="btn-padrao">
+                                <button class="btn-notificacao">
+                                </button>
+                                <a href="conta.html" class="btn-conta">
+                                </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fim Cabeçalho -->   
+                  <div class="box-dashboard">
 
                 <div class="box-notificacao">
 
@@ -119,11 +124,67 @@
                         </div>
 
                         <!-- as linhas virão aqui -->
-                        <div id="lista-maquinas"></div>
-                    </div>
+                        <div id="lista-maquinas"></div> 
+            </div>
+        </div>
+    </div>
+</div>
+    </div></div>
+    <!-- Cabeçalho
+    <div class="dashboard-bg">
+        <div class="dashboard-sidebar">
+            <div class="dashboard-logo"></div>
+            <div class="dashboard-sidebar-btns">
+                <a href="alertas.html" class="dashboard-sidebar-btn">
+                    <div class="icon-alert"></div>
+                    <h3>Alertas</h3>
+                </a>
+                <a href="conta.html" class="dashboard-sidebar-btn">
+                    <div class="icon-user"></div>
+                    <h3>Conta</h3>
+                </a>
+                <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+                    <div class="icon-dashboard"></div>
+                    <h3>Painel de Controle</h3>
+                </a>
+                <a href="relatorios.html" class="dashboard-sidebar-btn">
+                    <div class="icon-relatory"></div>
+                    <h3>Relatórios</h3>
+                </a>
+                <a href="suporte.html" class="dashboard-sidebar-btn">
+                    <div class="icon-support"></div>
+                    <h3>Suporte</h3>
+                </a>
+            </div>
+            <a href="index.html" class="dashboard-logout">
+                <div class="icon-logout"></div>
+                <h3>Logout</h3>
+            </a>
+        </div>
+        <!-- Cabeçalho topo -->
+        <!-- <div class="dashboard-low-right-side">
+            <div class="dashboard-topbar">
+                <a href="dashboard-alto.html" class="btn-voltar">
+                    Painel de controle - Servidor
+                </a>
+                <div class="btns-topbar">
+                    <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
+                        Cadastrar Máquina
+                    </a>
+                    <button class="btn-notificacao">
+                    </button>
+                    <a href="conta.html" class="btn-conta">
+                        <div class="icon-user2"></div>
+                    </a>
+
+                </div> -->
+            <!-- </div> -->
+            <!-- Fim Cabeçalho -->
+           
+                    <!-- </div>
 
                 </div>
-            </div>
+            </div>  -->
 
             <div class="modal fade" id="modalNotificacoes" tabindex="-1" aria-labelledby="modalNotificacoesLabel"
                 aria-hidden="true">

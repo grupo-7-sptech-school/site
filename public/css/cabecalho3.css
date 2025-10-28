@@ -142,9 +142,9 @@ body{
 .btns-topbar{
   width: 20vw;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-
+  gap: 38px;
 }
 
 .btn-padrao{
