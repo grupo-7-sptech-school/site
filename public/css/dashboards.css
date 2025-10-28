@@ -17,7 +17,7 @@ body {
   display: flex;
   background-color: #EDEDED;
 }
-btn-notificacao
+
 .dashboard-sidebar {
   justify-self: flex-start;
   color: white;
@@ -30,7 +30,9 @@ btn-notificacao
   gap: 7vh;
   font-family: "montserrat", sans-serif;
 }
+
 .dashboard-logo {
+
   background-image: url(../assets/icon/logoSD.png);
   margin-top: 13vh;
   padding-left: 5vw;
@@ -97,6 +99,8 @@ btn-notificacao
 .btn-notificacao:hover {
   transition: scale 0.3s ease-in-out;
   scale: 1.1;
+  
+
 }
 
 .btn-gerar-relatorio {
@@ -259,7 +263,7 @@ btn-notificacao
 
 .grafico-cpu {
   display: flex;
-  height: 24vh;
+  height: 28vh;
   width: 44vw;
   flex-direction: column;
   background-color: white;
@@ -283,7 +287,7 @@ btn-notificacao
 
 .grafico-ram {
   display: flex;
-  height: 24vh;
+  height: 28vh;
   width: 44vw;
   flex-direction: column;
   background-color: white;
@@ -294,11 +298,12 @@ btn-notificacao
 .grafico-disco {
   display: flex;
   width: 30vw;
-  height: 60vh;
+  height: 65vh;
   border-radius: 25px;
   background-color: white;
   justify-content: space-evenly;
   align-items: center;
+
 
 }
 
@@ -312,7 +317,7 @@ btn-notificacao
 }
 
 .uso-livre-disco {
-  font-family: "montserrat", sans-serif;
+  font-family: "montserrat" sans-serif;
   color: rgba(0, 0, 0, 0.593);
 
 }
@@ -331,15 +336,18 @@ btn-notificacao
   width: 45vw;
   display: flex;
   flex-direction: column;
-  gap: 8vh;
-
+  gap: 5vh;
+  padding-bottom: 3vh;
+  padding-top: 3vh;
 }
 
 .cup-charts {
   height: 100%;
   display: flex;
   align-items: center;
-
+  padding-bottom: 3vh;
+  padding-top: 3vh;
+  font-family: "montserrat", sans-serif;
 }
 
 .copo {

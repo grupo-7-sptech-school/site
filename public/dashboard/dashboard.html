@@ -67,8 +67,8 @@
                     <a id="btnGerarRelatorio" onclick="gerarResposta()" class="btn-gerar-relatorio">
                         Gerar relatorio
                     </a>
-                    <button class="btn-notificacao" >
-                        <div class="icon-notificacao" ></div>
+                    <button class="btn-notificacao">
+                        <div id="btn-notificacao" class="icon-notificacao"></div>
                     </button>
                     <a href="conta.html" class="btn-conta">
                         
@@ -79,7 +79,7 @@
                 <div class="kpi"><h3>Uptime do sistema</h3><div class="kpi1" ><h2 style="color: #18B187;" id="dias">652</h2> Dias e <h2 style="color: #18B187;" id="horas">14</h2> horas</div></div>
                 <div class="kpi"><h3>Status UPS</h3> <h2 id="statusUps" style="color: #18B187;">Normal</h2></div>
                 <div class="kpi"><h3>P.U.E</h3><h2 style="color: #18B187;">1.2 </h2></div>
-                <div class="kpi"><h3>Utilização do rack</h3><h2 style="color: #18B187;"><p id="porcentagemRack">60</p>%</h2></div>
+                <div class="kpi"><h3>Utilização do rack</h3><h2 style="color: #18B187;" id="porcentagemRack"></h2></div>
             </div>
             <div class="dashboard-charts">
                 <div class="line-charts">
@@ -125,114 +125,196 @@
 </body>
 <script>
 
-    const data = [];
-    const data2 = [];
-    let prev = 100;
-    let prev2 = 80;
-    for (let i = 0; i < 1000; i++) {
-        prev += 5 - Math.random() * 10;
-        data.push({ x: i, y: prev });
-        prev2 += 5 - Math.random() * 10;
-        data2.push({ x: i, y: prev2 });
+
+ // Função para gerar labels dos ultimos 10 min
+function labelsTempoReal() {
+    var labels = [];
+    var agora = new Date();
+    for (var i = 19; i >= 0; i--) {
+    var tempo = new Date(agora.getTime() - i * 30 * 1000);
+    var horas = String(tempo.getHours()).padStart(2, '0');
+    var minutos = String(tempo.getMinutes()).padStart(2, '0');
+    // mostra label só nos pontos pares (a cada 1 min)
+    if (i % 2 === 0) {
+      labels.push(horas + ':' + minutos);
+    } else {
+      labels.push('');
+    }
+  }
+  return labels;
+}
+
+
+    var labelsCpu = labelsTempoReal();
+    var labelsRam = labelsTempoReal();
+    
+    // Inicializa zerado
+    var dadosCpu = [];
+    var dadosRam = [];
+    for (var i = 0; i < 20; i++) {
+        dadosCpu.push(Math.random() * 50);
+        dadosRam.push(Math.random() * 50);
     }
 
-    const totalDuration = 10000;
-    const delayBetweenPoints = totalDuration / data.length;
-    const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
-    const animation = {
-        x: {
-            type: 'number',
-            easing: 'linear',
-            duration: delayBetweenPoints,
-            from: NaN,
-            delay(ctx) {
-                if (ctx.type !== 'data' || ctx.xStarted) {
-                    return 0;
-                }
-                ctx.xStarted = true;
-                return ctx.index * delayBetweenPoints;
-            }
-        },
-        y: {
-            type: 'number',
-            easing: 'linear',
-            duration: delayBetweenPoints,
-            from: previousY,
-            delay(ctx) {
-                if (ctx.type !== 'data' || ctx.yStarted) {
-                    return 0;
-                }
-                ctx.yStarted = true;
-                return ctx.index * delayBetweenPoints;
-            }
-        }
-    };
+    //Função que gera novos valores aleatórios para os gráficos de linha
+    function novoValor(prev) {
+        var variacao = (Math.random() - 0.5) * 20;
+        var novo = prev + variacao;
+        if (novo < 0) novo = 0;
+        if (novo > 100) novo = 100;
+        return Math.round(novo);
+    }
 
-    const ctxCpu = document.getElementById('graficoCpuCanvas');
-
-    const configCpu = {
+    // Gráfico CPU
+    var ctxCpu = document.getElementById('graficoCpuCanvas').getContext('2d');
+    var graficoCpu = new Chart(ctxCpu, {
         type: 'line',
         data: {
+            labels: labelsCpu,
             datasets: [{
-                borderColor: 'blue',
-                borderWidth: 1,
-                radius: 0,
-                data: data,
+                label: 'Uso CPU (%)',
+                data: dadosCpu,
+                borderColor: '#4bc0c0',
+                backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                borderWidth: 2,
+                pointRadius: 2,
+                tension: 0.3,
+                fill: true
             }]
-
         },
         options: {
-
+            animation: false,
+            responsive: true,
             maintainAspectRatio: false,
-            animation,
-            interaction: {
-                intersect: false
-            },
-            plugins: {
-                legend: false
-            },
             scales: {
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    title: { 
+                        display: true, 
+                        text: 'Uso de CPU(%)' 
+                    },
+                    ticks: { 
+                        callback: function(value) { return value + '%'; } 
+                    }
+                },
                 x: {
-                    type: 'linear'
+                    title: { 
+                        display: true, 
+                        text: 'Tempo (últimos 10 min)' 
+                    },
+                    ticks: {
+                        
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
                 }
+            },
+            plugins: { 
+                legend: { 
+                    display: false 
+                } 
             }
         }
-    };
-
-    new Chart(ctxCpu, configCpu);
-
-    const ctxRam = document.getElementById('graficoRamCanvas');
-
-    const configRam = {
+    });
+var mostrarLabel = false;
+    //Gráfico RAM
+    var ctxRam = document.getElementById('graficoRamCanvas').getContext('2d');
+    var graficoRam = new Chart(ctxRam, {
         type: 'line',
         data: {
+            labels: labelsRam,
             datasets: [{
-                borderColor: 'red',
-                borderWidth: 1,
-                radius: 0,
-                data: data2,
+                label: 'Uso RAM (%)',
+                data: dadosRam,
+                borderColor: '#ff4d4d',
+                backgroundColor: 'rgba(255, 77, 77, 0.1)',
+                borderWidth: 2,
+                pointRadius: 2,
+                tension: 0.3,
+                fill: true
             }]
-
         },
         options: {
-
+            animation: false,
+            responsive: true,
             maintainAspectRatio: false,
-            animation,
-            interaction: {
-                intersect: false
-            },
-            plugins: {
-                legend: false
-            },
             scales: {
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    title: { 
+                        display: true, 
+                        text: 'Uso de RAM(%)'
+                    },
+                    ticks: { 
+                        callback: function(value) { return value + '%'; } 
+                    }
+                },
                 x: {
-                    type: 'linear'
+                    title: { 
+                        display: true, 
+                        text: 'Tempo (últimos 10 min)',
+                        
+                    },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
                 }
+            },
+            plugins: { 
+                legend: { 
+                    display: false 
+                } 
             }
         }
-    };
+    });
 
-    new Chart(ctxRam, configRam);
+    // Atualização em tempo real (30 segundos)
+    setInterval(function() {
+        // Gera novos dados
+        var novoCpu = novoValor(dadosCpu[dadosCpu.length - 1]);
+        var novoRam = novoValor(dadosRam[dadosRam.length - 1]);
+
+        // Atualiza o percurso do gráfico mantendo os 20 pontos
+        dadosCpu.push(novoCpu);
+        dadosCpu.shift();
+        dadosRam.push(novoRam);
+        dadosRam.shift();
+
+        // Atualiza labels
+        var agora = new Date();
+        var horas = String(agora.getHours()).padStart(2, '0');
+        var minutos = String(agora.getMinutes()).padStart(2, '0');
+        
+        
+        // formata o horario'
+        var labelAgora = (agora.getSeconds() == 0) ? 
+            (horas + ':' + minutos) : 
+            (horas + ':' + minutos );
+
+        var novaLabel = mostrarLabel ? horas + ':' + minutos : '';
+        mostrarLabel = !mostrarLabel;
+
+        labelsCpu.push(novaLabel);
+        labelsCpu.shift();
+        labelsRam.push(novaLabel);
+        labelsRam.shift();
+
+        // Atualiza gráficos
+        graficoCpu.update('none');
+        graficoRam.update('none');var mediaRack = (novoCpu + novoRam + usoDisco) / 3;
+  var porcentagemRack = document.getElementById("porcentagemRack");
+
+  if (porcentagemRack) {
+    porcentagemRack.innerHTML = mediaRack.toFixed(0) + "%";
+  }
+}, 30000); // 30 segundos
 
 const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
     var usoDisco = Math.floor(Math.random() * 100);
@@ -323,11 +405,9 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
         }
       }]
     });
+    
 
-
-
-
-
+        
 
 
 
@@ -469,11 +549,7 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
             }]
         };
 
-        console.log('----------------------------------------------')
-        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
-        console.log(resposta)
-
-        // Inserindo valores recebidos em estrutura para plotar o gráfico
+       
         for (i = 0; i < resposta.length; i++) {
             var registro = resposta[i];
             labels.push(registro.momento_grafico);
@@ -481,21 +557,11 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
             dados.datasets[1].data.push(registro.temperatura);
         }
 
-        console.log('----------------------------------------------')
-        console.log('O gráfico será plotado com os respectivos valores:')
-        console.log('Labels:')
-        console.log(labels)
-        console.log('Dados:')
-        console.log(dados.datasets)
-        console.log('----------------------------------------------')
-
-        // Criando estrutura para plotar gráfico - config
         const config = {
             type: 'line',
             data: dados,
         };
 
-        // Adicionando gráfico criado em div na tela
         let myChart = new Chart(
             document.getElementById(`myChartCanvas${idAquario}`),
             config
@@ -583,19 +649,17 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
 
     async function gerarResposta() { // assincrona pra pegar junto com os processos e não dar ruim se é que me entende...
     try {
-
         console.log("Gerando análise detalhada...");
         const response = await fetch('/analisar-processos');
-
         if (!response.ok) {
             throw new Error(`Erro: ${response.status}`);
         }
         const data = await response.json();
         console.log("Análise recebida:", data);
-
         if (data.success) {
             const mensagem = `${data.analise}`;
             console.log(mensagem);
+
             try {
                 retornoJson = data.analise
                 console.log(retornoJson)
