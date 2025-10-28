@@ -153,49 +153,39 @@
 </body>
 <script>
 
-    async function baixarPDF() {
-        try {
-            console.log("Iniciando download do PDF...");
+   async function baixarPDF() {
+    try {
+        console.log("Iniciando download do PDF...");
 
-            const btnPDF = document.getElementById('btnGerarPDF');
-            const originalText = btnPDF.innerHTML;
-            btnPDF.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando PDF...';
-            btnPDF.disabled = true;
+        
+        alert("Gerando PDF... Isso pode levar alguns segundos.");
+        
+        const response = await fetch('/relatorio/pdf');
 
-            const response = await fetch('/relatorio/pdf');
-
-            if (!response.ok) {
-                throw new Error(`Erro: ${response.status}`);
-            }
-
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `relatorio_solardata_${new Date().toISOString().split('T')[0]}.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-
-            console.log('PDF baixado');
-
-            btnPDF.innerHTML = '<i class="fas fa-check"></i> PDF Baixado!';
-            setTimeout(() => {
-                btnPDF.innerHTML = originalText;
-                btnPDF.disabled = false;
-            }, 2000);
-
-        } catch (error) {
-            console.error('Erro ao baixar PDF:', error);
-
-            const btnPDF = document.getElementById('btnGerarPDF');
-            btnPDF.innerHTML = '<i class="fas fa-file-pdf"></i> Baixar PDF';
-            btnPDF.disabled = false;
-
-            alert('Erro ao baixar PDF: ' + error.message);
+        if (!response.ok) {
+            throw new Error(`Erro: ${response.status}`);
         }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `relatorio_solardata_${new Date().toISOString().split('T')[0]}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        console.log('PDF baixado com sucesso!');
+        
+        // Feedback visual 
+        alert("PDF baixado com sucesso");
+
+    } catch (error) {
+        console.error('Erro ao baixar PDF:', error);
+        alert('Erro ao baixar PDF: ' + error.message);
     }
+}
 
     // Função para gerar labels dos ultimos 10 min
     function labelsTempoReal() {
@@ -482,7 +472,7 @@
 
 
 
-    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+   // b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 
     let proximaAtualizacao;
 
