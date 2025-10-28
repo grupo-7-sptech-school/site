@@ -17,7 +17,7 @@ body {
   display: flex;
   background-color: #EDEDED;
 }
-
+btn-notificacao
 .dashboard-sidebar {
   justify-self: flex-start;
   color: white;
@@ -30,9 +30,7 @@ body {
   gap: 7vh;
   font-family: "montserrat", sans-serif;
 }
-
 .dashboard-logo {
-
   background-image: url(../assets/icon/logoSD.png);
   margin-top: 13vh;
   padding-left: 5vw;
@@ -99,8 +97,6 @@ body {
 .btn-notificacao:hover {
   transition: scale 0.3s ease-in-out;
   scale: 1.1;
-  
-
 }
 
 .btn-gerar-relatorio {
