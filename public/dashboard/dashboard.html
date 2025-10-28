@@ -10,19 +10,16 @@
 
 
     <link rel="stylesheet" href="./../css/dashboards.css">
-    <link rel="stylesheet" href="./../css/cabecalho3.css">
     <script src="../js/sessao.js"></script>
     <script src="./../js/alerta.js"></script>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;disco1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
 
     <!-- scripts do Chart.js - 2022-1 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.x/dist/pixi.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.3"></script>
 
     <!--FONT AWESOME-->
     <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
@@ -31,69 +28,68 @@
 <!-- <body onload=" atualizarFeed()"> -->
 
 <body onload="filtrarRelatorio()">
- <!-- Cabeçalho -->
-    <div class="total-dash">
-        <div class="dashboard-bg">
-            <div class="dashboard-sidebar">
-                <div class="dashboard-logo"></div>
-                <div class="dashboard-sidebar-btns">
-                    <a href="alertas.html" class="dashboard-sidebar-btn">
-                        <div class="icon-alert"></div>
-                        <h3>Alertas</h3>
-                    </a>
-                    <a href="conta.html" class="dashboard-sidebar-btn">
-                        <div class="icon-user"></div>
-                        <h3>Conta</h3>
-                    </a>
-                    <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
-                        <div class="icon-dashboard"></div>
-                        <h3>Painel de <br> Controle</h3>
-                    </a>
-                    <a href="relatorios.html" class="dashboard-sidebar-btn">
-                        <div class="icon-relatory"></div>
-                        <h3>Relatórios</h3>
-                    </a>
-                    <a href="suporte.html" class="dashboard-sidebar-btn">
-                        <div class="icon-support"></div>
-                        <h3>Suporte</h3>
-                    </a>
-                </div>
-                <a href="/public/index.html" class="dashboard-logout">
-                    <div class="icon-logout"></div>
-                    <h3>Logout</h3>
+    <div class="dashboard-bg">
+        <div class="dashboard-sidebar">
+            <div class="dashboard-logo"></div>
+            <div class="dashboard-sidebar-btns">
+                <a href="alertas.html" class="dashboard-sidebar-btn">
+                    <div class="icon-alert"></div>
+                    <h3>Alertas</h3>
+                </a>
+                <a href="conta.html" class="dashboard-sidebar-btn">
+                    <div class="icon-user"></div>
+                    <h3>Conta</h3>
+                </a>
+                <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+                    <div class="icon-dashboard"></div>
+                    <h3>Painel de Controle</h3>
+                </a>
+                <a href="relatorios.html" class="dashboard-sidebar-btn">
+                    <div class="icon-relatory"></div>
+                    <h3>Relatórios</h3>
+                </a>
+                <a href="suporte.html" class="dashboard-sidebar-btn">
+                    <div class="icon-support"></div>
+                    <h3>Suporte</h3>
                 </a>
             </div>
-            <!-- Cabeçalho topo -->
-            <div class="dashboard-low-right-side">
-                <div class="dashboard-topbar">
-                    <a href="dashboard-alto.html" class="btn-voltar">
-                        Painel de controle - Servidor
-                    </a>
-                    <div class="btns-topbar">
-                    <!-- <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
-                        Cadastrar Máquina
-                    </a> -->
-                    <a href="relatorios.html" class="btn-gerar-relatorio">
-                        Gerar relatorio
-                    </a>
-                        <div class="btn-padrao">
-                                <button class="btn-notificacao">
-                                </button>
-                                <a href="conta.html" class="btn-conta">
-                                </a>
+            <a onclick="sessionStorage.clear()" href="../index.html" class="dashboard-logout">
+                <div class="icon-logout"></div>
+                <h3>Logout</h3>
+            </a>
+        </div>
+        <div class="dashboard-low-right-side">
+            <div class="dashboard-topbar">
+                <h2>Painel de controle - Servidor</h2>
+                <div class="btns-topbar">
+                    <div class="btn-relatorio-container">
+                        <a id="btnGerarRelatorio" onclick="gerarResposta()" class="btn-gerar-relatorio">
+                            Gerar relatorio
+                        </a>
+                        <div class="dropdown-pdf">
+                            <button class="btn-pdf-dropdown">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <a onclick="baixarPDF()"><i class="fas fa-file-pdf"></i> Baixar PDF</a>
+                            </div>
                         </div>
                     </div>
+
+                    <button class="btn-notificacao">
+                        <div id="btn-notificacao" class="icon-notificacao"></div>
+                    </button>
+                    <a href="conta.html" class="btn-conta">
+
+                    </a>
                 </div>
-                <!-- Fim Cabeçalho -->    
-
-    
-
+            </div>
             <div class="kpis">
                 <div class="kpi">
                     <h3>Uptime do sistema</h3>
                     <div class="kpi1">
-                        <h2 style="color: #18B187;" id="dias">652</h2> Dias e <h2 style="color: #18B187;" id="horas">14
-                        </h2> horas
+                        <h2 style="color: #18B187;" id="dias">652 dias e 14 horas
+                        </h2> 
                     </div>
                 </div>
                 <div class="kpi">
@@ -111,14 +107,17 @@
             </div>
             <div class="dashboard-charts">
                 <div class="line-charts">
+                    <h3>Consumo de CPU</h3>
                     <div class="grafico-cpu">
                         <canvas id="graficoCpuCanvas"></canvas>
                     </div>
+                    <h2>Consumo de RAM</h2>
                     <div class="grafico-ram">
                         <canvas id="graficoRamCanvas"></canvas>
                     </div>
                 </div>
                 <div class="cup-charts">
+                    <h3>Armazenamento de Disco</h3>
                     <div class="grafico-disco">
                         <div class="copo">
                             <div class="elipse-topo" id="elipseTopo"></div>
@@ -141,7 +140,7 @@
                         height: 2vh;
                         width: 1vw;
                         
-                        "></div><br>Armazenamento <br> usado
+                        "></div><br>Armazenamento <br> utilizado
                                 <h1 id="h1_usoDisco">
 
                                 </h1>
@@ -152,7 +151,6 @@
             </div>
         </div>
     </div>
-</div>
 </body>
 <script>
 
@@ -198,7 +196,7 @@
             var tempo = new Date(agora.getTime() - i * 30 * 1000);
             var horas = String(tempo.getHours()).padStart(2, '0');
             var minutos = String(tempo.getMinutes()).padStart(2, '0');
-            // mostra label só nos pontos pares (a cada 1 min)
+            // mostra label de 2 em 2 plots
             if (i % 2 === 0) {
                 labels.push(horas + ':' + minutos);
             } else {
@@ -239,10 +237,10 @@
                 label: 'Uso CPU (%)',
                 data: dadosCpu,
                 borderColor: '#4bc0c0',
-                backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
                 borderWidth: 2,
-                pointRadius: 2,
-                tension: 0.3,
+                pointRadius: 1.5,
+                tension: 0.2,
                 fill: true
             }]
         },
@@ -261,6 +259,7 @@
                     },
                     ticks: {
                         callback: function (value) { return value + '%'; }
+                        
                     }
                 },
                 x: {
@@ -294,9 +293,9 @@
                 label: 'Uso RAM (%)',
                 data: dadosRam,
                 borderColor: '#ff4d4d',
-                backgroundColor: 'rgba(255, 77, 77, 0.1)',
+                backgroundColor: 'rgba(255, 77, 77, 0.6)',
                 borderWidth: 2,
-                pointRadius: 2,
+                pointRadius: 1.5,
                 tension: 0.3,
                 fill: true
             }]
@@ -357,7 +356,7 @@
         var minutos = String(agora.getMinutes()).padStart(2, '0');
 
 
-        // formata o horario'
+        // formata o horario
         var labelAgora = (agora.getSeconds() == 0) ?
             (horas + ':' + minutos) :
             (horas + ':' + minutos);
@@ -403,7 +402,7 @@
     new Chart(ctxDisco, {
         type: 'bar',
         data: {
-            labels: [''],
+            labels: [usoDisco +'%'],
             datasets: [{
                 data: [usoDisco],
                 backgroundColor: 'transparent'
@@ -414,7 +413,10 @@
             maintainAspectRatio: false,
             plugins: { legend: { display: false }, tooltip: { enabled: true } },
             scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } },
-            animation: true
+            animation: {
+    duration: 800,
+    easing: 'easeInOutQuad'
+  }
         },
         plugins: [{
             id: 'liquidoDisco',

@@ -27,6 +27,7 @@ body {
   display: flex;
   align-items: center;
   flex-direction: column;
+  padding-right: 0.5vw;
   gap: 7vh;
   font-family: "montserrat", sans-serif;
 }
@@ -41,7 +42,8 @@ body {
   margin-left: -3vw;
   background-repeat: no-repeat;
   background-size: cover;
-  
+  background-position-x: center;
+  background-position-y: center;
 }
 
 .dashboard-logout {
@@ -51,6 +53,7 @@ body {
   display: flex;
   align-items: center;
   padding-right: 5vw;
+  
 }
 
 .dashboard-sidebar-btns {
@@ -187,6 +190,8 @@ body {
   height: 4vh;
   width: 3vw;
   background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
 }
 
 .dashboard-logout:hover {
@@ -248,7 +253,7 @@ body {
   color: #18B187;
   justify-content: center;
   font-weight: 800;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .dashboard-charts {
@@ -264,7 +269,7 @@ body {
 .grafico-cpu {
   display: flex;
   height: 28vh;
-  width: 44vw;
+  width: 45vw;
   flex-direction: column;
   background-color: white;
   border-radius: 25px;
@@ -288,7 +293,7 @@ body {
 .grafico-ram {
   display: flex;
   height: 28vh;
-  width: 44vw;
+  width: 45vw;
   flex-direction: column;
   background-color: white;
   border-radius: 25px;
@@ -334,26 +339,54 @@ body {
 
 .line-charts {
   width: 45vw;
+  height: 78vh;
   display: flex;
   flex-direction: column;
-  gap: 5vh;
   padding-bottom: 3vh;
-  padding-top: 3vh;
+  padding-top: 0;
+  font-family: "montserrat", sans-serif;
+  color: #0B795B;
+}
+
+.line-charts h2{
+  height: 2vh;
+  margin-top: 1vh;
+}
+
+.line-charts h3{
+  height: 2vh;
+  margin-top: 0;
+
+  margin-bottom: 3vh;
+  font-size: 1.5rem;
+  font-family: "montserrat", sans-serif;
+  color: #0B795B;
 }
 
 .cup-charts {
   height: 100%;
   display: flex;
   align-items: center;
+  flex-direction: column;
   padding-bottom: 3vh;
-  padding-top: 3vh;
+  align-items: start;
   font-family: "montserrat", sans-serif;
 }
 
+.cup-charts h3{
+  height: 2vh;
+  margin-top: 1vh;
+  font-size: 1.5rem;
+  font-family: "montserrat", sans-serif;
+  color: #0B795B;
+}
+
+
+
 .copo {
   position: relative;
-  width: 25%;
-  height: 76%;
+  width: 27%;
+  height: 80%;
   background: linear-gradient(to right, #dedede 0%, #ffffff 33%, #dedede 85%);
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.25);
 
@@ -386,6 +419,8 @@ body {
   font-family: "montserrat", sans-serif;
   justify-content: flex-start;
   font-size: 1rem;
+  height: 14vh;
+  
 }
 
 .kpi div {
