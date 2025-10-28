@@ -6,6 +6,7 @@ require("dotenv").config({ path: caminho_env });
 var express = require("express");
 var cors = require("cors");
 var path = require("path");
+var axios = require("axios");
 
 var PORTA_APP = process.env.APP_PORT || 80;
 var HOST_APP = process.env.APP_HOST || '0.0.0.0';
@@ -34,7 +35,74 @@ app.use("/empresas", empresasRouter);
 
 
 
+app.get("/relatorio/pdf", async (req, res) => {
+    try {
+        console.log('Solicitação de relatório PDF recebida');
+        
+        // 1. Obter dados do monitoramento (igual sua rota /analisar-processos)
+        const usuarioModel = require("./src/models/usuarioModel.js");
+        const processos = await usuarioModel.puxarProcesso();
 
+        if (!processos || processos.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Nenhum processo encontrado"
+            });
+        }
+
+        console.log(`${processos.length} processos encontrados para PDF`);
+
+        const analise = gerarAnaliseLocalSimples(processos);
+
+        // 2. Preparar dados para o PDF (mesma estrutura do /analisar-processos)
+        const dadosParaPDF = {
+            success: true,
+            message: "Análise detalhada gerada com sucesso!",
+            quantidade_processos: processos.length,
+            analise: analise.relatorio,
+            estatisticas: analise.estatisticas,
+            alertas: analise.alertas,
+            top_processos: analise.top_processos,
+            provedor_ia: "Sistema de Análise Local",
+            timestamp: new Date().toISOString()
+        };
+
+        // 3. Enviar para o serviço Python
+        const pdfServiceUrl = process.env.PDF_SERVICE_URL || 'http://localhost:5000';
+        
+        console.log('Enviando dados para serviço PDF...');
+        const response = await axios.post(`${pdfServiceUrl}/generate-pdf`, dadosParaPDF, {
+            responseType: 'stream',
+            timeout: 30000
+        });
+
+        // 4. Configurar headers para download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="relatorio_solardata_${Date.now()}.pdf"`);
+
+        // 5. Pipe do stream para response
+        response.data.pipe(res);
+        
+        console.log('✅ PDF enviado para o cliente');
+
+    } catch (error) {
+        console.error('Erro ao gerar PDF:', error);
+        
+        if (error.code === 'ECONNREFUSED') {
+            return res.status(503).json({ 
+                success: false,
+                error: 'Serviço de PDF indisponível',
+                message: 'O serviço de geração de PDF não está respondendo. Verifique se o Python/Flask está rodando na porta 5000.'
+            });
+        }
+        
+        res.status(500).json({ 
+            success: false,
+            error: 'Falha ao gerar relatório PDF',
+            details: error.message 
+        });
+    }
+});
 
 
 

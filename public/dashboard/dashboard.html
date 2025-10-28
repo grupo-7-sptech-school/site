@@ -64,22 +64,48 @@
             <div class="dashboard-topbar">
                 <h2>Painel de controle - Servidor</h2>
                 <div class="btns-topbar">
-                    <a id="btnGerarRelatorio" onclick="gerarResposta()" class="btn-gerar-relatorio">
-                        Gerar relatorio
-                    </a>
+                    <div class="btn-relatorio-container">
+                        <a id="btnGerarRelatorio" onclick="gerarResposta()" class="btn-gerar-relatorio">
+                            Gerar relatorio
+                        </a>
+                        <div class="dropdown-pdf">
+                            <button class="btn-pdf-dropdown">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <a onclick="baixarPDF()"><i class="fas fa-file-pdf"></i> Baixar PDF</a>
+                            </div>
+                        </div>
+                    </div>
+
                     <button class="btn-notificacao">
                         <div id="btn-notificacao" class="icon-notificacao"></div>
                     </button>
                     <a href="conta.html" class="btn-conta">
-                        
+
                     </a>
                 </div>
             </div>
             <div class="kpis">
-                <div class="kpi"><h3>Uptime do sistema</h3><div class="kpi1" ><h2 style="color: #18B187;" id="dias">652</h2> Dias e <h2 style="color: #18B187;" id="horas">14</h2> horas</div></div>
-                <div class="kpi"><h3>Status UPS</h3> <h2 id="statusUps" style="color: #18B187;">Normal</h2></div>
-                <div class="kpi"><h3>P.U.E</h3><h2 style="color: #18B187;">1.2 </h2></div>
-                <div class="kpi"><h3>Utilização do rack</h3><h2 style="color: #18B187;" id="porcentagemRack"></h2></div>
+                <div class="kpi">
+                    <h3>Uptime do sistema</h3>
+                    <div class="kpi1">
+                        <h2 style="color: #18B187;" id="dias">652</h2> Dias e <h2 style="color: #18B187;" id="horas">14
+                        </h2> horas
+                    </div>
+                </div>
+                <div class="kpi">
+                    <h3>Status UPS</h3>
+                    <h2 id="statusUps" style="color: #18B187;">Normal</h2>
+                </div>
+                <div class="kpi">
+                    <h3>P.U.E</h3>
+                    <h2 style="color: #18B187;">1.2 </h2>
+                </div>
+                <div class="kpi">
+                    <h3>Utilização do rack</h3>
+                    <h2 style="color: #18B187;" id="porcentagemRack"></h2>
+                </div>
             </div>
             <div class="dashboard-charts">
                 <div class="line-charts">
@@ -98,24 +124,26 @@
                             <div class="elipse-base" id="elipseBase"></div>
                         </div>
                         <div class="uso-livre-disco">
-                        <h2><div style="background-color: #939393;
+                            <h2>
+                                <div style="background-color: #939393;
                         border-radius: 90px;
                         height: 2vh;
                         width: 1vw;"></div><br>Armazenamento <br> Livre
-                            <h1 id="h1_usoLivre">
-                                
-                            </h1>
-                        </h2>
-                        <h2><div style="background-color: #18B187;
+                                <h1 id="h1_usoLivre">
+
+                                </h1>
+                            </h2>
+                            <h2>
+                                <div style="background-color: #18B187;
                         border-radius: 90px;
                         height: 2vh;
                         width: 1vw;
                         
                         "></div><br>Armazenamento <br> usado
-                            <h1 id="h1_usoDisco">
-                                
-                            </h1>
-                        </h2>
+                                <h1 id="h1_usoDisco">
+
+                                </h1>
+                            </h2>
                         </div>
                     </div>
                 </div>
@@ -125,29 +153,72 @@
 </body>
 <script>
 
+    async function baixarPDF() {
+        try {
+            console.log("Iniciando download do PDF...");
 
- // Função para gerar labels dos ultimos 10 min
-function labelsTempoReal() {
-    var labels = [];
-    var agora = new Date();
-    for (var i = 19; i >= 0; i--) {
-    var tempo = new Date(agora.getTime() - i * 30 * 1000);
-    var horas = String(tempo.getHours()).padStart(2, '0');
-    var minutos = String(tempo.getMinutes()).padStart(2, '0');
-    // mostra label só nos pontos pares (a cada 1 min)
-    if (i % 2 === 0) {
-      labels.push(horas + ':' + minutos);
-    } else {
-      labels.push('');
+            const btnPDF = document.getElementById('btnGerarPDF');
+            const originalText = btnPDF.innerHTML;
+            btnPDF.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando PDF...';
+            btnPDF.disabled = true;
+
+            const response = await fetch('/relatorio/pdf');
+
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_solardata_${new Date().toISOString().split('T')[0]}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            console.log('PDF baixado');
+
+            btnPDF.innerHTML = '<i class="fas fa-check"></i> PDF Baixado!';
+            setTimeout(() => {
+                btnPDF.innerHTML = originalText;
+                btnPDF.disabled = false;
+            }, 2000);
+
+        } catch (error) {
+            console.error('Erro ao baixar PDF:', error);
+
+            const btnPDF = document.getElementById('btnGerarPDF');
+            btnPDF.innerHTML = '<i class="fas fa-file-pdf"></i> Baixar PDF';
+            btnPDF.disabled = false;
+
+            alert('Erro ao baixar PDF: ' + error.message);
+        }
     }
-  }
-  return labels;
-}
+
+    // Função para gerar labels dos ultimos 10 min
+    function labelsTempoReal() {
+        var labels = [];
+        var agora = new Date();
+        for (var i = 19; i >= 0; i--) {
+            var tempo = new Date(agora.getTime() - i * 30 * 1000);
+            var horas = String(tempo.getHours()).padStart(2, '0');
+            var minutos = String(tempo.getMinutes()).padStart(2, '0');
+            // mostra label só nos pontos pares (a cada 1 min)
+            if (i % 2 === 0) {
+                labels.push(horas + ':' + minutos);
+            } else {
+                labels.push('');
+            }
+        }
+        return labels;
+    }
 
 
     var labelsCpu = labelsTempoReal();
     var labelsRam = labelsTempoReal();
-    
+
     // Inicializa zerado
     var dadosCpu = [];
     var dadosRam = [];
@@ -191,35 +262,35 @@ function labelsTempoReal() {
                     beginAtZero: true,
                     min: 0,
                     max: 100,
-                    title: { 
-                        display: true, 
-                        text: 'Uso de CPU(%)' 
+                    title: {
+                        display: true,
+                        text: 'Uso de CPU(%)'
                     },
-                    ticks: { 
-                        callback: function(value) { return value + '%'; } 
+                    ticks: {
+                        callback: function (value) { return value + '%'; }
                     }
                 },
                 x: {
-                    title: { 
-                        display: true, 
-                        text: 'Tempo (últimos 10 min)' 
+                    title: {
+                        display: true,
+                        text: 'Tempo (últimos 10 min)'
                     },
                     ticks: {
-                        
+
                         autoSkip: false,
                         maxRotation: 45,
                         minRotation: 45
                     }
                 }
             },
-            plugins: { 
-                legend: { 
-                    display: false 
-                } 
+            plugins: {
+                legend: {
+                    display: false
+                }
             }
         }
     });
-var mostrarLabel = false;
+    var mostrarLabel = false;
     //Gráfico RAM
     var ctxRam = document.getElementById('graficoRamCanvas').getContext('2d');
     var graficoRam = new Chart(ctxRam, {
@@ -246,19 +317,19 @@ var mostrarLabel = false;
                     beginAtZero: true,
                     min: 0,
                     max: 100,
-                    title: { 
-                        display: true, 
+                    title: {
+                        display: true,
                         text: 'Uso de RAM(%)'
                     },
-                    ticks: { 
-                        callback: function(value) { return value + '%'; } 
+                    ticks: {
+                        callback: function (value) { return value + '%'; }
                     }
                 },
                 x: {
-                    title: { 
-                        display: true, 
+                    title: {
+                        display: true,
                         text: 'Tempo (últimos 10 min)',
-                        
+
                     },
                     ticks: {
                         autoSkip: false,
@@ -267,16 +338,16 @@ var mostrarLabel = false;
                     }
                 }
             },
-            plugins: { 
-                legend: { 
-                    display: false 
-                } 
+            plugins: {
+                legend: {
+                    display: false
+                }
             }
         }
     });
 
     // Atualização em tempo real (30 segundos)
-    setInterval(function() {
+    setInterval(function () {
         // Gera novos dados
         var novoCpu = novoValor(dadosCpu[dadosCpu.length - 1]);
         var novoRam = novoValor(dadosRam[dadosRam.length - 1]);
@@ -291,12 +362,12 @@ var mostrarLabel = false;
         var agora = new Date();
         var horas = String(agora.getHours()).padStart(2, '0');
         var minutos = String(agora.getMinutes()).padStart(2, '0');
-        
-        
+
+
         // formata o horario'
-        var labelAgora = (agora.getSeconds() == 0) ? 
-            (horas + ':' + minutos) : 
-            (horas + ':' + minutos );
+        var labelAgora = (agora.getSeconds() == 0) ?
+            (horas + ':' + minutos) :
+            (horas + ':' + minutos);
 
         var novaLabel = mostrarLabel ? horas + ':' + minutos : '';
         mostrarLabel = !mostrarLabel;
@@ -308,106 +379,106 @@ var mostrarLabel = false;
 
         // Atualiza gráficos
         graficoCpu.update('none');
-        graficoRam.update('none');var mediaRack = (novoCpu + novoRam + usoDisco) / 3;
-  var porcentagemRack = document.getElementById("porcentagemRack");
+        graficoRam.update('none'); var mediaRack = (novoCpu + novoRam + usoDisco) / 3;
+        var porcentagemRack = document.getElementById("porcentagemRack");
 
-  if (porcentagemRack) {
-    porcentagemRack.innerHTML = mediaRack.toFixed(0) + "%";
-  }
-}, 30000); // 30 segundos
+        if (porcentagemRack) {
+            porcentagemRack.innerHTML = mediaRack.toFixed(0) + "%";
+        }
+    }, 30000); // 30 segundos
 
-const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
+    const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
     var usoDisco = Math.floor(Math.random() * 100);
     var usoLivre = 100 - usoDisco;
-    h1_usoDisco.innerHTML=usoDisco+"%"
-    h1_usoLivre.innerHTML=usoLivre+"%"
+    h1_usoDisco.innerHTML = usoDisco + "%"
+    h1_usoLivre.innerHTML = usoLivre + "%"
     if (usoDisco < 3) {
-      elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
+        elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
     } else if (usoDisco > 97) {
-      setTimeout(() => {
-        elipseTopo.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
-      }, 609);
-      setTimeout(() => {
-        elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
-      }, 15);
+        setTimeout(() => {
+            elipseTopo.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
+        }, 609);
+        setTimeout(() => {
+            elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
+        }, 15);
     } else {
-      setTimeout(() => {
-        elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
-      }, 15);
+        setTimeout(() => {
+            elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
+        }, 15);
     }
 
     new Chart(ctxDisco, {
-      type: 'bar',
-      data: {
-        labels: [''],
-        datasets: [{
-          data: [usoDisco],
-          backgroundColor: 'transparent'
+        type: 'bar',
+        data: {
+            labels: [''],
+            datasets: [{
+                data: [usoDisco],
+                backgroundColor: 'transparent'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: true } },
+            scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } },
+            animation: true
+        },
+        plugins: [{
+            id: 'liquidoDisco',
+            beforeDatasetsDraw(graficoDisco) {
+                const ctx = graficoDisco.ctx;
+                const area = graficoDisco.chartArea;
+                const meta = graficoDisco.getDatasetMeta(0);
+                const barra = meta.data[0];
+
+                const yTopo = barra.y;
+                const yBase = area.bottom;
+
+                ctx.beginPath();
+                ctx.ellipse(
+                    (area.left + area.right) / 2,
+                    yTopo,
+                    (area.right - area.left) / 2,
+                    14,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
+
+                const gradienteHorizontal = ctx.createLinearGradient(area.left, 0, area.right, 0);
+                gradienteHorizontal.addColorStop(0, '#25a683');
+                gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
+                gradienteHorizontal.addColorStop(0.85, '#25a683');
+
+                ctx.fillStyle = gradienteHorizontal;
+                ctx.fillRect(area.left, yTopo, area.right - area.left, yBase - yTopo);
+
+                ctx.beginPath();
+                ctx.ellipse(
+                    (area.left + area.right) / 2,
+                    yTopo,
+                    (area.right - area.left) / 2,
+                    14,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
+
+                const gradienteEscuro = ctx.createLinearGradient(area.left, 0, area.right, 0);
+                gradienteEscuro.addColorStop(0, '#1d8066');
+                gradienteEscuro.addColorStop(0.33, '#18a47d');
+                gradienteEscuro.addColorStop(0.85, '#1d8066');
+
+                ctx.fillStyle = gradienteEscuro;
+                ctx.fill();
+
+                ctx.restore();
+            }
         }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { enabled: true } },
-        scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } },
-        animation: true
-      },
-      plugins: [{
-        id: 'liquidoDisco',
-        beforeDatasetsDraw(graficoDisco) {
-          const ctx = graficoDisco.ctx;
-          const area = graficoDisco.chartArea;
-          const meta = graficoDisco.getDatasetMeta(0);
-          const barra = meta.data[0];
-
-          const yTopo = barra.y;
-          const yBase = area.bottom;
-
-          ctx.beginPath();
-          ctx.ellipse(
-            (area.left + area.right) / 2,
-            yTopo,
-            (area.right - area.left) / 2,
-            14,
-            0,
-            0,
-            Math.PI * 2
-          );
-
-          const gradienteHorizontal = ctx.createLinearGradient(area.left, 0, area.right, 0);
-          gradienteHorizontal.addColorStop(0, '#25a683');
-          gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
-          gradienteHorizontal.addColorStop(0.85, '#25a683');
-
-          ctx.fillStyle = gradienteHorizontal;
-          ctx.fillRect(area.left, yTopo, area.right - area.left, yBase - yTopo);
-
-          ctx.beginPath();
-          ctx.ellipse(
-            (area.left + area.right) / 2,
-            yTopo,
-            (area.right - area.left) / 2,
-            14,
-            0,
-            0,
-            Math.PI * 2
-          );
-
-          const gradienteEscuro = ctx.createLinearGradient(area.left, 0, area.right, 0);
-          gradienteEscuro.addColorStop(0, '#1d8066');
-          gradienteEscuro.addColorStop(0.33, '#18a47d');
-          gradienteEscuro.addColorStop(0.85, '#1d8066');
-
-          ctx.fillStyle = gradienteEscuro;
-          ctx.fill();
-
-          ctx.restore();
-        }
-      }]
     });
-    
 
-        
+
+
 
 
 
@@ -549,7 +620,7 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
             }]
         };
 
-       
+
         for (i = 0; i < resposta.length; i++) {
             var registro = resposta[i];
             labels.push(registro.momento_grafico);
@@ -632,47 +703,50 @@ const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
 
     }
 
-
-    function filtrarRelatorio() {
+  function filtrarRelatorio() {
     const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
-    btnGerarRelatorio = document.getElementById("btnGerarRelatorio")
-        console.log("TESTE1")
+    btnGerarRelatorio = document.getElementById("btnGerarRelatorio");
+    const dropdownContainer = document.querySelector(".btn-relatorio-container");
+
+    console.log("TESTE1");
 
     if(fktipoUsuario == 1) {
-        console.log("TESTE")
-        btnGerarRelatorio.style.display = 'none'
+        console.log("TESTE");
+        btnGerarRelatorio.style.display = 'none';
+        if(dropdownContainer) {
+            dropdownContainer.style.display = 'none'; 
+        }
     }
-    }
-
+}
 
 
 
     async function gerarResposta() { // assincrona pra pegar junto com os processos e não dar ruim se é que me entende...
-    try {
-        console.log("Gerando análise detalhada...");
-        const response = await fetch('/analisar-processos');
-        if (!response.ok) {
-            throw new Error(`Erro: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Análise recebida:", data);
-        if (data.success) {
-            const mensagem = `${data.analise}`;
-            console.log(mensagem);
-
-            try {
-                retornoJson = data.analise
-                console.log(retornoJson)
-            } catch {
-                console.log("Erro ao converter para JSON")
+        try {
+            console.log("Gerando análise detalhada...");
+            const response = await fetch('/analisar-processos');
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.status}`);
             }
+            const data = await response.json();
+            console.log("Análise recebida:", data);
+            if (data.success) {
+                const mensagem = `${data.analise}`;
+                console.log(mensagem);
 
-        } else {
-            alert(`Erro: ${data.message || data.error}`);
+                try {
+                    retornoJson = data.analise
+                    console.log(retornoJson)
+                } catch {
+                    console.log("Erro ao converter para JSON")
+                }
+
+            } else {
+                alert(`Erro: ${data.message || data.error}`);
+            }
+        } catch (error) {
+            alert('Erro ao gerar análise: ' + error.message);
         }
-    } catch (error) {
-        alert('Erro ao gerar análise: ' + error.message);
     }
-}
 
 </script>
