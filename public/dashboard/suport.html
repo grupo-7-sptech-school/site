@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <link rel="shortcut icon" href="../assets/icon/logo-branca.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarData | Suporte</title>
+
+  <link rel="stylesheet" href="./../css/dashboards.css">
+  <link rel="stylesheet" href="./../css/suporte.css">
+
+  <script src="../js/sessao.js"></script>
+  <script src="./../js/alerta.js"></script>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- FONT AWESOME -->
+  <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="dashboard-bg">
+
+    <div class="dashboard-sidebar">
+      <div class="dashboard-logo"></div>
+
+      <div class="dashboard-sidebar-btns">
+        <a href="alertas.html" class="dashboard-sidebar-btn">
+          <div class="icon-alert"></div>
+          <h3>Alertas</h3>
+        </a>
+
+        <a href="conta.html" class="dashboard-sidebar-btn">
+          <div class="icon-user"></div>
+          <h3>Conta</h3>
+        </a>
+
+        <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+          <div class="icon-dashboard"></div>
+          <h3>Painel de Controle</h3>
+        </a>
+
+        <a href="relatorios.html" class="dashboard-sidebar-btn active">
+          <div class="icon-relatory"></div>
+          <h3>Relatórios</h3>
+        </a>
+
+        <a href="suporte.html" class="dashboard-sidebar-btn">
+          <div class="icon-support"></div>
+          <h3>Suporte</h3>
+        </a>
+      </div>
+
+      <a href="index.html" class="dashboard-logout">
+        <div class="icon-logout"></div>
+        <h3>Logout</h3>
+      </a>
+    </div>
+
+    <div class="dashboard-low-right-side">
+
+        <div class="dashboard-topbar">
+        <h2>Central de ajuda</h2>
+
+        <div class="btns-topbar" style="width: 9vw;">
+          <button class="btn-notificacao">
+            <div class="icon-notificacao"></div>
+          </button>
+
+          <a href="conta.html" class="btn-conta">
+            <div class="icon-user2"></div>
+          </a>
+        </div>
+      </div>
+
+      <div class="faq-container">
+
+  <div class="faq-header">
+    <h2>Perguntas Frequentes (FAQ)</h2>
+    <p>Veja se a sua dúvida já foi respondida.</p>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span>Como entro em contato com o suporte?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-answer">
+      <p>Você pode entrar em contato com a nossa equipe pelo chat disponível na página inicial, ou enviando um email para <b>techsolardata@gmail.com</b></p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span>Como faço alteração de cadastro?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-answer">
+      <p>Após o login realizado, vá até a aba <b>Contas</b>, e clique em <b>Alterar cadastro</b>. Neste menu, você consegue alterar seu email, senha e foto de perfil.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span>Esqueci minha senha, o que faço?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-answer">
+      <p>Clique em <b>Esqueci minha senha</b> na tela de login, e siga as instruções para redefinir. Um link será enviado para o email cadastrado.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span>Como funciona a geração de relatórios?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-answer">
+      <p>Após clicar no botão <b>Gerar relatório</b> na tela do <b>Painel de controle</b>, será gerado um arquivo com extensão PDF, com as informações capturadas baseado na análise daquele momento. Os relatórios são gerados com IA.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question">
+      <span>De que forma sou notificado(a) sobre o monitoramento?</span>
+      <span class="faq-icon">+</span>
+    </div>
+    <div class="faq-answer">
+      <p>É combinado com nossos clientes as métricas de preferência em sua empresa. Nós utilizamos a poderosa ferramenta <b>Slack</b>. Com ela, assim que a métrica definida for ultrapassada ou reduzida com a medição do monitamento do componente, é enviado uma notificação para a equipe responsável.</p>
+    </div>
+  </div>
+
+  <div class="faq-footer">
+    <p>Ainda não conseguiu tirar sua dúvida ou resolver seu problema?</p>
+    <button class="btn-chamado" onclick="abrirChamado()">Abrir chamado</button>
+  </div>
+
+</div>
+
+    </div>
+  </div>
+</body>
+</html>
+<script>
+
+let perguntas = document.querySelectorAll('.faq-question');
+
+for (let i = 0; i < perguntas.length; i++) {
+  perguntas[i].onclick = function() {
+    this.parentElement.classList.toggle('active');
+  }
+}
+
+  function abrirChamado() {
+    window.open('https://solardata.atlassian.net/jira/servicedesk/projects/SS/queues/custom/1?cloudId=66c16323-0eec-43be-9767-f36a00f186fb&atlOrigin=eyJpIjoiYTA2ZmVlOGZjOTk2NDc5NGI1YmFjMzNjOWM3ZTg2YTQiLCJwIjoiaiJ9', '_blank');
+  }
+</script>
