@@ -52,4 +52,8 @@ router.post("/cadastrarMaquina", function (req, res) {
     usuarioController.cadastrarMaquinaController(req, res);
 });
 
+router.get("/puxarMaquinas", function (req, res) {
+    usuarioController.puxarMaquinas(req, res);
+});
+
 module.exports = router;

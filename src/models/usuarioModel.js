@@ -77,6 +77,49 @@ function puxarAlerta() {
     return database.executar(instrucaoSql);
 }
 
+function puxarMaquinas() {
+    var instrucaoSql = `SELECT 
+    m.hostName AS 'HostName',
+    m.identificador AS 'Identificador',
+    m.ip AS 'IP',
+    m.dtCriacao AS 'Data de Criação',
+    (SELECT r.captura 
+     FROM Registro r
+     JOIN Componente c ON r.fkComponente = c.idComponente
+     WHERE c.nome LIKE 'CPU%' AND c.fkMaquina = m.hostName
+     ORDER BY r.dtRegistro DESC
+     LIMIT 1) AS 'CPU Atual (%)',
+    (SELECT r.captura 
+     FROM Registro r
+     JOIN Componente c ON r.fkComponente = c.idComponente
+     WHERE c.nome LIKE 'RAM%' AND c.fkMaquina = m.hostName
+     ORDER BY r.dtRegistro DESC
+     LIMIT 1) AS 'RAM Atual (%)',
+    (SELECT a.estado 
+     FROM Alerta a
+     JOIN Componente c ON a.fkComponente = c.idComponente
+     WHERE c.fkMaquina = m.hostName
+     ORDER BY a.dtHora DESC
+     LIMIT 1) AS 'Último Estado',
+    (SELECT a.dtHora 
+     FROM Alerta a
+     JOIN Componente c ON a.fkComponente = c.idComponente
+     WHERE c.fkMaquina = m.hostName
+     ORDER BY a.dtHora DESC
+     LIMIT 1) AS 'Data do Último Alerta',
+    (SELECT a.descricao 
+     FROM Alerta a
+     JOIN Componente c ON a.fkComponente = c.idComponente
+     WHERE c.fkMaquina = m.hostName
+     ORDER BY a.dtHora DESC
+     LIMIT 1) AS 'Descrição do Último Alerta'
+     FROM Maquina m
+     ORDER BY m.hostName;`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 
 function cadastrarMaquina(identificador, hostname, mac, ip, fkEmpresa) {
     var instrucaoSql = `
@@ -95,5 +138,6 @@ module.exports = {
     validarEmailRecuperar,
     inserirRecuperacao,
     puxarAlerta,
-    cadastrarMaquina
+    cadastrarMaquina,
+    puxarMaquinas
 };

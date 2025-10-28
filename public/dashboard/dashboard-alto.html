@@ -48,7 +48,7 @@
                     <div class="icon-user"></div>
                     <h3>Conta</h3>
                 </a>
-                <a href="dashboard.html" class="dashboard-sidebar-btn">
+                <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
                     <div class="icon-dashboard"></div>
                     <h3>Painel de Controle</h3>
                 </a>
@@ -75,268 +75,80 @@
                 <div class="btns-topbar">
                     <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
                         Cadastrar Máquina
-                    </a> 
+                    </a>
                     <button class="btn-notificacao">
                     </button>
                     <a href="conta.html" class="btn-conta">
                         <div class="icon-user2"></div>
                     </a>
 
-                        </div>
-                    </div>
-                    <!-- Fim Cabeçalho -->
-                    <div class="box-dashboard">
+                </div>
+            </div>
+            <!-- Fim Cabeçalho -->
+            <div class="box-dashboard">
 
-                        <div class="box-notificacao">
+                <div class="box-notificacao">
 
-                            <!-- Topo  quadro de monitoramento -->
-                            <div class="topo-notificacao">
-                                <div class="box-id">
-                                    <p>HOSTNAME</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>IDENTIFICADOR</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>UPTIME</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>ULTIMA OCORRÊNCIA</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>USO DO RACK</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>STATUS</p>
-                                </div>
+                    <!-- Topo  quadro de monitoramento -->
+                    <div class="container-maquinas">
+                        <div class="header-maquinas">
+                            <div class="box-id">
+                                <p>HOSTNAME</p>
                             </div>
-
-                            <!-- Linha 1-->
-                            <div class="line-notifica1">
-                                <div class="box-id">
-                                    <p>0001</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>PROD-WEB-01</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>5 anos</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>Sem ocorrências</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>50%</p>
-                                </div>
-                                <div class="box-status">
-                                    <div>Operando</div>
-                                </div>
+                            <div class="box-nome">
+                                <p>IDENTIFICADOR</p>
                             </div>
-
-                            <!-- Linha 2-->
-                            <div class="line-notifica2">
-                                <div class="box-id">
-                                    <p>0002</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>HTML-WEB-01</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>1 mês</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>09/09/2025</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>17%</p>
-                                </div>
-                                <div class="box-status">
-                                    <div>Ocioso</div>
-                                </div>
+                            <div class="box-uptime">
+                                <p>IP</p>
                             </div>
-
-                            <!-- Linha 3-->
-                            <div class="line-notifica3">
-                                <div class="box-id">
-                                    <p>0003</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>DEV-WEB-01</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>2 semanas</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>07/10/2025</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>90%</p>
-                                </div>
-                                <div class="box-status">
-                                    <div>Crítico</div>
-                                </div>
+                            <div class="box-uptime">
+                                <p>DATA DE CRIAÇÃO</p>
                             </div>
-
-                            <!-- Linha 4-->
-                            <div class="line-notifica4">
-                                <div class="box-id">
-                                    <p>0004</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>PROD-DB-01</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>2 anos</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>21/02/2023</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>70%</p>
-                                </div>
-                                <div class="box-status">
-                                    <div>Operando</div>
-                                </div>
+                            <div class="box-ocorrencia">
+                                <p>ULTIMA OCORRÊNCIA</p>
                             </div>
-
-                            <!-- Linha 5-->
-                            <div class="line-notifica5">
-                                <div class="box-id">
-                                    <p>0005</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>HTML-DB-01</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>4 dias</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>12/10/2025</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>20%</p>
-                                </div>
-                                <div class="box-status">
-                                    <div>Ocioso</div>
-                                </div>
+                            <div class="box-rack">
+                                <p>USO DE CPU</p>
                             </div>
-
-                            <!-- Linha 6-->
-                            <div class="line-notifica6">
-                                <div class="box-id">
-                                    <p>0006</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>PROD-APP-01</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>3 anos</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>Sem ocorrências</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>60%</p>
-                                </div>
-                                <div class="box-status">
-                                    <div>Operando</div>
-                                </div>
+                            <div class="box-rack">
+                                <p>USO DE RAM</p>
                             </div>
-
-                            <!-- Linha 7-->
-                            <div class="line-notifica7">
-                                <div class="box-id">
-                                    <p>0007</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>PROD-WEB-01</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>Inativo</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>06/06/2024</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>0%</p>
-                                </div>
-                                <div class="box-status">
-                                    <div>Inoperante</div>
-                                </div>
-                            </div>
-
-                            <!-- Linha 8-->
-                            <div class="line-notifica8">
-                                <div class="box-id">
-                                    <p>0008</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>DEV-DB-01</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>12 horas</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>27/10/2025</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>75%</p>
-                                </div>
-                                <div class="box-status">
-                                    <div>Alerta</div>
-                                </div>
-                            </div>
-
-                            <!-- Linha 9-->
-                            <div class="line-notifica-final">
-                                <div class="box-id">
-                                    <p>0009</p>
-                                </div>
-                                <div class="box-nome">
-                                    <p>DEV-APP-01</p>
-                                </div>
-                                <div class="box-uptime">
-                                    <p>25 minutos</p>
-                                </div>
-                                <div class="box-ocorrencia">
-                                    <p>16/07/2025</p>
-                                </div>
-                                <div class="box-rack">
-                                    <p>18%</p>
-                                </div>
-                                <div class="box-status">
-                                    <div>Ocioso</div>
-                                </div>
+                            <div class="box-status">
+                                <p>STATUS</p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="modal fade" id="modalNotificacoes" tabindex="-1"
-                        aria-labelledby="modalNotificacoesLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content border-success">
-                                <div class="modal-header bg-success text-white">
-                                    <h5 class="modal-title" id="modalNotificacoesLabel">Últimos Alertas</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                        aria-label="Fechar"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div id="alertasContainer">
-                                        <p class="text-center text-muted">Carregando alertas...</p>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-success"
-                                        data-bs-dismiss="modal">Fechar</button>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- as linhas virão aqui -->
+                        <div id="lista-maquinas"></div>
                     </div>
 
                 </div>
+            </div>
+
+            <div class="modal fade" id="modalNotificacoes" tabindex="-1" aria-labelledby="modalNotificacoesLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-success">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title" id="modalNotificacoesLabel">Últimos Alertas</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                aria-label="Fechar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="alertasContainer">
+                                <p class="text-center text-muted">Carregando alertas...</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-success"
+                                data-bs-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 </body>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -349,12 +161,12 @@
 
 
     function filtrarCadastroMaquina() {
-    const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
-    btnCadsatrarMaquina = document.getElementById("btnCadsatrarMaquina")
+        const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
+        btnCadsatrarMaquina = document.getElementById("btnCadsatrarMaquina")
 
-    if(fktipoUsuario == 1) {
-        btnCadsatrarMaquina.style.display = 'none'
-    }
+        if (fktipoUsuario == 1) {
+            btnCadsatrarMaquina.style.display = 'none'
+        }
     }
 
 
@@ -369,7 +181,7 @@
             if (!response.ok) {
                 throw new Error('Erro ao buscar alertas');
             }
-            
+
             const alertas = await response.json();
 
             if (alertas.length == 0) {
@@ -391,15 +203,16 @@
                 } else if (alerta.estado == 'ALERTA') {
                     tipoClasse = 'alert-warning';
                 } else if (alerta.estado == 'NORMAL') {
-                    tipoClasse = 'alert-success';   
-                } 
+                    tipoClasse = 'alert-success';
+                }
 
                 div.className = `alert ${tipoClasse} mb-2`;
                 div.role = 'alert';
 
                 div.innerHTML = `
                 <strong>Identificador da máquina: </strong> <small> ${alerta.identificador || 'Maquina desconhecida'} </small> <br>
-                <strong>${alerta.componenteNome || 'Componente desconhecido'}:</strong> ${alerta.captura || 'Sem captura.'} <br>
+                <strong>${alerta.componenteNome || 'Componente desconhecido'}:
+                </strong> ${alerta.captura || 'Sem captura.'} <br>
                 <strong> Estado: </strong> <small> ${alerta.estado || 'DESCONHECIDO'} </small>
                 <br><small>${new Date(alerta.dtHora).toLocaleString()}</small>
             `;
@@ -414,5 +227,95 @@
 
 
 
+function formatarData(dataISO) {
+  if (!dataISO) return "—";  // filtra para ver se tem o dado ou não
+  const data = new Date(dataISO);
+  if (isNaN(data)) return "—";  // filtra para ver se tem o dado ou não
+  return data.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+
+
+
+
+  async function carregarMaquinas() {
+
+  var container = document.getElementById("lista-maquinas");
+  container.innerHTML = "<p class='text-muted text-center'>Carregando máquinas...</p>";
+
+  try {
+    var respostaRecebida = await fetch("/usuarios/puxarMaquinas");
+    var maquinas = await respostaRecebida.json();
+
+    if (maquinas.length == 0) {
+      container.innerHTML = "<p class='text-center text-muted'>Nenhuma máquina cadastrada.</p>";
+      return;
+    }
+
+    container.innerHTML = "";
+
+    for (let index = 0; index < maquinas.length; index++) {
+      const m = maquinas[index];
+
+      var host = m["HostName"] || "—";
+      var ident = m["Identificador"] || "—";
+      var ip = m["IP"] || "—";
+      var dataCriacao = m["Data de Criação"];
+      var ultimaOcorrencia = m["Data do Último Alerta"];
+
+      var dataCriacaoFormatada = formatarData(dataCriacao);
+      var ultimaOcorrenciaFormatada = formatarData(ultimaOcorrencia);
+
+      var cpuValor = m["CPU Atual (%)"] || 0;
+      var ramValor = m["RAM Atual (%)"] || 0;
+      var usoCPU = `${cpuValor}%`;
+      var usoRAM = `${ramValor}%`;
+
+      var estado = "";
+      if (cpuValor > 80 || ramValor > 90) {
+        estado = "critico";
+      } else if ((cpuValor >= 70 && cpuValor <= 80) || (ramValor >= 80 && ramValor <= 90)) {
+        estado = "alerta";
+      } else if (cpuValor < 10 && ramValor < 10) {
+        estado = "ocioso";
+      } else {
+        estado = "normal";
+      }
+
+      const linhaBagulho = document.createElement("div"); // chama a div especifica para cada linha
+      linhaBagulho.classList.add("line-notifica");  // adiciona css a linha especifica 
+
+      linhaBagulho.innerHTML = `
+        <div class="box-id"><p>${host}</p></div>
+        <div class="box-nome"><p>${ident}</p></div>
+        <div class="box-uptime"><p>${ip}</p></div>
+        <div class="box-uptime"><p>${dataCriacaoFormatada}</p></div>
+        <div class="box-ocorrencia"><p>${ultimaOcorrenciaFormatada}</p></div>
+        <div class="box-rack"><p>${usoCPU}</p></div>
+        <div class="box-rack"><p>${usoRAM}</p></div>
+        <div class="box-status"><p class="status ${estado}">${estado.toUpperCase()}</p></div>
+      `;
+
+      linhaBagulho.onclick = function() {
+      location.replace(`dashboard.html?id=${m["host"]}`);  // assim que ele clica ele vai para a a dash especifica do ID
+      }
+
+      container.appendChild(linhaBagulho);  // adiciona a nova linha de info no fim da página, com as coisas especificas e tal
+    }
+  } catch (e) {
+    console.error(e);
+    container.innerHTML = "<p style='color:red;'>Erro ao carregar máquinas.</p>";
+  }
+}
+
+
+filtrarCadastroMaquina();
+carregarMaquinas();
 
 </script>
