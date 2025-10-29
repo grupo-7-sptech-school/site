@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Máquina</title>
     <link rel="stylesheet" href="./../css/cabecalho3.css">
-
 </head>
 
 <body>
@@ -28,12 +27,6 @@
                         <div class="icon-dashboard"></div>
                         <h3>Painel de <br> Controle</h3>
                     </a>
-                    <!--
-                    <a href="relatorios.html" class="dashboard-sidebar-btn">
-                        <div class="icon-relatory"></div>
-                        <h3>Relatórios</h3>
-                    </a>
-                    -->
                     <a href="suporte.html" class="dashboard-sidebar-btn">
                         <div class="icon-support"></div>
                         <h3>Suporte</h3>
@@ -52,48 +45,161 @@
                     </a>
                     <div class="btns-topbar">
                         <div class="btn-padrao">
-                                <button class="btn-notificacao">
-                                </button>
-                                <a href="conta.html" class="btn-conta">
-                                </a>
+                            <button class="btn-user">
+                                Gerenciamento usuario
+                            </button>
+                            <button class="btn-notificacao">
+                            </button>
+                            <a href="conta.html" class="btn-conta">
+                            </a>
                         </div>
                     </div>
                 </div>
                 <!-- Fim Cabeçalho -->    
-        </div>
-        </div>
-    </div>
-
-    <div class="conta-container">
-
-        <div class="container-informacoes">
-            <div class="campo-info">
-            <span>Usuário:</span>
+                
             </div>
-            <div class="campo-info">
-                <span>Empresa:</span>
-            </div>
-            <div class="campo-info">
-                <div class="icon-alterar"></div>
-                <span>E-mail:</span>
-            </div>
-            <div class="campo-info">
-                <div class="icon-alterar"></div>
-                <span>Senha:</span>
-                <span class="senha">*****</span>
-            </div>
-            <div class="campo-info">
-                <span>Permissão da conta:</span>
-            </div>
-            
-
-            
-
         </div>
     </div>
 
-    
+    <div id="modalUsuarios" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Gerenciamento de Usuários</h2>
+                <span class="close">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="form-adicionar-usuario">
+                    <h3>Adicionar Novo Usuário</h3>
+                    <form id="formNovoUsuario">
+                        <div class="form-group">
+                            <label for="email">E-mail:</label>
+                            <input type="email" id="email" name="email" required placeholder="exemplo@empresa.com">
+                        </div>
+                         <div class="form-group">
+                            <label for="senha">Senha:</label>
+                            <input type="password" id="senha" name="senha" required placeholder="**********">
+                        </div>
+                        <div class="form-group">
+                            <label for="permissao">Tipo de Permissão:</label>
+                            <select id="permissao" name="permissao" required>
+                                <option value="">Selecione o tipo de permissão...</option>
+                                <option value="admin">Administrador</option>
+                                <option value="usuario">Usuário</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-adicionar">Adicionar Usuário</button>
+                    </form>
+                </div>
 
+                <div class="lista-usuarios">
+                    <h3>Usuários do Sistema</h3>
+                    <div class="tabela-usuarios">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>E-mail</th>
+                                    <th>Tipo de Permissão</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaUsuarios">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('modalUsuarios');
+            const btnAbrir = document.querySelector('.btn-user');
+            const spanFechar = document.querySelector('.close');
+            const formNovoUsuario = document.getElementById('formNovoUsuario');
+            const tabelaUsuarios = document.getElementById('tabelaUsuarios');
+
+            let usuarios = [
+                { email: 'admin@solardata.com', permissao: 'admin' },
+                { email: 'analista1@solardata.com', permissao: 'usuario' },
+            ];
+
+            btnAbrir.addEventListener('click', function() {
+                modal.style.display = 'block';
+                carregarUsuarios();
+            });
+
+            spanFechar.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            function carregarUsuarios() {
+                tabelaUsuarios.innerHTML = '';
+                usuarios.forEach((usuario, index) => {
+                    const tr = document.createElement('tr');
+                    
+                    const classePermissao = `permissao-${usuario.permissao}`;
+                    const textoPermissao = usuario.permissao === 'admin' ? 'Administrador' : 
+                                        usuario.permissao === 'usuario' ? 'Usuário' : 'Visualizador';
+                    
+                    tr.innerHTML = `
+                        <td>${usuario.email}</td>
+                        <td><span class="${classePermissao}">${textoPermissao}</span></td>
+                        <td>
+                            <button class="btn-acao btn-editar" onclick="editarUsuario(${index})">Editar</button>
+                            <button class="btn-acao btn-excluir" onclick="excluirUsuario(${index})">Excluir</button>
+                        </td>
+                    `;
+                    tabelaUsuarios.appendChild(tr);
+                });
+            }
+
+            formNovoUsuario.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const permissao = document.getElementById('permissao').value;
+                
+                if (email && permissao) {
+                    usuarios.push({ email, permissao });
+                    carregarUsuarios();
+                    formNovoUsuario.reset();
+                    
+                    console.log('Novo usuário:', { email, permissao });
+                    alert('Usuário adicionado com sucesso!');
+                }
+            });
+
+            window.editarUsuario = function(index) {
+                const usuario = usuarios[index];
+                const novoEmail = prompt('Editar e-mail:', usuario.email);
+                const novaPermissao = prompt('Editar permissão (admin/usuario/visualizador):', usuario.permissao);
+                
+                if (novoEmail && novaPermissao) {
+                    usuarios[index] = { email: novoEmail, permissao: novaPermissao };
+                    carregarUsuarios();
+                    alert('Usuário atualizado com sucesso!');
+                }
+            };
+
+            window.excluirUsuario = function(index) {
+                if (confirm('Tem certeza que deseja excluir este usuário?')) {
+                    usuarios.splice(index, 1);
+                    carregarUsuarios();
+                    alert('Usuário excluído com sucesso!');
+                }
+            };
+
+            carregarUsuarios();
+        });
+    </script>
 </body>
 
 </html>
