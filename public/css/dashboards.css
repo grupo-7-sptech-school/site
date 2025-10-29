@@ -479,14 +479,12 @@ body {
 /* Botão inferior */
 #btnFecharModal {
   background-color: #ffffff;
-  color:#06503d;
+  color: #06503d;
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 20px;
-  transition: background-color 0.3s ease;
 }
 
 /* Container de alertas */
@@ -495,30 +493,60 @@ body {
 }
 
 /* Estilo de cada alerta */
-.alerta-item {
+#alertasContainer .alerta-item {
   padding: 15px 20px;
   border-radius: 8px;
   margin-bottom: 12px;
-  color: white;
   font-size: 0.95rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  word-break: break-word;
+  color: #fff; /* padrão texto claro */
 }
 
+
 /* Tipos de alerta */
-.alerta-item.info {
-  background-color:#0b795b;
+/* Alertas Container */
+#modalNotificacoes .modal-content {
+    background-color: #EDEDED;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    font-family: "montserrat", sans-serif;
+}
+
+/* Container de alertas */
+#alertasContainer {
+    margin-top: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Estilo base para alertas */
+.alerta-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-family: "montserrat", sans-serif;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estados específicos */
+.alerta-item.success {
+    background-color: #06795B;
+    color: white;
+    border-left: 4px solid #045d46;
 }
 
 .alerta-item.warning {
-  background-color:red;
+    background-color: #F5A623;
+    color: #1a1a1a;
+    border-left: 4px solid #d68b13;
 }
 
 .alerta-item.danger {
-  background-color:red;
-}
-
-.alerta-item.success {
-  background-color:#06795b;
+    background-color: #E53935;
+    color: white;
+    border-left: 4px solid #c62828;
 }
 
 .loading {
