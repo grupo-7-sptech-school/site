@@ -214,31 +214,58 @@
         if (e.target === modal) modal.classList.remove('active');
     });
 
-    // Carregar alertas simulados
-    function carregarAlertas() {
-        alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
 
-        setTimeout(() => {
-            const alertas = [
-                { titulo: "Servidor 3 reiniciado", data: "25/10/2025 - 14:20", tipo: "info" },
-                { titulo: "Temperatura acima do limite", data: "25/10/2025 - 13:55", tipo: "warning" },
-                { titulo: "Falha na UPS detectada", data: "25/10/2025 - 12:40", tipo: "danger" },
-                { titulo: "Backup concluído com sucesso", data: "25/10/2025 - 11:10", tipo: "success" }
-            ];
 
-            alertasContainer.innerHTML = "";
 
-            alertas.forEach(alerta => {
-                const div = document.createElement('div');
-                div.classList.add('alerta-item', alerta.tipo);
-                div.innerHTML = `
-        <strong>${alerta.titulo}</strong><br>
-        <small>${alerta.data}</small>
-      `;
-                alertasContainer.appendChild(div);
-            });
-        }, 800);
+
+    async function carregarAlertas() {
+    alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
+
+    try {
+        const resposta = await fetch("/usuarios/puxarAlerta");
+        if (!resposta.ok) throw new Error("Erro ao buscar alertas do servidor.");
+
+        const alertas = await resposta.json();
+        alertasContainer.innerHTML = "";
+
+        if (alertas.length === 0) {
+            alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta encontrado.</p>";
+            return;
+        }
+
+        alertas.forEach(alerta => {
+            let tipoClasse = "";
+
+            if (alerta.estado == "CRITICO") {
+                tipoClasse = "alert-danger";
+            } else if (alerta.estado == "ALERTA") {
+                tipoClasse = "alert-warning";
+            } else if (alerta.estado == "NORMAL") {
+                tipoClasse = "alert-success";
+            } else {
+                tipoClasse = "alert-secondary";
+            }
+
+            const div = document.createElement("div");
+            div.className = `alerta-item ${tipoClasse}`;
+            div.innerHTML = `
+                <strong>Identificador da máquina:</strong> <small>${alerta.identificador || "Desconhecida"}</small><br>
+                <strong>${alerta.componenteNome || "Componente"}:</strong> ${alerta.captura || "Sem dados."}<br>
+                <strong>Estado:</strong> <small>${alerta.estado || "DESCONHECIDO"}</small><br>
+                <small>${new Date(alerta.dtHora).toLocaleString("pt-BR")}</small>
+            `;
+
+            alertasContainer.appendChild(div);
+        });
+    } catch (error) {
+        console.error("Erro ao carregar alertas:", error);
+        alertasContainer.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
     }
+}
+
+
+
+
 
     function formatarData(dataISO) {
         if (!dataISO) return "—";  // filtra para ver se tem o dado ou não

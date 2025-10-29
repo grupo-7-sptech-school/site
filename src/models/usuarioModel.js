@@ -66,10 +66,10 @@ function puxarAlerta() {
     Componente.nome AS componenteNome,
     Maquina.identificador AS identificador
     FROM Alerta
-    JOIN Registro ON Alerta.fkRegistro = Registro.idRegistro
-    JOIN Componente ON Registro.fkComponente = Componente.idComponente
-    JOIN Maquina ON Componente.fkMaquina = Maquina.hostname
-    WHERE alerta.estado != "NORMAL"
+    LEFT JOIN Registro ON Alerta.fkRegistro = Registro.idRegistro
+    JOIN Componente ON Alerta.fkComponente = Componente.idComponente
+    JOIN Maquina ON Componente.fkMaquina = Maquina.hostName
+    WHERE Alerta.estado != "NORMAL"
     ORDER BY Alerta.dtHora DESC
     LIMIT 4;`;
 
