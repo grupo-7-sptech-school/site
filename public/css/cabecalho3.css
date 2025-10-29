@@ -24,7 +24,7 @@ body{
 }
 
 .dashboard-sidebar{
-  justify-self: flex-start;
+ justify-self: flex-start;
   color: white;
   background-color: #0B795B;
   height: 100vh;
@@ -32,26 +32,35 @@ body{
   display: flex;
   align-items: center;
   flex-direction: column;
+  padding-right: 0.5vw;
   gap: 7vh;
-  font-family:"montserrat",sans-serif;
+  font-family: "montserrat", sans-serif;
 }
 
-.dashboard-logo{
+.dashboard-logo {
   background-image: url(../assets/icon/logoSD.png);
   margin-top: 13vh;
   padding-left: 5vw;
   padding-top: 11vh;
   padding-right: 5vw;
   margin-left: -3vw;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-x: center;
+  background-position-y: center;
 }
 
-.dashboard-logout{
+.dashboard-logout {
   margin-top: 7vh;
   color: white;
   text-decoration: none;
   display: flex;
   align-items: center;
   padding-right: 5vw;
+}
+
+.dashboard-sidebar-btns {
+  color: white;
 }
 
 .dashboard-sidebar-btns{

@@ -66,10 +66,10 @@ function puxarAlerta() {
     Componente.nome AS componenteNome,
     Maquina.identificador AS identificador
     FROM Alerta
-    LEFT JOIN Registro ON Alerta.fkRegistro = Registro.idRegistro
-    JOIN Componente ON Alerta.fkComponente = Componente.idComponente
-    JOIN Maquina ON Componente.fkMaquina = Maquina.hostName
-    WHERE Alerta.estado != "NORMAL"
+    JOIN Registro ON Alerta.fkRegistro = Registro.idRegistro
+    JOIN Componente ON Registro.fkComponente = Componente.idComponente
+    JOIN Maquina ON Componente.fkMaquina = Maquina.hostname
+    WHERE alerta.estado != "NORMAL"
     ORDER BY Alerta.dtHora DESC
     LIMIT 4;`;
 
@@ -155,4 +155,4 @@ module.exports = {
     cadastrarMaquina,
     puxarMaquinas,
     cadastrarComponentes
-};
+}

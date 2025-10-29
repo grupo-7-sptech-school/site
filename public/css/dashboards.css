@@ -1,14 +1,10 @@
 html {
   overflow: hidden;
   scroll-behavior: smooth;
-
 }
-
-
 
 body {
   margin: 0;
-
 }
 
 .dashboard-bg {
@@ -33,7 +29,6 @@ body {
 }
 
 .dashboard-logo {
-
   background-image: url(../assets/icon/logoSD.png);
   margin-top: 13vh;
   padding-left: 5vw;
@@ -53,15 +48,11 @@ body {
   display: flex;
   align-items: center;
   padding-right: 5vw;
-  
 }
 
 .dashboard-sidebar-btns {
   color: white;
-
 }
-
-
 
 .dashboard-topbar {
   height: 13vh;
@@ -96,14 +87,11 @@ body {
   background-position-x: center;
   background-position-y: center;
   background-size: 5vh;
-  
 }
 
 .btn-notificacao:hover {
   transition: scale 0.3s ease-in-out;
   scale: 1.1;
-  
-
 }
 
 .btn-gerar-relatorio {
@@ -137,7 +125,6 @@ body {
   display: flex;
   align-items: center;
   padding-left: 2vw;
-
 }
 
 .dashboard-sidebar-btn:hover {
@@ -199,13 +186,9 @@ body {
   color: rgb(235, 0, 0);
   background-color: rgba(216, 0, 0, 0.322);
   border-radius: 10px;
-
 }
 
-
-
 .btn-conta {
-
   background-image: url(../assets/icon/icon-svg.svg);
   display: flex;
   background-position-x: center;
@@ -218,9 +201,6 @@ body {
   scale: 1.1;
   background-color: #c8c8c8;
 }
-
-
-
 
 .dashboard-low-right-side {
   display: flex;
@@ -309,7 +289,6 @@ body {
   justify-content: space-evenly;
   align-items: center;
 
-
 }
 
 .uso-livre-disco h2 {
@@ -324,7 +303,6 @@ body {
 .uso-livre-disco {
   font-family: "montserrat" sans-serif;
   color: rgba(0, 0, 0, 0.593);
-
 }
 
 #h1_usoLivre {
@@ -380,8 +358,6 @@ body {
   font-family: "montserrat", sans-serif;
   color: #0B795B;
 }
-
-
 
 .copo {
   position: relative;

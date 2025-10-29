@@ -25,12 +25,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-
-
-
-
-
-
 </head>
 
 <!-- <body onload=" atualizarFeed()"> -->
@@ -53,10 +47,6 @@
                     <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
                         <div class="icon-dashboard"></div>
                         <h3>Painel de <br> Controle</h3>
-                    </a>
-                    <a href="relatorios.html" class="dashboard-sidebar-btn">
-                        <div class="icon-relatory"></div>
-                        <h3>Relatórios</h3>
                     </a>
                     <a href="suporte.html" class="dashboard-sidebar-btn">
                         <div class="icon-support"></div>
@@ -130,61 +120,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    Cabeçalho
-    <div class="dashboard-bg">
-        <div class="dashboard-sidebar">
-            <div class="dashboard-logo"></div>
-            <div class="dashboard-sidebar-btns">
-                <a href="alertas.html" class="dashboard-sidebar-btn">
-                    <div class="icon-alert"></div>
-                    <h3>Alertas</h3>
-                </a>
-                <a href="conta.html" class="dashboard-sidebar-btn">
-                    <div class="icon-user"></div>
-                    <h3>Conta</h3>
-                </a>
-                <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
-                    <div class="icon-dashboard"></div>
-                    <h3>Painel de Controle</h3>
-                </a>
-                <a href="relatorios.html" class="dashboard-sidebar-btn">
-                    <div class="icon-relatory"></div>
-                    <h3>Relatórios</h3>
-                </a>
-                <a href="suporte.html" class="dashboard-sidebar-btn">
-                    <div class="icon-support"></div>
-                    <h3>Suporte</h3>
-                </a>
-            </div>
-            <a href="index.html" class="dashboard-logout">
-                <div class="icon-logout"></div>
-                <h3>Logout</h3>
-            </a>
-        </div>
-        Cabeçalho topo
-        <div class="dashboard-low-right-side">
-            <div class="dashboard-topbar">
-                <a href="dashboard-alto.html" class="btn-voltar">
-                    Painel de controle - Servidor
-                </a>
-                <div class="btns-topbar">
-                    <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
-                        Cadastrar Máquina
-                    </a>
-                    <button class="btn-notificacao">
-                    </button>
-                    <a href="conta.html" class="btn-conta">
-                        <div class="icon-user2"></div>
-                    </a>
-
-                </div>
-            </div>
-            Fim Cabeçalho
-
-        </div>
-
-    </div>
     </div>
     <div id="modalNotificacoes">
         <div class="modal-content">
@@ -267,9 +202,6 @@
     }
 
 
-
-
-
     function formatarData(dataISO) {
         if (!dataISO) return "—";  // filtra para ver se tem o dado ou não
         const data = new Date(dataISO);
@@ -282,9 +214,6 @@
             minute: "2-digit",
         });
     }
-
-
-
 
 
     async function carregarMaquinas() {
