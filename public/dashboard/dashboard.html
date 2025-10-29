@@ -162,76 +162,76 @@
 </body>
 <script>
 
-    const btnNotificacao = document.querySelector('.btn-notificacao');
-    const modal = document.getElementById('modalNotificacoes');
-    const btnFecharModal = document.getElementById('btnFecharModal');
-    const alertasContainer = document.getElementById('alertasContainer');
+    // const btnNotificacao = document.querySelector('.btn-notificacao');
+    // const modal = document.getElementById('modalNotificacoes');
+    // const btnFecharModal = document.getElementById('btnFecharModal');
+    // const alertasContainer = document.getElementById('alertasContainer');
 
-    // Função para abrir o modal
-    btnNotificacao.addEventListener('click', () => {
-        modal.classList.add('active');
-        carregarAlertas();
-    });
+    // // Função para abrir o modal
+    // btnNotificacao.addEventListener('click', () => {
+    //     modal.classList.add('active');
+    //     carregarAlertas();
+    // });
 
-    // Fechar o modal
-    btnFecharModal.addEventListener('click', () => modal.classList.remove('active'));
+    // // Fechar o modal
+    // btnFecharModal.addEventListener('click', () => modal.classList.remove('active'));
 
-    // Fecha ao clicar fora da caixa
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
-    });
+    // // Fecha ao clicar fora da caixa
+    // modal.addEventListener('click', (e) => {
+    //     if (e.target === modal) modal.classList.remove('active');
+    // });
 
-    // Carregar alertas simulados
-    async function carregarAlertas() {
-        alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
+    // // Carregar alertas simulados
+    // async function carregarAlertas() {
+    //     alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
 
-        try {
-            const resposta = await fetch("/usuarios/puxarAlerta");
-            if (!resposta.ok) throw new Error("Erro ao buscar alertas do servidor.");
+    //     try {
+    //         const resposta = await fetch("/usuarios/puxarAlerta");
+    //         if (!resposta.ok) throw new Error("Erro ao buscar alertas do servidor.");
 
-            const alertas = await resposta.json();
-            alertasContainer.innerHTML = "";
+    //         const alertas = await resposta.json();
+    //         alertasContainer.innerHTML = "";
 
-            if (alertas.length === 0) {
-                alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta encontrado.</p>";
-                return;
-            }
+    //         if (alertas.length === 0) {
+    //             alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta encontrado.</p>";
+    //             return;
+    //         }
 
-            alertas.forEach(alerta => {
-                let tipoClasse = "";
-                switch (alerta.estado) {
-                    case "CRITICO":
-                        tipoClasse = "danger";
-                        break;
-                    case "ALERTA":
-                        tipoClasse = "warning";
-                        break;
-                    case "NORMAL":
-                        tipoClasse = "success";
-                        break;
-                    default:
-                        tipoClasse = "success";
-                }
+    //         alertas.forEach(alerta => {
+    //             let tipoClasse = "";
+    //             switch (alerta.estado) {
+    //                 case "CRITICO":
+    //                     tipoClasse = "danger";
+    //                     break;
+    //                 case "ALERTA":
+    //                     tipoClasse = "warning";
+    //                     break;
+    //                 case "NORMAL":
+    //                     tipoClasse = "success";
+    //                     break;
+    //                 default:
+    //                     tipoClasse = "success";
+    //             }
 
-                const dataFormatada = new Date(alerta.dtHora).toLocaleString("pt-BR");
+    //             const dataFormatada = new Date(alerta.dtHora).toLocaleString("pt-BR");
 
 
-                const div = document.createElement("div");
-                div.className = `alerta-item ${tipoClasse}`;
-                div.innerHTML = `
-                <strong>Identificador da máquina:</strong> <small>${alerta.identificador || "Desconhecida"}</small><br>
-                <strong>${alerta.componenteNome || "Componente"}:</strong> ${alerta.captura || "Sem dados."}<br>
-                <strong>Estado:</strong> <small>${alerta.estado || "DESCONHECIDO"}</small><br>
-                <small>${new Date(alerta.dtHora).toLocaleString("pt-BR")}</small>
-            `;
+    //             const div = document.createElement("div");
+    //             div.className = `alerta-item ${tipoClasse}`;
+    //             div.innerHTML = `
+    //             <strong>Identificador da máquina:</strong> <small>${alerta.identificador || "Desconhecida"}</small><br>
+    //             <strong>${alerta.componenteNome || "Componente"}:</strong> ${alerta.captura || "Sem dados."}<br>
+    //             <strong>Estado:</strong> <small>${alerta.estado || "DESCONHECIDO"}</small><br>
+    //             <small>${new Date(alerta.dtHora).toLocaleString("pt-BR")}</small>
+    //         `;
 
-                alertasContainer.appendChild(div);
-            });
-        } catch (error) {
-            console.error("Erro ao carregar alertas:", error);
-            alertasContainer.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
-        }
-    }
+    //             alertasContainer.appendChild(div);
+    //         });
+    //     } catch (error) {
+    //         console.error("Erro ao carregar alertas:", error);
+    //         alertasContainer.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
+    //     }
+    // }
 
     async function baixarPDF() {
         try {

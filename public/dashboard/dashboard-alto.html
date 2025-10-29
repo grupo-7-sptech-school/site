@@ -129,163 +129,300 @@
 </body>
 
 <script>
-    const btnNotificacao = document.querySelector('.btn-notificacao');
-    const modal = document.getElementById('modalNotificacoes');
-    const btnFecharModal = document.getElementById('btnFecharModal');
-    const alertasContainer = document.getElementById('alertasContainer');
+    // const btnNotificacao = document.querySelector('.btn-notificacao');
+    // const modal = document.getElementById('modalNotificacoes');
+    // const btnFecharModal = document.getElementById('btnFecharModal');
+    // const alertasContainer = document.getElementById('alertasContainer');
 
     // Função para abrir o modal
-    btnNotificacao.addEventListener('click', () => {
-        modal.classList.add('active');
-        carregarAlertas();
-    });
+    // btnNotificacao.addEventListener('click', () => {
+    //     modal.classList.add('active');
+    //     carregarAlertas();
+    // });
 
     // Fechar o modal
-    btnFecharModal.addEventListener('click', () => modal.classList.remove('active'));
+    // btnFecharModal.addEventListener('click', () => modal.classList.remove('active'));
 
-    // Fecha ao clicar fora da caixa
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
+    // // Fecha ao clicar fora da caixa
+    // modal.addEventListener('click', (e) => {
+    //     if (e.target === modal) modal.classList.remove('active');
+    // });
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    
+  const btnNotificacao = document.querySelector('.btn-notificacao');
+  const modal = document.getElementById('modalNotificacoes');
+  const btnFecharModal = document.getElementById('btnFecharModal');
+  const alertasContainer = document.getElementById('alertasContainer');
+  const listaMaquinas = document.getElementById('lista-maquinas');
+
+  if (!btnNotificacao || !modal || !btnFecharModal || !alertasContainer || !listaMaquinas) {
+    console.error("Elementos de alerta/maquinas não encontrados:", {
+      btnNotificacao, modal, btnFecharModal, alertasContainer, listaMaquinas
     });
+    return;
+  }
 
-    // Carregar alertas simulados
-    async function carregarAlertas() {
-        alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
+  const alertasMock = [
+    { identificador: "Server-SP01", componenteNome: "CPU", captura: 87.5, estado: "CRITICO", dtHora: "2025-10-28T21:05:17" },
+    { identificador: "Server-SP02", componenteNome: "RAM", captura: 82.1, estado: "ALERTA", dtHora: "2025-10-28T21:03:12" },
+    { identificador: "Server-SP03", componenteNome: "DISCO", captura: 91.3, estado: "CRITICO", dtHora: "2025-10-28T21:01:45" },
+    { identificador: "Server-SP01", componenteNome: "CPU", captura: 68.9, estado: "ALERTA", dtHora: "2025-10-28T21:00:32" }
+  ];
 
-        try {
-            const resposta = await fetch("/usuarios/puxarAlerta");
-            if (!resposta.ok) throw new Error("Erro ao buscar alertas do servidor.");
+  const maquinasMock = [
+    { HostName: "server-sp01", Identificador: "Server-SP01", IP: "192.168.0.10", DataCriacao: "2025-10-20T10:00:00", UltimoAlerta: "2025-10-28T21:05:17", CPU: 75, RAM: 82 },
+    { HostName: "server-sp02", Identificador: "Server-SP02", IP: "192.168.0.11", DataCriacao: "2025-10-22T14:32:00", UltimoAlerta: "2025-10-28T21:03:12", CPU: 45, RAM: 70 },
+    { HostName: "server-sp03", Identificador: "Server-SP03", IP: "192.168.0.12", DataCriacao: "2025-10-18T09:21:00", UltimoAlerta: "2025-10-28T21:01:45", CPU: 91, RAM: 76 },
+    { HostName: "server-rj01", Identificador: "Server-RJ01", IP: "192.168.1.10", DataCriacao: "2025-10-15T08:00:00", UltimoAlerta: "2025-10-27T19:45:00", CPU: 20, RAM: 25 }
+  ];
 
-            const alertas = await resposta.json();
-            alertasContainer.innerHTML = "";
+  function formatarData(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    if (isNaN(d)) return "—";
+    return d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  }
 
-            if (alertas.length === 0) {
-                alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta encontrado.</p>";
-                return;
-            }
-
-            alertas.forEach(alerta => {
-                let tipoClasse = "";
-                switch (alerta.estado) {
-                    case "CRITICO":
-                        tipoClasse = "danger";
-                        break;
-                    case "ALERTA":
-                        tipoClasse = "warning";
-                        break;
-                    case "NORMAL":
-                        tipoClasse = "success";
-                        break;
-                    default:
-                        tipoClasse = "success";
-                }
-
-                const dataFormatada = new Date(alerta.dtHora).toLocaleString("pt-BR");
-
-
-                const div = document.createElement("div");
-                div.className = `alerta-item ${tipoClasse}`;
-                div.innerHTML = `
-                <strong>Identificador da máquina:</strong> <small>${alerta.identificador || "Desconhecida"}</small><br>
-                <strong>${alerta.componenteNome || "Componente"}:</strong> ${alerta.captura || "Sem dados."}<br>
-                <strong>Estado:</strong> <small>${alerta.estado || "DESCONHECIDO"}</small><br>
-                <small>${new Date(alerta.dtHora).toLocaleString("pt-BR")}</small>
-            `;
-
-                alertasContainer.appendChild(div);
-            });
-        } catch (error) {
-            console.error("Erro ao carregar alertas:", error);
-            alertasContainer.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
-        }
+  function carregarAlertas() {
+    alertasContainer.innerHTML = "";
+    if (!alertasMock.length) {
+      alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta.</p>";
+      return;
     }
+    alertasMock.forEach(a => {
+      const tipoClasse = a.estado == "CRITICO" ? "danger" : a.estado == "ALERTA" ? "warning" : "success";
+      const div = document.createElement("div");
+      div.className = `alerta-item ${tipoClasse}`;
+      div.innerHTML = `
+        <strong>${a.identificador}</strong>
+        <small style="display:block;margin-top:4px;">${a.componenteNome} • <b>${a.captura}%</b></small>
+        <div style="margin-top:6px;"><small>Estado: <b>${a.estado}</b></small></div>
+        <small style="display:block;margin-top:6px;color:#555">${formatarData(a.dtHora)}</small>
+      `;
+      alertasContainer.appendChild(div);
+    });
+  }
 
+  function carregarMaquinas() {
+    listaMaquinas.innerHTML = "";
+    maquinasMock.forEach(m => {
+      const usoCPU = `${m.CPU}%`, usoRAM = `${m.RAM}%`;
+      let estado = "normal";
+      if (m.CPU > 80 || m.RAM > 90) estado = "critico";
+      else if (m.CPU >= 70 || m.RAM >= 80) estado = "alerta";
+      else if (m.CPU < 10 && m.RAM < 10) estado = "ocioso";
 
-    function formatarData(dataISO) {
-        if (!dataISO) return "—";  // filtra para ver se tem o dado ou não
-        const data = new Date(dataISO);
-        if (isNaN(data)) return "—";  // filtra para ver se tem o dado ou não
-        return data.toLocaleString("pt-BR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-    }
-
-
-    async function carregarMaquinas() {
-
-        var container = document.getElementById("lista-maquinas");
-        container.innerHTML = "<p class='text-muted text-center'>Carregando máquinas...</p>";
-
-        try {
-            var respostaRecebida = await fetch("/usuarios/puxarMaquinas");
-            var maquinas = await respostaRecebida.json();
-
-            if (maquinas.length == 0) {
-                container.innerHTML = "<p class='text-center text-muted'>Nenhuma máquina cadastrada.</p>";
-                return;
-            }
-
-            container.innerHTML = "";
-
-            for (let index = 0; index < maquinas.length; index++) {
-                const m = maquinas[index];
-
-                var host = m["HostName"] || "—";
-                var ident = m["Identificador"] || "—";
-                var ip = m["IP"] || "—";
-                var dataCriacao = m["Data de Criação"];
-                var ultimaOcorrencia = m["Data do Último Alerta"];
-
-                var dataCriacaoFormatada = formatarData(dataCriacao);
-                var ultimaOcorrenciaFormatada = formatarData(ultimaOcorrencia);
-
-                var cpuValor = m["CPU Atual (%)"] || 0;
-                var ramValor = m["RAM Atual (%)"] || 0;
-                var usoCPU = `${cpuValor}%`;
-                var usoRAM = `${ramValor}%`;
-
-                var estado = "";
-                if (cpuValor > 80 || ramValor > 90) {
-                    estado = "critico";
-                } else if ((cpuValor >= 70 && cpuValor <= 80) || (ramValor >= 80 && ramValor <= 90)) {
-                    estado = "alerta";
-                } else if (cpuValor < 10 && ramValor < 10) {
-                    estado = "ocioso";
-                } else {
-                    estado = "normal";
-                }
-
-                const linhaBagulho = document.createElement("div"); // chama a div especifica para cada linha
-                linhaBagulho.classList.add("line-notifica");  // adiciona css a linha especifica 
-
-                linhaBagulho.innerHTML = `
-        <div class="box-id"><p>${host}</p></div>
-        <div class="box-nome"><p>${ident}</p></div>
-        <div class="box-uptime"><p>${ip}</p></div>
-        <div class="box-uptime"><p>${dataCriacaoFormatada}</p></div>
-        <div class="box-ocorrencia"><p>${ultimaOcorrenciaFormatada}</p></div>
+      const linha = document.createElement("div");
+      linha.className = "line-notifica";
+      linha.innerHTML = `
+        <div class="box-id"><p>${m.HostName}</p></div>
+        <div class="box-nome"><p>${m.Identificador}</p></div>
+        <div class="box-uptime"><p>${m.IP}</p></div>
+        <div class="box-uptime"><p>${formatarData(m.DataCriacao)}</p></div>
+        <div class="box-ocorrencia"><p>${formatarData(m.UltimoAlerta)}</p></div>
         <div class="box-rack"><p>${usoCPU}</p></div>
         <div class="box-rack"><p>${usoRAM}</p></div>
         <div class="box-status"><p class="status ${estado}">${estado.toUpperCase()}</p></div>
       `;
 
-                linhaBagulho.onclick = function () {
-                    location.replace(`dashboard.html?id=${m["host"]}`);  // assim que ele clica ele vai para a a dash especifica do ID
-                }
+      linha.addEventListener("click", () => {
+        window.location.href = `dashboard.html?id=${encodeURIComponent(m.Identificador)}`;
+      });
 
-                container.appendChild(linhaBagulho);  // adiciona a nova linha de info no fim da página, com as coisas especificas e tal
-            }
-        } catch (e) {
-            console.error(e);
-            container.innerHTML = "<p style='color:red;'>Erro ao carregar máquinas.</p>";
-        }
-    }
+      listaMaquinas.appendChild(linha);
+    });
+  }
+
+  btnNotificacao.addEventListener("click", () => {
+    console.log("Clicou no botão de notificação");
+    modal.classList.add("active");
+    carregarAlertas();
+  });
+  btnFecharModal.addEventListener("click", () => modal.classList.remove("active"));
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("active"); });
+
+  carregarMaquinas();
+  console.log("carregarMaquinas() executado — máquinas mockadas exibidas.");
+});
 
 
-    carregarMaquinas();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // NÃO REMOVER PLMDS
+
+
+    // Carregar alertas simulados
+    // async function carregarAlertas() {
+    //     alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
+
+    //     try {
+    //         const resposta = await fetch("/usuarios/puxarAlerta");
+    //         if (!resposta.ok) throw new Error("Erro ao buscar alertas do servidor.");
+
+    //         const alertas = await resposta.json();
+    //         alertasContainer.innerHTML = "";
+
+    //         if (alertas.length === 0) {
+    //             alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta encontrado.</p>";
+    //             return;
+    //         }
+
+    //         alertas.forEach(alerta => {
+    //             let tipoClasse = "";
+    //             switch (alerta.estado) {
+    //                 case "CRITICO":
+    //                     tipoClasse = "danger";
+    //                     break;
+    //                 case "ALERTA":
+    //                     tipoClasse = "warning";
+    //                     break;
+    //                 case "NORMAL":
+    //                     tipoClasse = "success";
+    //                     break;
+    //                 default:
+    //                     tipoClasse = "success";
+    //             }
+
+    //             const dataFormatada = new Date(alerta.dtHora).toLocaleString("pt-BR");
+
+
+    //             const div = document.createElement("div");
+    //             div.className = `alerta-item ${tipoClasse}`;
+    //             div.innerHTML = `
+    //             <strong>Identificador da máquina:</strong> <small>${alerta.identificador || "Desconhecida"}</small><br>
+    //             <strong>${alerta.componenteNome || "Componente"}:</strong> ${alerta.captura || "Sem dados."}<br>
+    //             <strong>Estado:</strong> <small>${alerta.estado || "DESCONHECIDO"}</small><br>
+    //             <small>${new Date(alerta.dtHora).toLocaleString("pt-BR")}</small>
+    //         `;
+
+    //             alertasContainer.appendChild(div);
+    //         });
+    //     } catch (error) {
+    //         console.error("Erro ao carregar alertas:", error);
+    //         alertasContainer.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
+    //     }
+    // }
+
+
+    // function formatarData(dataISO) {
+    //     if (!dataISO) return "—";  // filtra para ver se tem o dado ou não
+    //     const data = new Date(dataISO);
+    //     if (isNaN(data)) return "—";  // filtra para ver se tem o dado ou não
+    //     return data.toLocaleString("pt-BR", {
+    //         day: "2-digit",
+    //         month: "2-digit",
+    //         year: "numeric",
+    //         hour: "2-digit",
+    //         minute: "2-digit",
+    //     });
+    // }
+
+
+    // async function carregarMaquinas() {
+
+    //     var container = document.getElementById("lista-maquinas");
+    //     container.innerHTML = "<p class='text-muted text-center'>Carregando máquinas...</p>";
+
+    //     try {
+    //         var respostaRecebida = await fetch("/usuarios/puxarMaquinas");
+    //         var maquinas = await respostaRecebida.json();
+
+    //         if (maquinas.length == 0) {
+    //             container.innerHTML = "<p class='text-center text-muted'>Nenhuma máquina cadastrada.</p>";
+    //             return;
+    //         }
+
+    //         container.innerHTML = "";
+
+    //         for (let index = 0; index < maquinas.length; index++) {
+    //             const m = maquinas[index];
+
+    //             var host = m["HostName"] || "—";
+    //             var ident = m["Identificador"] || "—";
+    //             var ip = m["IP"] || "—";
+    //             var dataCriacao = m["Data de Criação"];
+    //             var ultimaOcorrencia = m["Data do Último Alerta"];
+
+    //             var dataCriacaoFormatada = formatarData(dataCriacao);
+    //             var ultimaOcorrenciaFormatada = formatarData(ultimaOcorrencia);
+
+    //             var cpuValor = m["CPU Atual (%)"] || 0;
+    //             var ramValor = m["RAM Atual (%)"] || 0;
+    //             var usoCPU = `${cpuValor}%`;
+    //             var usoRAM = `${ramValor}%`;
+
+    //             var estado = "";
+    //             if (cpuValor > 80 || ramValor > 90) {
+    //                 estado = "critico";
+    //             } else if ((cpuValor >= 70 && cpuValor <= 80) || (ramValor >= 80 && ramValor <= 90)) {
+    //                 estado = "alerta";
+    //             } else if (cpuValor < 10 && ramValor < 10) {
+    //                 estado = "ocioso";
+    //             } else {
+    //                 estado = "normal";
+    //             }
+
+    //             const linhaBagulho = document.createElement("div"); // chama a div especifica para cada linha
+    //             linhaBagulho.classList.add("line-notifica");  // adiciona css a linha especifica 
+
+    //             linhaBagulho.innerHTML = `
+    //     <div class="box-id"><p>${host}</p></div>
+    //     <div class="box-nome"><p>${ident}</p></div>
+    //     <div class="box-uptime"><p>${ip}</p></div>
+    //     <div class="box-uptime"><p>${dataCriacaoFormatada}</p></div>
+    //     <div class="box-ocorrencia"><p>${ultimaOcorrenciaFormatada}</p></div>
+    //     <div class="box-rack"><p>${usoCPU}</p></div>
+    //     <div class="box-rack"><p>${usoRAM}</p></div>
+    //     <div class="box-status"><p class="status ${estado}">${estado.toUpperCase()}</p></div>
+    //   `;
+
+    //             linhaBagulho.onclick = function () {
+    //                 location.replace(`dashboard.html?id=${m["host"]}`);  // assim que ele clica ele vai para a a dash especifica do ID
+    //             }
+
+    //             container.appendChild(linhaBagulho);  // adiciona a nova linha de info no fim da página, com as coisas especificas e tal
+    //         }
+    //     } catch (e) {
+    //         console.error(e);
+    //         container.innerHTML = "<p style='color:red;'>Erro ao carregar máquinas.</p>";
+    //     }
+    // }
+
+
+    // carregarMaquinas();
 
 </script>
