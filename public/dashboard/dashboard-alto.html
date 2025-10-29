@@ -167,10 +167,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const alertasMock = [
-    { identificador: "Server-SP01", componenteNome: "CPU", captura: 87.5, estado: "CRITICO", dtHora: "2025-10-28T21:05:17" },
-    { identificador: "Server-SP02", componenteNome: "RAM", captura: 82.1, estado: "ALERTA", dtHora: "2025-10-28T21:03:12" },
-    { identificador: "Server-SP03", componenteNome: "DISCO", captura: 91.3, estado: "CRITICO", dtHora: "2025-10-28T21:01:45" },
-    { identificador: "Server-SP01", componenteNome: "CPU", captura: 68.9, estado: "ALERTA", dtHora: "2025-10-28T21:00:32" }
+    { identificador: "Server-SP01", componenteNome: "CPU", captura: 87.5, estado: "ALERTA CRITICO", dtHora: "2025-10-28T21:05:17" },
+    { identificador: "Server-SP02", componenteNome: "RAM", captura: 82.1, estado: "ALERTA PREVENTIVO", dtHora: "2025-10-28T21:03:12" },
+    { identificador: "Server-SP03", componenteNome: "DISCO", captura: 91.3, estado: "ALERTA CRITICO", dtHora: "2025-10-28T21:01:45" },
+    { identificador: "Server-SP01", componenteNome: "CPU", captura: 68.9, estado: "ALERTA PREVENTIVO", dtHora: "2025-10-28T21:00:32" }
   ];
 
   const maquinasMock = [
@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     alertasMock.forEach(a => {
-      const tipoClasse = a.estado == "CRITICO" ? "danger" : a.estado == "ALERTA" ? "warning" : "success";
+      const tipoClasse = a.estado == "ALERTA CRITICO" ? "danger" : a.estado == "ALERTA PREVENTIVO" ? "warning" : "success";
       const div = document.createElement("div");
       div.className = `alerta-item ${tipoClasse}`;
       div.innerHTML = `
@@ -212,8 +212,8 @@ document.addEventListener("DOMContentLoaded", () => {
     maquinasMock.forEach(m => {
       const usoCPU = `${m.CPU}%`, usoRAM = `${m.RAM}%`;
       let estado = "normal";
-      if (m.CPU > 80 || m.RAM > 90) estado = "critico";
-      else if (m.CPU >= 70 || m.RAM >= 80) estado = "alerta";
+      if (m.CPU > 80 || m.RAM > 90) estado = "alerta critico";
+      else if (m.CPU >= 70 || m.RAM >= 80) estado = "alerta preventivo";
       else if (m.CPU < 10 && m.RAM < 10) estado = "ocioso";
 
       const linha = document.createElement("div");
