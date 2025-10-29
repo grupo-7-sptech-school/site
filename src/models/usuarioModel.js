@@ -58,18 +58,17 @@ function puxarProcesso() {
 }
 
 function puxarAlerta() {
-    var instrucaoSql = `SELECT 
-    Alerta.idAlerta,
+    var instrucaoSql = `SELECT Alerta.idAlerta,
     Alerta.dtHora,
     Alerta.estado,
     Alerta.captura,
     Componente.nome AS componenteNome,
     Maquina.identificador AS identificador
     FROM Alerta
-    JOIN Registro ON Alerta.fkRegistro = Registro.idRegistro
-    JOIN Componente ON Registro.fkComponente = Componente.idComponente
-    JOIN Maquina ON Componente.fkMaquina = Maquina.hostname
-    WHERE alerta.estado != "NORMAL"
+    LEFT JOIN Registro ON Alerta.fkRegistro = Registro.idRegistro
+    JOIN Componente ON Alerta.fkComponente = Componente.idComponente
+    JOIN Maquina ON Componente.fkMaquina = Maquina.hostName
+    WHERE Alerta.estado != "NORMAL"
     ORDER BY Alerta.dtHora DESC
     LIMIT 4;`;
 
