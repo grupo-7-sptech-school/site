@@ -119,95 +119,6 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('modalUsuarios');
-            const btnAbrir = document.querySelector('.btn-user');
-            const spanFechar = document.querySelector('.close');
-            const formNovoUsuario = document.getElementById('formNovoUsuario');
-            const tabelaUsuarios = document.getElementById('tabelaUsuarios');
-
-            let usuarios = [
-                { email: 'admin@solardata.com', permissao: 'admin' },
-                { email: 'analista1@solardata.com', permissao: 'usuario' },
-            ];
-
-            btnAbrir.addEventListener('click', function() {
-                modal.style.display = 'block';
-                carregarUsuarios();
-            });
-
-            spanFechar.addEventListener('click', function() {
-                modal.style.display = 'none';
-            });
-
-            window.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-
-            function carregarUsuarios() {
-                tabelaUsuarios.innerHTML = '';
-                usuarios.forEach((usuario, index) => {
-                    const tr = document.createElement('tr');
-                    
-                    const classePermissao = `permissao-${usuario.permissao}`;
-                    const textoPermissao = usuario.permissao === 'admin' ? 'Administrador' : 
-                                        usuario.permissao === 'usuario' ? 'Usuário' : 'Visualizador';
-                    
-                    tr.innerHTML = `
-                        <td>${usuario.email}</td>
-                        <td><span class="${classePermissao}">${textoPermissao}</span></td>
-                        <td>
-                            <button class="btn-acao btn-editar" onclick="editarUsuario(${index})">Editar</button>
-                            <button class="btn-acao btn-excluir" onclick="excluirUsuario(${index})">Excluir</button>
-                        </td>
-                    `;
-                    tabelaUsuarios.appendChild(tr);
-                });
-            }
-
-            formNovoUsuario.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('email').value;
-                const permissao = document.getElementById('permissao').value;
-                
-                if (email && permissao) {
-                    usuarios.push({ email, permissao });
-                    carregarUsuarios();
-                    formNovoUsuario.reset();
-                    
-                    console.log('Novo usuário:', { email, permissao });
-                    alert('Usuário adicionado com sucesso!');
-                }
-            });
-
-            window.editarUsuario = function(index) {
-                const usuario = usuarios[index];
-                const novoEmail = prompt('Editar e-mail:', usuario.email);
-                const novaPermissao = prompt('Editar permissão (admin/usuario/visualizador):', usuario.permissao);
-                
-                if (novoEmail && novaPermissao) {
-                    usuarios[index] = { email: novoEmail, permissao: novaPermissao };
-                    carregarUsuarios();
-                    alert('Usuário atualizado com sucesso!');
-                }
-            };
-
-            window.excluirUsuario = function(index) {
-                if (confirm('Tem certeza que deseja excluir este usuário?')) {
-                    usuarios.splice(index, 1);
-                    carregarUsuarios();
-                    alert('Usuário excluído com sucesso!');
-                }
-            };
-
-            carregarUsuarios();
-        });
-
-
-
 
         document.addEventListener("DOMContentLoaded", () => {
 
@@ -309,6 +220,104 @@
     carregarMaquinas();
     console.log("carregarMaquinas() executado — máquinas mockadas exibidas.");
   });
+
+
+
+
+
+
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('modalUsuarios');
+            const btnAbrir = document.querySelector('.btn-user');
+            const spanFechar = document.querySelector('.close');
+            const formNovoUsuario = document.getElementById('formNovoUsuario');
+            const tabelaUsuarios = document.getElementById('tabelaUsuarios');
+
+            let usuarios = [
+                { email: 'admin@solardata.com', permissao: 'admin' },
+                { email: 'analista1@solardata.com', permissao: 'usuario' },
+            ];
+
+            btnAbrir.addEventListener('click', function() {
+                modal.style.display = 'block';
+                carregarUsuarios();
+            });
+
+            spanFechar.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            function carregarUsuarios() {
+                tabelaUsuarios.innerHTML = '';
+                usuarios.forEach((usuario, index) => {
+                    const tr = document.createElement('tr');
+                    
+                    const classePermissao = `permissao-${usuario.permissao}`;
+                    const textoPermissao = usuario.permissao === 'admin' ? 'Administrador' : 
+                                        usuario.permissao === 'usuario' ? 'Usuário' : 'Visualizador';
+                    
+                    tr.innerHTML = `
+                        <td>${usuario.email}</td>
+                        <td><span class="${classePermissao}">${textoPermissao}</span></td>
+                        <td>
+                            <button class="btn-acao btn-editar" onclick="editarUsuario(${index})">Editar</button>
+                            <button class="btn-acao btn-excluir" onclick="excluirUsuario(${index})">Excluir</button>
+                        </td>
+                    `;
+                    tabelaUsuarios.appendChild(tr);
+                });
+            }
+
+            formNovoUsuario.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const permissao = document.getElementById('permissao').value;
+                
+                if (email && permissao) {
+                    usuarios.push({ email, permissao });
+                    carregarUsuarios();
+                    formNovoUsuario.reset();
+                    
+                    console.log('Novo usuário:', { email, permissao });
+                    alert('Usuário adicionado com sucesso!');
+                }
+            });
+
+            window.editarUsuario = function(index) {
+                const usuario = usuarios[index];
+                const novoEmail = prompt('Editar e-mail:', usuario.email);
+                const novaPermissao = prompt('Editar permissão (admin/usuario/visualizador):', usuario.permissao);
+                
+                if (novoEmail && novaPermissao) {
+                    usuarios[index] = { email: novoEmail, permissao: novaPermissao };
+                    carregarUsuarios();
+                    alert('Usuário atualizado com sucesso!');
+                }
+            };
+
+            window.excluirUsuario = function(index) {
+                if (confirm('Tem certeza que deseja excluir este usuário?')) {
+                    usuarios.splice(index, 1);
+                    carregarUsuarios();
+                    alert('Usuário excluído com sucesso!');
+                }
+            };
+
+            carregarUsuarios();
+        });
+
+
+
     </script>
 </body>
 
