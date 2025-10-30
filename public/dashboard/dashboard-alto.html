@@ -152,12 +152,22 @@
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    
+
+
+  const btnCadastrarMaquina = document.getElementById("btnCadsatrarMaquina");
+  const fkTipoUsuario = localStorage.getItem("FK_TIPO_USUARIO");
   const btnNotificacao = document.querySelector('.btn-notificacao');
   const modal = document.getElementById('modalNotificacoes');
   const btnFecharModal = document.getElementById('btnFecharModal');
   const alertasContainer = document.getElementById('alertasContainer');
   const listaMaquinas = document.getElementById('lista-maquinas');
+
+
+  if (fkTipoUsuario != "1") {
+    if (btnCadastrarMaquina) {
+      btnCadastrarMaquina.style.display = "none";
+    }
+  }  
 
   if (!btnNotificacao || !modal || !btnFecharModal || !alertasContainer || !listaMaquinas) {
     console.error("Elementos de alerta/maquinas não encontrados:", {

@@ -45,7 +45,7 @@
                     </a>
                     <div class="btns-topbar">
                         <div class="btn-padrao">
-                            <button class="btn-user">
+                            <button id="btnGerenciarUsuarios" class="btn-user">
                                 Gerenciamento usuario
                             </button>
                             <button class="btn-notificacao">
@@ -120,13 +120,23 @@
 
     <script>
 
-        document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
 
+
+    const btnGerenciarUsuarios = document.getElementById("btnGerenciarUsuarios");
+    const fkTipoUsuario = localStorage.getItem("FK_TIPO_USUARIO");
     const btnNotificacao = document.querySelector('.btn-notificacao');
     const modal = document.getElementById('modalNotificacoes');
     const btnFecharModal = document.getElementById('btnFecharModal');
     const alertasContainer = document.getElementById('alertasContainer');
     const listaMaquinas = document.getElementById('lista-maquinas');
+
+    
+    if (fkTipoUsuario != "1") {
+    if (btnGerenciarUsuarios) {
+      btnGerenciarUsuarios.style.display = "none";
+    }
+  }  
 
     if (!btnNotificacao || !modal || !btnFecharModal || !alertasContainer || !listaMaquinas) {
       console.error("Elementos de alerta/maquinas não encontrados:", {

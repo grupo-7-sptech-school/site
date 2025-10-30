@@ -72,7 +72,7 @@
                     <!-- <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
                         Cadastrar Máquina
                     </a> -->
-                    <a onclick="gerarResposta()" class="btn-gerar-relatorio">
+                    <a id="btnGerarRelatorio" onclick="gerarResposta()" class="btn-gerar-relatorio">
                         Gerar relatorio
                     </a>
                         <div class="btn-padrao">
@@ -238,11 +238,21 @@
 
     document.addEventListener("DOMContentLoaded", () => {
     
+  const btnGerarRelatorio = document.getElementById("btnGerarRelatorio");
+  const fkTipoUsuario = localStorage.getItem("FK_TIPO_USUARIO");      
   const btnNotificacao = document.querySelector('.btn-notificacao');
   const modal = document.getElementById('modalNotificacoes');
   const btnFecharModal = document.getElementById('btnFecharModal');
   const alertasContainer = document.getElementById('alertasContainer');
   const listaMaquinas = document.getElementById('lista-maquinas');
+
+
+  if (fkTipoUsuario != "1") {
+    if (btnGerarRelatorio) {
+      btnGerarRelatorio.style.display = "none";
+    }
+  }  
+
 
   if (!btnNotificacao || !modal || !btnFecharModal || !alertasContainer || !listaMaquinas) {
     console.error("Elementos de alerta/maquinas não encontrados:", {
