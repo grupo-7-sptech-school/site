@@ -1,207 +1,181 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
-  <link rel="shortcut icon" href="../assets/icon/logo-branca.ico" type="image/x-icon">
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SolarData | Suporte</title>
-
-  <link rel="stylesheet" href="./../css/modal.css">
-  <link rel="stylesheet" href="./../css/cabecalho3.css">
-
-
-  <script src="../js/sessao.js"></script>
-  <script src="./../js/alerta.js"></script>
-
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-    rel="stylesheet">
-
-  <!-- FONT AWESOME -->
-  <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+  <title>Alertas - SolarData</title>
+  <link rel="stylesheet" href="./../css/dashboards.css">
+  <link rel="stylesheet" href="./../css/alertas.css">
 </head>
 
 <body>
-  <!-- Cabeçalho -->
-  <div class="total-dash">
-    <div class="dashboard-bg">
-      <div class="dashboard-sidebar">
-        <div class="dashboard-logo"></div>
-        <div class="dashboard-sidebar-btns">
-          <a href="alertas.html" class="dashboard-sidebar-btn">
-            <div class="icon-alert"></div>
-            <h3>Alertas</h3>
-          </a>
-          <a href="conta.html" class="dashboard-sidebar-btn">
-            <div class="icon-user"></div>
-            <h3>Conta</h3>
-          </a>
-          <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
-            <div class="icon-dashboard"></div>
-            <h3>Painel de <br> Controle</h3>
-          </a>
-          <!--
-                    <a href="relatorios.html" class="dashboard-sidebar-btn">
-                        <div class="icon-relatory"></div>
-                        <h3>Relatórios</h3>
-                    </a>
-                  -->
-          <a href="suporte.html" class="dashboard-sidebar-btn">
-            <div class="icon-support"></div>
-            <h3>Suporte</h3>
-          </a>
-        </div>
-        <a href="/public/index.html" class="dashboard-logout">
-          <div class="icon-logout"></div>
-          <h3>Logout</h3>
+  <!-- ======= CONTAINER PRINCIPAL ======= -->
+  <div class="dashboard-bg">
+
+    <!-- ==== SIDEBAR LATERAL ==== -->
+    <aside class="dashboard-sidebar">
+      <div class="dashboard-logo"></div>
+
+      <nav class="dashboard-sidebar-btns">
+        <a href="alertas.html" class="dashboard-sidebar-btn">
+          <div class="icon-alert"></div>
+          <h3>Alertas</h3>
         </a>
-      </div>
-      <!-- Cabeçalho topo -->
-      <div class="dashboard-low-right-side">
-        <div class="dashboard-topbar">
-          <a href="#" class="btn-voltar">
-            Alertas - SolarData
-          </a>
-          <div class="btns-topbar">
-            <!-- <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
-                        Cadastrar Máquina
-                    </a> -->
-            <!-- <a href="relatorios.html" class="btn-gerar-relatorio">
-                        Gerar relatorio
-                    </a> -->
-            <div class="btn-padrao">
-              <button class="btn-notificacao">
-              </button>
-              <a href="conta.html" class="btn-conta">
-              </a>
-            </div>
-          </div>
+        <a href="conta.html" class="dashboard-sidebar-btn">
+          <div class="icon-user"></div>
+          <h3>Conta</h3>
+        </a>
+        <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+          <div class="icon-dashboard"></div>
+          <h3>Painel de <br> Controle</h3>
+        </a>
+        <a href="suporte.html" class="dashboard-sidebar-btn">
+          <div class="icon-support"></div>
+          <h3>Suporte</h3>
+        </a>
+      </nav>
+
+      <a href="/public/index.html" class="dashboard-logout">
+        <div class="icon-logout"></div>
+        <h3>Logout</h3>
+      </a>
+    </aside>
+
+    <!-- ==== ÁREA PRINCIPAL (DIREITA) ==== -->
+    <section class="dashboard-low-right-side">
+
+      <!-- ===== BARRA SUPERIOR ===== -->
+      <header class="dashboard-topbar">
+        <h2>Alertas - SolarData</h2>
+        <div class="btns-topbar">
+          <a href="conta.html" class="btn-conta"></a>
+        </div>
+      </header>
+
+      <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+      <main class="conteudo-principal">
+
+        <!-- Título e subtítulo -->
+        <div class="titulo-area">
+          <h1>Histórico de Alertas<br>
+            <p class="subtitulo">Visualize todos os alertas do sistema e filtre por máquina</p>
+          </h1>
         </div>
 
-        <!-- Fim Cabeçalho -->
+        <!-- Área de filtro -->
+        <div class="filtro-area">
+          <label for="selectMaquina" class="filtro-label">Filtrar por máquina:</label>
+          <select id="selectMaquina" class="filtro-select">
+            <option value="all">Todas as máquinas</option>
+          </select>
+          <input type="text" id="buscaAlertas" class="filtro-busca" placeholder="Buscar alerta..."
+            aria-label="Buscar alerta">
 
-      </div>
-    </div>
-    <div id="lista-maquinas"></div>
-    
-    <div id="modalNotificacoes">
-      <div class="modal-content">
-        <div id="alertasContainer"></div>
-        <button id="btnFecharModal">Fechar</button>
-        
-      </div>
-       </div>
+          <span id="total-count" class="badge">0 alertas</span>
+        </div>
+
+        <!-- Tabela de alertas -->
+        <div class="tabela-wrap">
+          <table class="table-alertas" id="tabelaAlertas">
+            <thead>
+              <tr>
+                <th>Data / Hora</th>
+                <th>Máquina</th>
+                <th>Tipo de Alerta</th>
+                <th>Prioridade</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Linhas inseridas via JS -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <!-- ====== SCRIPT DE FILTRO E RENDERIZAÇÃO ====== -->
+  <script>
+    const alertasMock = [
+      { id: 1, maquina: 'Inversor-01', data: '2025-10-30 09:12', tipo: 'Sobreaquecimento', prioridade: 'Alta', mensagem: 'Temperatura acima do limite.' },
+      { id: 2, maquina: 'Inversor-02', data: '2025-10-30 08:45', tipo: 'Falha de Comunicação', prioridade: 'Média', mensagem: 'Perda intermitente de sinal.' },
+      { id: 3, maquina: 'Painel-03', data: '2025-10-29 17:30', tipo: 'Baixa Produção', prioridade: 'Baixa', mensagem: 'Produção 30% abaixo do esperado.' },
+      { id: 4, maquina: 'Inversor-01', data: '2025-10-29 12:05', tipo: 'Erro', prioridade: 'Alta', mensagem: 'Código E42: Falha no sensor.' },
+      { id: 5, maquina: 'Painel-05', data: '2025-10-28 15:20', tipo: 'Conexão', prioridade: 'Média', mensagem: 'Cabo desconectado parcialmente.' },
+      { id: 6, maquina: 'Inversor-02', data: '2025-10-27 10:00', tipo: 'Manutenção', prioridade: 'Baixa', mensagem: 'Agendar revisão preventiva.' }
+    ];
+
+    const selectMaquina = document.getElementById('selectMaquina');
+    const tabelaBody = document.querySelector('#tabelaAlertas tbody');
+    const totalCount = document.getElementById('total-count');
+
+    function populaSelect() {
+      const maquinas = [...new Set(alertasMock.map(a => a.maquina))].sort();
+      maquinas.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        selectMaquina.appendChild(opt);
+      });
+    }
+
+    function renderTabela(lista) {
+      tabelaBody.innerHTML = '';
+      if (!lista.length) {
+        tabelaBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:16px;">Nenhum alerta encontrado.</td></tr>';
+      } else {
+        lista.forEach(a => {
+          const tr = document.createElement('tr');
+          const prioridadeClasse =
+            a.prioridade.toLowerCase() === 'alta' ? 'prioridade-alta' :
+              a.prioridade.toLowerCase() === 'média' ? 'prioridade-media' : 'prioridade-baixa';
+          tr.innerHTML = `
+            <td>${a.data}</td>
+            <td>${a.maquina}</td>
+            <td>${a.tipo}</td>
+            <td><span class="${prioridadeClasse}">${a.prioridade}</span></td>
+            <td>${a.mensagem}</td>
+          `;
+          tabelaBody.appendChild(tr);
+        });
+      }
+      totalCount.textContent = `${lista.length} ${lista.length === 1 ? 'alerta' : 'alertas'}`;
+    }
+
+    function aplicarFiltro() {
+      const filtro = selectMaquina.value;
+      const filtrados = filtro === 'all' ? alertasMock : alertasMock.filter(a => a.maquina === filtro);
+      renderTabela(filtrados);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      populaSelect();
+      renderTabela(alertasMock);
+      selectMaquina.addEventListener('change', aplicarFiltro);
+    });
 
 
+    const inuptBusca = document.getElementById('buscaAlertas');
+
+    inuptBusca.addEventListener("input", () => {
+      const termo = inuptBusca.value.toLowerCase;
+      const maquinaSelecionada = selectMaquina.value;
+
+      const filtrados = alertasMock.filter(a => {
+        const combinaTexto =
+          a.tipo.toLowerCase().includes(termo) ||
+          a.mensagem.toLowerCase().includes(termo) ||
+          a.maquina.toLowerCase().includes(termo);
+
+        const combinarMaquina = maquinaSelecionada === 'all' || a.maquina === maquinaSelecionada;
+
+        return combinaTexto && combinarMaquina;
+      });
+      renderTabela(filtrados);
+    });
+  </script>
 </body>
 
 </html>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-
-    const btnNotificacao = document.querySelector('.btn-notificacao');
-    const modal = document.getElementById('modalNotificacoes');
-    const btnFecharModal = document.getElementById('btnFecharModal');
-    const alertasContainer = document.getElementById('alertasContainer');
-    const listaMaquinas = document.getElementById('lista-maquinas');
-
-    if (!btnNotificacao || !modal || !btnFecharModal || !alertasContainer || !listaMaquinas) {
-      console.error("Elementos de alerta/maquinas não encontrados:", {
-        btnNotificacao, modal, btnFecharModal, alertasContainer, listaMaquinas
-      });
-      return;
-    }
-
-    const alertasMock = [
-      { identificador: "Server-SP01", componenteNome: "CPU", captura: 87.5, estado: "ALERTA CRITICO", dtHora: "2025-10-28T21:05:17" },
-      { identificador: "Server-SP02", componenteNome: "RAM", captura: 82.1, estado: "ALERTA PREVENTIVO", dtHora: "2025-10-28T21:03:12" },
-      { identificador: "Server-SP03", componenteNome: "DISCO", captura: 91.3, estado: "ALERTA CRITICO", dtHora: "2025-10-28T21:01:45" },
-      { identificador: "Server-SP01", componenteNome: "CPU", captura: 68.9, estado: "ALERTA PREVENTIVO", dtHora: "2025-10-28T21:00:32" }
-    ];
-
-    const maquinasMock = [
-      { HostName: "server-sp01", Identificador: "Server-SP01", IP: "192.168.0.10", DataCriacao: "2025-10-20T10:00:00", UltimoAlerta: "2025-10-28T21:05:17", CPU: 75, RAM: 82 },
-      { HostName: "server-sp02", Identificador: "Server-SP02", IP: "192.168.0.11", DataCriacao: "2025-10-22T14:32:00", UltimoAlerta: "2025-10-28T21:03:12", CPU: 45, RAM: 70 },
-      { HostName: "server-sp03", Identificador: "Server-SP03", IP: "192.168.0.12", DataCriacao: "2025-10-18T09:21:00", UltimoAlerta: "2025-10-28T21:01:45", CPU: 91, RAM: 76 },
-      { HostName: "server-rj01", Identificador: "Server-RJ01", IP: "192.168.1.10", DataCriacao: "2025-10-15T08:00:00", UltimoAlerta: "2025-10-27T19:45:00", CPU: 20, RAM: 25 }
-    ];
-
-    function formatarData(iso) {
-      if (!iso) return "—";
-      const d = new Date(iso);
-      if (isNaN(d)) return "—";
-      return d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
-    }
-
-    function carregarAlertas() {
-      alertasContainer.innerHTML = "";
-      if (!alertasMock.length) {
-        alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta.</p>";
-        return;
-      }
-      alertasMock.forEach(a => {
-        const tipoClasse = a.estado == "ALERTA CRITICO" ? "danger" : a.estado == "ALERTA PREVENTIVO" ? "warning" : "success";
-        const div = document.createElement("div");
-        div.className = `alerta-item ${tipoClasse}`;
-        div.innerHTML = `
-        <strong>${a.identificador}</strong>
-        <small style="display:block;margin-top:4px;">${a.componenteNome} • <b>${a.captura}%</b></small>
-        <div style="margin-top:6px;"><small>Estado: <b>${a.estado}</b></small></div>
-        <small style="display:block;margin-top:6px;color:#555">${formatarData(a.dtHora)}</small>
-      `;
-        alertasContainer.appendChild(div);
-      });
-    }
-
-    function carregarMaquinas() {
-      listaMaquinas.innerHTML = "";
-      maquinasMock.forEach(m => {
-        const usoCPU = `${m.CPU}%`, usoRAM = `${m.RAM}%`;
-        let estado = "normal";
-        if (m.CPU > 80 || m.RAM > 90) estado = "alerta critico";
-        else if (m.CPU >= 70 || m.RAM >= 80) estado = "alerta preventivo";
-        else if (m.CPU < 10 && m.RAM < 10) estado = "ocioso";
-
-        const linha = document.createElement("div");
-        linha.className = "line-notifica";
-        linha.innerHTML = `
-        <div class="box-id"><p>${m.HostName}</p></div>
-        <div class="box-nome"><p>${m.Identificador}</p></div>
-        <div class="box-uptime"><p>${m.IP}</p></div>
-        <div class="box-uptime"><p>${formatarData(m.DataCriacao)}</p></div>
-        <div class="box-ocorrencia"><p>${formatarData(m.UltimoAlerta)}</p></div>
-        <div class="box-rack"><p>${usoCPU}</p></div>
-        <div class="box-rack"><p>${usoRAM}</p></div>
-        <div class="box-status"><p class="status ${estado}">${estado.toUpperCase()}</p></div>
-      `;
-
-        linha.addEventListener("click", () => {
-          window.location.href = `dashboard.html?id=${encodeURIComponent(m.Identificador)}`;
-        });
-
-        listaMaquinas.appendChild(linha);
-      });
-    }
-
-    btnNotificacao.addEventListener("click", () => {
-      console.log("Clicou no botão de notificação");
-      modal.classList.add("active");
-      carregarAlertas();
-    });
-    btnFecharModal.addEventListener("click", () => modal.classList.remove("active"));
-    modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("active"); });
-
-    carregarMaquinas();
-    console.log("carregarMaquinas() executado — máquinas mockadas exibidas.");
-  });
-
-
-
-
-
-
-
-</script>
