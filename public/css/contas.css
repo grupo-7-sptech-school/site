@@ -1,0 +1,91 @@
+#tela-conta {
+  margin: 40px auto;
+  max-width: 600px;
+  background: #f8f9fb;
+  padding: 30px;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+  color: #333;
+}
+
+#tela-conta h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.perfil-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+#fotoUsuario {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #3ba48c;
+  object-fit: cover;
+}
+
+.campo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.campo label {
+  width: 70px;
+  font-weight: 500;
+}
+
+.campo span {
+  flex: 1;
+  padding: 5px 10px;
+  background: #fff;
+  border-radius: 6px;
+}
+
+.campo .editar {
+  color: #3ba48c;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.campo .editar:hover {
+  color: #2e7b67;
+}
+
+.senha-container {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.senha-container input {
+  display: block;
+  width: 80%;
+  margin: 8px auto;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.senha-container button {
+  background: #3ba48c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.senha-container button:hover {
+  background: #2e7b67;
+}
+
+.mensagem {
+  margin-top: 10px;
+  font-size: 0.9em;
+}

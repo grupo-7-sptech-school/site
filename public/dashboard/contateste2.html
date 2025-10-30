@@ -9,8 +9,7 @@
   <title>SolarData | Suporte</title>
 
   <link rel="stylesheet" href="./../css/modal.css">
-  <link rel="stylesheet" href="./../css/cabecalho3.css">
-
+  <link rel="stylesheet" href="./../css/contas.css">
 
   <script src="../js/sessao.js"></script>
   <script src="./../js/alerta.js"></script>
@@ -86,7 +85,31 @@
       </div>
     </div>
 
+    <div id="tela-conta">
+  <h2>Minha Conta</h2>
+  
+  <div class="perfil-container">
+    <img id="fotoUsuario" src="../assets/img/default-user.png" alt="Foto do usuário">
+    <div class="campo">
+      <label>Nome</label>
+      <span id="nomeUsuario">Usuario</span>
+      <i class="fas fa-pen editar" data-campo="nome"></i>
+    </div>
+    <div class="campo">
+      <label>E-mail</label>
+      <span id="emailUsuario">email@email.com</span>
+      <i class="fas fa-pen editar" data-campo="email"></i>
+    </div>
+  </div>
 
+  <div class="senha-container">
+    <h3>Alterar senha</h3>
+    <input type="password" id="senhaAtual" placeholder="Senha atual">
+    <input type="password" id="novaSenha" placeholder="Nova senha">
+    <button id="btnAlterarSenha">Salvar nova senha</button>
+    <p id="msgSenha" class="mensagem"></p>
+  </div>
+</div>
 
     <div id="lista-maquinas"></div>
     
