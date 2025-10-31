@@ -15,7 +15,7 @@ body {
 }
 
 .dashboard-sidebar {
-  justify-self: flex-start;
+  /* justify-self: flex-start; */
   color: white;
   background-color: #0B795B;
   height: 100vh;
@@ -117,6 +117,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
 }
 
 .dashboard-sidebar-btn {
@@ -423,3 +424,6 @@ body {
 }
 
 
+#btnGerarRelatorio {
+  cursor: pointer;
+}
