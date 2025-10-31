@@ -55,7 +55,7 @@
                         Painel de controle - Servidor
                     </a>
                     <div class="btns-topbar">
-                        <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
+                        <a id="btnCadastrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
                         Cadastrar Máquina
                     </a>
                         <!-- <a href="relatorios.html" class="btn-gerar-relatorio">
@@ -73,9 +73,10 @@
         </div>
     </div>
     <div id="modalNotificacoes">
-        <div class="modal-content">
-            <div id="alertasContainer"></div>
-            <button id="btnFecharModal">Fechar</button>
+      <div class="modal-content">
+        <div id="alertasContainer"></div>
+        <button id="btnFecharModal">Fechar</button>
+        <div id="lista-maquinas"></div>
         </div>
     </div>
 </body>
@@ -106,7 +107,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
 
-  const btnCadastrarMaquina = document.getElementById("btnCadsatrarMaquina");
+  const btnCadastrarMaquina = document.getElementById("btnCadastrarMaquina");
   const fkTipoUsuario = localStorage.getItem("FK_TIPO_USUARIO");
   const btnNotificacao = document.querySelector('.btn-notificacao');
   const modal = document.getElementById('modalNotificacoes');
@@ -115,15 +116,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const listaMaquinas = document.getElementById('lista-maquinas');
 
 
-  if (fkTipoUsuario != "1") {
+  if (fkTipoUsuario != 1) {
     if (btnCadastrarMaquina) {
       btnCadastrarMaquina.style.display = "none";
     }
   }  
 
-  if (!btnNotificacao || !modal || !btnFecharModal || !alertasContainer || !listaMaquinas) {
+  if (!btnNotificacao || !modal || !btnFecharModal || !alertasContainer) {
     console.error("Elementos de alerta/maquinas não encontrados:", {
-      btnNotificacao, modal, btnFecharModal, alertasContainer, listaMaquinas
+      btnNotificacao, modal, btnFecharModal, alertasContainer
     });
     return;
   }

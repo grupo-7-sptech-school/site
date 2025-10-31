@@ -32,14 +32,13 @@ app.use("/empresas", empresasRouter);
 
 
 
-
+const PDFDocument = require('pdfkit');
 
 
 app.get("/relatorio/pdf", async (req, res) => {
     try {
-        console.log('Solicitação de relatório PDF recebida');
-        
-        // 1. Obter dados do monitoramento (igual sua rota /analisar-processos)
+        console.log('Gerando PDF completo...');
+
         const usuarioModel = require("./src/models/usuarioModel.js");
         const processos = await usuarioModel.puxarProcesso();
 
@@ -50,62 +49,209 @@ app.get("/relatorio/pdf", async (req, res) => {
             });
         }
 
-        console.log(`${processos.length} processos encontrados para PDF`);
-
         const analise = gerarAnaliseLocalSimples(processos);
 
-        // 2. Preparar dados para o PDF (mesma estrutura do /analisar-processos)
-        const dadosParaPDF = {
-            success: true,
-            message: "Análise detalhada gerada com sucesso!",
-            quantidade_processos: processos.length,
-            analise: analise.relatorio,
-            estatisticas: analise.estatisticas,
-            alertas: analise.alertas,
-            top_processos: analise.top_processos,
-            provedor_ia: "Sistema de Análise Local",
-            timestamp: new Date().toISOString()
-        };
+        const doc = new PDFDocument({ margin: 20 });
 
-        // 3. Enviar para o serviço Python
-        const pdfServiceUrl = process.env.PDF_SERVICE_URL || 'http://localhost:5000';
-        
-        console.log('Enviando dados para serviço PDF...');
-        const response = await axios.post(`${pdfServiceUrl}/generate-pdf`, dadosParaPDF, {
-            responseType: 'stream',
-            timeout: 30000
-        });
-
-        // 4. Configurar headers para download
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="relatorio_solardata_${Date.now()}.pdf"`);
 
-        // 5. Pipe do stream para response
-        response.data.pipe(res);
-        
-        console.log('✅ PDF enviado para o cliente');
+        doc.pipe(res);
 
+        const corPrimaria = '#18B187';
+        const corSecundaria = '#2C3E50';
+        const corAlerta = '#E74C3C';
+        const corSucesso = '#27AE60';
+        const corAtencao = '#F39C12';
+
+        doc.fillColor(corPrimaria)
+            .rect(0, 0, doc.page.width, 70)
+            .fill();
+
+        doc.fillColor('#FFFFFF')
+            .fontSize(20)
+            .font('Helvetica-Bold')
+            .text('SOLARDATA', 50, 25)
+            .fontSize(10)
+            .text('Monitoramento de Servidores Verdes', 50, 50);
+
+        doc.fillColor(corSecundaria)
+            .fontSize(8)
+            .text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 400, 35, { align: 'right' });
+
+        let yPosition = 100;
+
+        const statusColor = analise.status === 'Crítico' ? corAlerta :
+            analise.status === 'Atenção' ? corAtencao : corSucesso;
+
+        doc.fillColor(statusColor)
+            .rect(50, yPosition, doc.page.width - 100, 30)
+            .fill();
+
+        doc.fillColor('#FFFFFF')
+            .fontSize(14)
+            .font('Helvetica-Bold')
+            .text(`STATUS: ${analise.status}`, 60, yPosition + 8);
+
+        yPosition += 40;
+
+        doc.fillColor(corSecundaria)
+            .fontSize(14)
+            .font('Helvetica-Bold')
+            .text('MÉTRICAS PRINCIPAIS', 50, yPosition);
+
+        yPosition += 25;
+
+        const metrics = [
+            { label: 'Processos Totais', value: processos.length },
+            { label: 'Processos Ativos', value: analise.ativos },
+            { label: 'Uso CPU Total', value: `${analise.totalCPU ? analise.totalCPU.toFixed(1) : '0.0'}%` },
+            { label: 'Uso RAM Total', value: `${analise.totalRAM ? analise.totalRAM.toFixed(1) : '0.0'}%` }
+        ];
+
+        metrics.forEach((metric, index) => {
+            const y = yPosition + (index * 20);
+
+            doc.fillColor(corSecundaria)
+                .fontSize(9)
+                .text(`• ${metric.label}:`, 60, y);
+
+            doc.fontSize(9)
+                .font('Helvetica-Bold')
+                .text(metric.value, 200, y);
+        });
+
+        yPosition += 100;
+
+        if (analise.alertas && analise.alertas.length > 0) {
+            doc.fillColor(corSecundaria)
+                .fontSize(14)
+                .font('Helvetica-Bold')
+                .text('ALERTAS', 50, yPosition);
+
+            yPosition += 20;
+
+            analise.alertas.forEach((alerta) => {
+                doc.fillColor(corAlerta)
+                    .fontSize(9)
+                    .text(`⚠ ${alerta}`, 60, yPosition);
+                yPosition += 15;
+            });
+
+            yPosition += 5;
+        }
+
+        if (analise.topCPU && analise.topCPU.length > 0) {
+            doc.fillColor(corSecundaria)
+                .fontSize(14)
+                .font('Helvetica-Bold')
+                .text('TOP 5 - MAIOR CONSUMO CPU', 50, yPosition);
+
+            yPosition += 20;
+
+            doc.fillColor(corSecundaria)
+                .fontSize(9)
+                .text('#', 60, yPosition)
+                .text('Processo', 100, yPosition)
+                .text('Uso CPU', 400, yPosition, { align: 'right' });
+
+            yPosition += 15;
+
+            analise.topCPU.slice(0, 5).forEach((proc, index) => {
+                const usage = proc.cpuPorcentagem || 0;
+
+                doc.fillColor(corSecundaria)
+                    .fontSize(9)
+                    .text(`${index + 1}.`, 60, yPosition)
+                    .text(proc.nome || 'Processo', 100, yPosition)
+                    .text(`${usage.toFixed(1)}%`, 400, yPosition, { align: 'right' });
+
+                yPosition += 15;
+            });
+
+            yPosition += 15;
+        }
+
+        if (analise.topRAM && analise.topRAM.length > 0) {
+            doc.fillColor(corSecundaria)
+                .fontSize(14)
+                .font('Helvetica-Bold')
+                .text('TOP 5 - MAIOR CONSUMO RAM', 50, yPosition);
+
+            yPosition += 20;
+
+            doc.fillColor(corSecundaria)
+                .fontSize(9)
+                .text('#', 60, yPosition)
+                .text('Processo', 100, yPosition)
+                .text('Uso RAM', 400, yPosition, { align: 'right' });
+
+            yPosition += 15;
+
+            analise.topRAM.slice(0, 5).forEach((proc, index) => {
+                const usage = proc.ramPorcentagem || 0;
+
+                doc.fillColor(corSecundaria)
+                    .fontSize(9)
+                    .text(`${index + 1}.`, 60, yPosition)
+                    .text(proc.nome || 'Processo', 100, yPosition)
+                    .text(`${usage.toFixed(1)}%`, 400, yPosition, { align: 'right' });
+
+                yPosition += 15;
+            });
+
+            yPosition += 15;
+        }
+
+        const espaçoRestante = doc.page.height - yPosition - 50;
+        
+        if (espaçoRestante > 50) {
+            const recomendacoes = gerarRecomendacoes(analise.alertas);
+
+            if (recomendacoes.length > 0) {
+                doc.fillColor(corPrimaria)
+                    .fontSize(14)
+                    .font('Helvetica-Bold')
+                    .text('RECOMENDAÇÕES', 50, yPosition);
+
+                yPosition += 20;
+
+                recomendacoes.forEach((recomendacao) => {
+                    if (yPosition < doc.page.height - 50) {
+                        doc.fillColor(corSecundaria)
+                            .fontSize(9)
+                            .text(`• ${recomendacao}`, 60, yPosition, {
+                                width: doc.page.width - 120,
+                                align: 'justify'
+                            });
+                        yPosition += 12;
+                    }
+                });
+            }
+        }
+
+        // RODAPÉ FIXO NA PRIMEIRA PÁGINA
+        doc.fillColor(corPrimaria)
+            .rect(0, doc.page.height - 30, doc.page.width, 30)
+            .fill();
+
+        doc.fillColor('#FFFFFF')
+            .fontSize(7)
+            .text('SolarData - Monitoramento de Servidores Sustentáveis', 50, doc.page.height - 20)
+            .text('Relatório gerado automaticamente', 400, doc.page.height - 20, { align: 'right' });
+
+        doc.end();
+
+        console.log('PDF gerado e enviado!');
     } catch (error) {
         console.error('Erro ao gerar PDF:', error);
-        
-        if (error.code === 'ECONNREFUSED') {
-            return res.status(503).json({ 
-                success: false,
-                error: 'Serviço de PDF indisponível',
-                message: 'O serviço de geração de PDF não está respondendo. Verifique se o Python/Flask está rodando na porta 5000.'
-            });
-        }
-        
-        res.status(500).json({ 
+        res.status(500).json({
             success: false,
             error: 'Falha ao gerar relatório PDF',
-            details: error.message 
+            details: error.message
         });
     }
 });
-
-
-
 
 
 
@@ -131,17 +277,29 @@ app.get("/analisar-processos", async (req, res) => {
             success: true,
             message: "Análise detalhada gerada com sucesso!",
             quantidade_processos: processos.length,
-            analise: analise.relatorio,
-            estatisticas: analise.estatisticas,
+            status: analise.status,
+            metricas: {
+                processos_totais: processos.length,
+                processos_ativos: analise.ativos,
+                cpu_total: analise.totalCPU ? analise.totalCPU.toFixed(1) + '%' : '0%',
+                ram_total: analise.totalRAM ? analise.totalRAM.toFixed(1) + '%' : '0%'
+            },
             alertas: analise.alertas,
-            top_processos: analise.top_processos,
-            provedor_ia: "Sistema de Análise Local",
+            top_processos_cpu: analise.topCPU.slice(0, 5).map((proc, index) => ({
+                posicao: index + 1,
+                nome: proc.nome,
+                uso_cpu: proc.cpuPorcentagem ? proc.cpuPorcentagem.toFixed(1) + '%' : '0%'
+            })),
+            top_processos_ram: analise.topRAM.slice(0, 5).map((proc, index) => ({
+                posicao: index + 1,
+                nome: proc.nome,
+                uso_ram: proc.ramPorcentagem ? proc.ramPorcentagem.toFixed(1) + '%' : '0%'
+            })),
             timestamp: new Date().toISOString()
         });
 
     } catch (error) {
         console.error("Erro na análise:", error);
-
         res.status(500).json({
             success: false,
             error: error.message
@@ -158,139 +316,73 @@ app.get("/analisar-processos", async (req, res) => {
 
 
 
+function gerarAnaliseLocalSimples(processos) {
+    var ativos = processos.filter(proc => proc.nome !== 'Idle' && proc.nome);
 
-function gerarAnaliseLocalSimples(processos) {  // ativo é a lista com todos os processos ATIVOS rsrs
-    var ativos = [];
-    for (var i = 0; i < processos.length; i++) {
-        if (processos[i].nome != 'Idle') { // validação se o proecsso é ativo ou n
-            ativos.push(processos[i]);
-        }
-    }
+    var totalCPU = ativos.reduce((sum, proc) => sum + (proc.cpuPorcentagem || 0), 0);
+    var totalRAM = ativos.reduce((sum, proc) => sum + (proc.ramPorcentagem || 0), 0);
+    totalRAM = Math.min(totalRAM, 100);
 
-    var totalCPU = soma(ativos, 'cpuPorcentagem');
-    var totalRAM = soma(ativos, 'ramPorcentagem'); 
-    var mediaCPU = 0;
-    var mediaRAM = 0;
+    var mediaCPU = ativos.length > 0 ? totalCPU / ativos.length : 0;
+    var mediaRAM = ativos.length > 0 ? totalRAM / ativos.length : 0;
 
-    if (ativos.length > 0) {
-        mediaCPU = totalCPU / ativos.length;
-        mediaRAM = totalRAM / ativos.length;
-    }
+    var topCPU = [...ativos].sort((a, b) => (b.cpuPorcentagem || 0) - (a.cpuPorcentagem || 0)).slice(0, 5);
+    var topRAM = [...ativos].sort((a, b) => (b.ramPorcentagem || 0) - (a.ramPorcentagem || 0)).slice(0, 5);
 
-
-    var topCPU = ordenar(ativos, 'cpuPorcentagem').slice(0, 5);  // ordeno os 5 maiores
-    var topRAM = ordenar(ativos, 'ramPorcentagem').slice(0, 5);  // ordeno os 5 maiores
-
-    var criticos = [];
-    for (var i = 0; i < ativos.length; i++) {
-        if (ativos[i].cpuPorcentagem > 10 || ativos[i].ramPorcentagem > 5) {  // crio a lista de processos criticos, aqueles que tem maior
-            criticos.push(ativos[i]);                                        //  consumo ou de ram ou de cpu
-        }
-    }
-
-    var categorias = {
-        dev: filtrar(ativos, ['code', 'java', 'node', 'python']),      // defino o que é sistema, dev e por ai vai
-        navegador: filtrar(ativos, ['chrome', 'firefox', 'edge']),
-        comunicacao: filtrar(ativos, ['discord', 'whatsapp', 'teams']),
-        sistema: filtrar(ativos, ['system', 'svchost', 'windows']),
-        outros: ativos
-    };
+    // Identificar processos críticos
+    var criticos = ativos.filter(proc =>
+        (proc.cpuPorcentagem || 0) > 10 ||
+        (proc.ramPorcentagem || 0) > 5
+    );
 
     var alertas = [];
-    if (totalCPU > 80) alertas.push('CPU acima do limite recomendado.');    // alertas... "Ah tá muito alto"
+    if (totalCPU > 80) alertas.push('CPU acima do limite recomendado.');
     if (totalRAM > 85) alertas.push('RAM acima do limite recomendado.');
     if (criticos.length > 5) alertas.push('Número elevado de processos críticos.');
 
-    var relatorio = '';
-    relatorio += 'RELATÓRIO DO SERVIDOR\n\n';
-    relatorio += 'GERAL\n';
-    relatorio += 'Processos totais: ' + processos.length + '\n';
-    relatorio += 'Processos ativos: ' + ativos.length + '\n';
-    relatorio += 'Uso total de CPU: ' + totalCPU.toFixed(1) + '%\n';
-    relatorio += 'Soma total de RAM: ' + totalRAM.toFixed(1) + '%\n';
-    relatorio += 'Média de CPU por processo: ' + mediaCPU.toFixed(1) + '%\n';
-    relatorio += 'Média de RAM por processo: ' + mediaRAM.toFixed(1) + '%\n\n';
-
-    relatorio += 'ALERTAS\n';
-    if (alertas.length > 0) {
-        for (var i = 0; i < alertas.length; i++) {   // puxo os alertas definidos acima
-            relatorio += alertas[i] + '\n';
-        }
-    } else {
-        relatorio += 'Nenhum alerta.\n';
+    var status = 'Normal';
+    if (totalCPU > 80 || totalRAM > 85 || criticos.length > 5) {
+        status = 'Crítico';
+    } else if (totalCPU > 60 || totalRAM > 70 || criticos.length > 2) {
+        status = 'Atenção';
     }
 
-    relatorio += '\nCATEGORIAS\n';
-    relatorio += 'Desenvolvimento: ' + categorias.dev.length + ' processos\n';    // exibo o que defini acima
-    relatorio += 'Navegadores: ' + categorias.navegador.length + ' processos\n';
-    relatorio += 'Comunicação: ' + categorias.comunicacao.length + ' processos\n';
-    relatorio += 'Sistema: ' + categorias.sistema.length + ' processos\n';
-    relatorio += 'Outros: ' + categorias.outros.length + ' processos\n\n';
-
-    relatorio += 'TOP 5 CPU\n';
-    for (var i = 0; i < topCPU.length; i++) {
-        relatorio += (i + 1) + '. ' + topCPU[i].nome + ' - ' + topCPU[i].cpuPorcentagem.toFixed(1) + '%\n'; // exibo o que defini acima
-    }
-
-    relatorio += '\nTOP 5 RAM\n';
-    for (var i = 0; i < topRAM.length; i++) {
-        relatorio += (i + 1) + '. ' + topRAM[i].nome + ' - ' + topRAM[i].ramPorcentagem.toFixed(1) + '%\n'; // exibo o que defini acima
-    }
-
-    var status = saude(totalCPU, totalRAM, criticos.length);   // ve como o sistema tá, critico e tals
-
-    relatorio += '\nRESUMO\n';
-    if (status == 'Crítico') {  // exibo o resumo com base no status
-        relatorio += 'O servidor apresenta alto consumo de recursos e vários processos críticos em execução.\n';
-        relatorio += 'Recomenda-se verificar aplicações de desenvolvimento e navegadores que utilizam mais recursos.\n';
-    } else if (status == 'Atenção') {
-        relatorio += 'O servidor está operando normalmente, mas há sinais de sobrecarga em alguns processos.\n';
-    } else {
-        relatorio += 'O servidor está operando de forma estável e eficiente.\n';
-    }
-
-    relatorio += '\nSTATUS GERAL: ' + status + '\n';
-    relatorio += 'Gerado em: ' + new Date().toLocaleString('pt-BR') + '\n';   // data de quando foi gerado e coloco em PT-BR
-
-    return { relatorio: relatorio, alertas: alertas, topCPU: topCPU, topRAM: topRAM, criticos: criticos }; // jogo tudo no return
+    return {
+        relatorio: `Relatório gerado em ${new Date().toLocaleString('pt-BR')}`,
+        alertas: alertas,
+        topCPU: topCPU,
+        topRAM: topRAM,
+        criticos: criticos,
+        ativos: ativos.length,
+        totalCPU: totalCPU,
+        totalRAM: totalRAM,
+        status: status
+    };
 }
 
+function gerarRecomendacoes(alertas) {
+    const recomendacoes = [];
 
-function soma(arr, campo) {
-    var total = 0;
-    for (var i = 0; i < arr.length; i++) {  // função que soma a RAM total e a CPU
-        total += arr[i][campo] || 0;
+    if (alertas.some(alerta => alerta.includes('CPU'))) {
+        recomendacoes.push('Considere encerrar processos que estão consumindo muita CPU, especialmente os listados no Top 5.');
+        recomendacoes.push('Verifique se há processos com vazamento de CPU e reinicie-os.');
     }
-    return total;
-}
 
-function ordenar(arr, campo) {
-    return arr.sort(function (a, b) {  //Função pronta que ordena facinho
-        return b[campo] - a[campo];
-    });
-}
-
-
-function filtrar(arr, termos) {
-    var resultado = [];
-    for (var i = 0; i < arr.length; i++) {  // Filtra o que é cada tipo, dev, sistema...
-        var nome = arr[i].nome.toLowerCase();
-        for (var j = 0; j < termos.length; j++) {
-            if (nome.indexOf(termos[j]) !== -1) {
-                resultado.push(arr[i]);
-                break;
-            }
-        }
+    if (alertas.some(alerta => alerta.includes('RAM'))) {
+        recomendacoes.push('Processos com alto consumo de memória devem ser investigados. Verifique se há gargalos.');
+        recomendacoes.push('Considere aumentar a memória física ou otimizar as aplicações para reduzir o uso de RAM.');
     }
-    return resultado;
-}
 
-function saude(cpu, ram, crit) {   // ve o estado
-    if (cpu > 80 || ram > 85 || crit > 5) return 'Crítico';
-    if (cpu > 60 || ram > 70 || crit > 2) return 'Atenção';
-    return 'Normal';
-}
+    if (alertas.some(alerta => alerta.includes('críticos'))) {
+        recomendacoes.push('Revise a lista de processos críticos e encerre os que não são essenciais para o sistema.');
+    }
 
+    if (recomendacoes.length === 0) {
+        recomendacoes.push('O sistema está operando dentro dos parâmetros normais. Mantenha o monitoramento regular.');
+    }
+
+    return recomendacoes;
+}
 
 app.listen(PORTA_APP, function () {
     console.log(`
