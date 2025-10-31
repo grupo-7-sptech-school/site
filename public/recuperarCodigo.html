@@ -85,34 +85,39 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const email = urlParams.get("email");
+        var novaSenha;
 
         console.log("Email recuperado:", email);
 
         function verificarCodigo() {
             const codigo = document.getElementById("codigo_input").value.trim();
 
-            if (codigo.length !== 6 || isNaN(codigo)) {
+            if (isNaN(codigo)) {
+                console.log('testando')
                 new bootstrap.Modal(document.getElementById("modalErro")).show();
                 return;
             }
 
-            fetch("/usuarios/verificarToken", {
+            fetch("./usuarios/validarTokenRecuperacao", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    emailServer: email,
-                    tokenServer: codigo
+                    validarTokenRecebido: codigo
                 }),
             })
-                .then(response => {
-                    if (response.ok) {
-                        new bootstrap.Modal(document.getElementById("modalSucesso")).show();
-                        setTimeout(() => {
-                            window.location.href = "novaSenha.html?email=" + encodeURIComponent(email);
-                        }, 2000);
-                    } else {
+                .then(async response => {
+                    if (!response.ok) {
                         new bootstrap.Modal(document.getElementById("modalErro")).show();
+                        return;
                     }
+                    const data = await response.json();
+                    const idUsuario = data[0]?.idUsuario;
+                    sessionStorage.setItem("idUsuario", idUsuario);
+
+                    new bootstrap.Modal(document.getElementById("modalSucesso")).show();
+                    setTimeout(() => {
+                        window.location.href = "novaSenha.html?email=" + encodeURIComponent(email);
+                    }, 2000);
                 })
                 .catch(error => {
                     console.error("Erro ao verificar código:", error);
