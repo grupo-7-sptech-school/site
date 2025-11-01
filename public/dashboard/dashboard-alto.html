@@ -104,10 +104,10 @@
                   <p>ULTIMA OCORRÊNCIA</p>
                 </div>
                 <div class="box-rack">
-                  <p>USO DE CPU</p>
+                  <p>USO CPU</p>
                 </div>
                 <div class="box-rack">
-                  <p>USO DE RAM</p>
+                  <p>USO RAM</p>
                 </div>
                 <div class="box-status">
                   <p>STATUS</p>
@@ -222,8 +222,8 @@
       maquinasMock.forEach(m => {
         const usoCPU = `${m.CPU}%`, usoRAM = `${m.RAM}%`;
         let estado = "normal";
-        if (m.CPU > 80 || m.RAM > 90) estado = "alerta critico";
-        else if (m.CPU >= 70 || m.RAM >= 80) estado = "alerta preventivo";
+        if (m.CPU > 80 || m.RAM > 90) estado = "critico";
+        else if (m.CPU >= 70 || m.RAM >= 80) estado = "preventivo";
         else if (m.CPU < 10 && m.RAM < 10) estado = "ocioso";
 
         const linha = document.createElement("div");
