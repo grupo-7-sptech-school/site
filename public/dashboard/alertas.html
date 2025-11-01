@@ -1,71 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Máquina</title>
-    <link rel="stylesheet" href="./../css/cabecalho3.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alertas - SolarData</title>
+  <link rel="stylesheet" href="./../css/dashboards.css">
+  <link rel="stylesheet" href="./../css/alertas.css">
 </head>
 
 <body>
-    <!-- Cabeçalho -->
-    <div class="total-dash">
-        <div class="dashboard-bg">
-            <div class="dashboard-sidebar">
-                <div class="dashboard-logo"></div>
-                <div class="dashboard-sidebar-btns">
-                    <a href="alertas.html" class="dashboard-sidebar-btn">
-                        <div class="icon-alert"></div>
-                        <h3>Alertas</h3>
-                    </a>
-                    <a href="conta.html" class="dashboard-sidebar-btn">
-                        <div class="icon-user"></div>
-                        <h3>Conta</h3>
-                    </a>
-                    <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
-                        <div class="icon-dashboard"></div>
-                        <h3>Painel de <br> Controle</h3>
-                    </a>
-                    <!--
-                    <a href="relatorios.html" class="dashboard-sidebar-btn">
-                        <div class="icon-relatory"></div>
-                        <h3>Relatórios</h3>
-                    </a> -->
-                    <a href="suporte.html" class="dashboard-sidebar-btn">
-                        <div class="icon-support"></div>
-                        <h3>Suporte</h3>
-                    </a>
-                </div>
-                <a href="/public/index.html" class="dashboard-logout">
-                    <div class="icon-logout"></div>
-                    <h3>Logout</h3>
-                </a>
-            </div>
-            <!-- Cabeçalho topo -->
-            <div class="dashboard-low-right-side">
-                <div class="dashboard-topbar">
-                    <a href="#" class="btn-voltar">
-                        Alertas - SolarData
-                    </a>
-                    <div class="btns-topbar">
-                    <!-- <a id="btnCadsatrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
-                        Cadastrar Máquina
-                    </a> -->
-                        <div class="btn-padrao">
-                                <button class="btn-notificacao">
-                                </button>
-                                <a href="conta.html" class="btn-conta">
-                                </a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Fim Cabeçalho -->    
-        </div>
-        </div></div>
-    
+  <!-- ======= CONTAINER PRINCIPAL ======= -->
+  <div class="dashboard-bg">
 
+    <!-- ==== SIDEBAR LATERAL ==== -->
+    <aside class="dashboard-sidebar">
+      <div class="dashboard-logo"></div>
+
+      <nav class="dashboard-sidebar-btns">
+        <a href="alertas.html" class="dashboard-sidebar-btn">
+          <div class="icon-alert"></div>
+          <h3>Alertas</h3>
+        </a>
+        <a href="conta.html" class="dashboard-sidebar-btn">
+          <div class="icon-user"></div>
+          <h3>Conta</h3>
+        </a>
+        <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+          <div class="icon-dashboard"></div>
+          <h3>Painel de <br> Controle</h3>
+        </a>
+        <a href="suporte.html" class="dashboard-sidebar-btn">
+          <div class="icon-support"></div>
+          <h3>Suporte</h3>
+        </a>
+      </nav>
+
+      <a href="/public/index.html" class="dashboard-logout">
+        <div class="icon-logout"></div>
+        <h3>Logout</h3>
+      </a>
+    </aside>
+
+    <!-- ==== ÁREA PRINCIPAL (DIREITA) ==== -->
+    <section class="dashboard-low-right-side">
+
+      <!-- ===== BARRA SUPERIOR ===== -->
+      <header class="dashboard-topbar">
+        <h2>Alertas - SolarData</h2>
+        <div class="btns-topbar">
+          <a href="conta.html" class="btn-conta"></a>
+        </div>
+      </header>
+
+      <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+      <main class="conteudo-principal">
+
+        <!-- Título e subtítulo -->
+        <div class="titulo-area">
+          <h1>Histórico de Alertas<br>
+            <p class="subtitulo">Visualize todos os alertas do sistema e filtre por máquina</p>
+          </h1>
+        </div>
+
+        <!-- Área de filtro -->
+        <div class="filtro-area">
+          <label for="selectMaquina" class="filtro-label">Filtrar por máquina:</label>
+          <select id="selectMaquina" class="filtro-select">
+            <option value="all">Todas as máquinas</option>
+          </select>
+          <input type="text" id="buscaAlertas" class="filtro-busca" placeholder="Buscar alerta..."
+            aria-label="Buscar alerta">
+
+          <span id="total-count" class="badge">0 alertas</span>
+        </div>
+
+        <!-- Tabela de alertas -->
+        <div class="tabela-wrap">
+          <table class="table-alertas" id="tabelaAlertas">
+            <thead>
+              <tr>
+                <th>Data / Hora</th>
+                <th>Máquina</th>
+                <th>Tipo de Alerta</th>
+                <th>Prioridade</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Linhas inseridas via JS -->
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <!-- ====== SCRIPT DE FILTRO E RENDERIZAÇÃO ====== -->
+  <script>
+    const alertasMock = [
+      { id: 1, maquina: 'Inversor-01', data: '2025-10-30 09:12', tipo: 'Sobreaquecimento', prioridade: 'Alta', mensagem: 'Temperatura acima do limite.' },
+      { id: 2, maquina: 'Inversor-02', data: '2025-10-30 08:45', tipo: 'Falha de Comunicação', prioridade: 'Média', mensagem: 'Perda intermitente de sinal.' },
+      { id: 3, maquina: 'Painel-03', data: '2025-10-29 17:30', tipo: 'Baixa Produção', prioridade: 'Baixa', mensagem: 'Produção 30% abaixo do esperado.' },
+      { id: 4, maquina: 'Inversor-01', data: '2025-10-29 12:05', tipo: 'Erro', prioridade: 'Alta', mensagem: 'Código E42: Falha no sensor.' },
+      { id: 5, maquina: 'Painel-05', data: '2025-10-28 15:20', tipo: 'Conexão', prioridade: 'Média', mensagem: 'Cabo desconectado parcialmente.' },
+      { id: 6, maquina: 'Inversor-02', data: '2025-10-27 10:00', tipo: 'Manutenção', prioridade: 'Baixa', mensagem: 'Agendar revisão preventiva.' }
+    ];
+
+    const selectMaquina = document.getElementById('selectMaquina');
+    const tabelaBody = document.querySelector('#tabelaAlertas tbody');
+    const totalCount = document.getElementById('total-count');
+
+    function populaSelect() {
+      const maquinas = [...new Set(alertasMock.map(a => a.maquina))].sort();
+      maquinas.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        selectMaquina.appendChild(opt);
+      });
+    }
+
+    function renderTabela(lista) {
+      tabelaBody.innerHTML = '';
+      if (!lista.length) {
+        tabelaBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:16px;">Nenhum alerta encontrado.</td></tr>';
+      } else {
+        lista.forEach(a => {
+          const tr = document.createElement('tr');
+          const prioridadeClasse =
+            a.prioridade.toLowerCase() === 'alta' ? 'prioridade-alta' :
+              a.prioridade.toLowerCase() === 'média' ? 'prioridade-media' : 'prioridade-baixa';
+          tr.innerHTML = `
+            <td>${a.data}</td>
+            <td>${a.maquina}</td>
+            <td>${a.tipo}</td>
+            <td><span class="${prioridadeClasse}">${a.prioridade}</span></td>
+            <td>${a.mensagem}</td>
+          `;
+          tabelaBody.appendChild(tr);
+        });
+      }
+      totalCount.textContent = `${lista.length} ${lista.length === 1 ? 'alerta' : 'alertas'}`;
+    }
+
+    function aplicarFiltro() {
+      const filtro = selectMaquina.value;
+      const filtrados = filtro === 'all' ? alertasMock : alertasMock.filter(a => a.maquina === filtro);
+      renderTabela(filtrados);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      populaSelect();
+      renderTabela(alertasMock);
+      selectMaquina.addEventListener('change', aplicarFiltro);
+    });
+
+
+    const inuptBusca = document.getElementById('buscaAlertas');
+
+    inuptBusca.addEventListener("input", () => {
+      const termo = inuptBusca.value.toLowerCase;
+      const maquinaSelecionada = selectMaquina.value;
+
+      const filtrados = alertasMock.filter(a => {
+        const combinaTexto =
+          a.tipo.toLowerCase().includes(termo) ||
+          a.mensagem.toLowerCase().includes(termo) ||
+          a.maquina.toLowerCase().includes(termo);
+
+        const combinarMaquina = maquinaSelecionada === 'all' || a.maquina === maquinaSelecionada;
+
+        return combinaTexto && combinarMaquina;
+      });
+      renderTabela(filtrados);
+    });
+  </script>
 </body>
 
 </html>

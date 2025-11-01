@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'techsolardata@gmail.com', 
+        user: 'techsolardata@gmail.com',
         pass: 'edzh ucgj mdat bahl' //senha de aplicativo gerada
     }
 });
@@ -104,6 +104,7 @@ function validarCodigo(req, res) {
         } else {
             res.status(204).send("Nenhum resultado encontrado!")
         }
+
     }).catch(function (erro) {
         console.log(erro);
         console.log("Houve um erro ao buscar o código de ativação.", erro.sqlMessage);
@@ -111,6 +112,25 @@ function validarCodigo(req, res) {
     });
 }
 
+
+function validarTokenRecuperacao(req, res) {
+
+    var validarTokenRecebido = req.body.validarTokenRecebido;
+
+    console.log(`Recuperando código de ativação`);
+
+    usuarioModel.validarTokenRecuperacao(validarTokenRecebido).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar o código de ativação.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
 
 
 
@@ -146,6 +166,23 @@ function inserirRecuperacao(req, res) {
             .then(resultado => res.json(resultado))
             .catch(erro => {
                 console.log("Erro ao inserir token:", erro);
+                res.status(500).json(erro.sqlMessage);
+            });
+    }
+}
+
+
+function redefinirSenha(req, res) {
+    var idUsuario = req.body.idUsuario;
+    var novaSenha = req.body.novaSenha
+
+    if (!idUsuario || !novaSenha) {
+        res.status(400).send("idusuario não definido!");
+    } else {
+        usuarioModel.redefinirSenha(idUsuario, novaSenha)
+            .then(resultado => res.json(resultado))
+            .catch(erro => {
+                console.log("Erro ao redefinir senha:", erro);
                 res.status(500).json(erro.sqlMessage);
             });
     }
@@ -267,13 +304,13 @@ function sendEmail(req, res) {
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log('Erro ao enviar email:', error);
-            return res.status(500).json({ 
-                message: 'Erro ao enviar o e-mail', 
-                error: error.message 
+            return res.status(500).json({
+                message: 'Erro ao enviar o e-mail',
+                error: error.message
             });
         }
 
-        res.status(200).json({ 
+        res.status(200).json({
             message: 'E-mail enviado com sucesso!',
             previewUrl: nodemailer.getTestMessageUrl(info)
         });
@@ -283,8 +320,8 @@ function sendEmail(req, res) {
 
 function enviarRecuperacao(email, token) {
     const mailOptions = {
-        from: 'techsolardata@gmail.com', 
-        to: email,               
+        from: 'techsolardata@gmail.com',
+        to: email,
         subject: 'Recuperação de senha',
         text: `Seu token de recuperação é: ${token}`
     };
@@ -308,5 +345,7 @@ module.exports = {
     puxarAlerta,
     cadastrarMaquinaController,
     puxarMaquinas,
-    cadastrarComponentes
+    cadastrarComponentes,
+    validarTokenRecuperacao,
+    redefinirSenha
 }

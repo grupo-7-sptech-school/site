@@ -49,6 +49,26 @@ function inserirRecuperacao(email, token) {
     return database.executar(instrucaoSql);
 }
 
+function validarTokenRecuperacao(tokenRecuperacao) {
+
+    var instrucaoSql = `SELECT *from Usuario where tokenRecuperacao = '${tokenRecuperacao}' LIMIT 1`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+function redefinirSenha(idUsuario, novaSenha) {
+    console.log("Inserindo token de recuperação para:", idUsuario);
+
+    var instrucaoSql = `
+        UPDATE Usuario 
+        SET senha = '${novaSenha}'
+        WHERE idUsuario = '${idUsuario}';
+    `;
+    console.log("Executando SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 
 function puxarProcesso() {
     var instrucaoSql = `SELECT * FROM Processo ORDER BY dtregistro DESC LIMIT 100;`;
@@ -153,5 +173,7 @@ module.exports = {
     puxarAlerta,
     cadastrarMaquina,
     puxarMaquinas,
-    cadastrarComponentes
+    cadastrarComponentes,
+    validarTokenRecuperacao,
+    redefinirSenha
 }

@@ -32,8 +32,16 @@ router.post("/validarEmailRecuperar", function (req, res) {
     usuarioController.validarEmailRecuperar(req, res);
 });
 
+router.post("/validarTokenRecuperacao", function (req, res) {
+    usuarioController.validarTokenRecuperacao(req, res);
+});
+
 router.put("/inserirRecuperacao", function (req, res) {
     usuarioController.inserirRecuperacao(req, res);
+});
+
+router.put("/redefinirSenha", function (req, res) {
+    usuarioController.redefinirSenha(req, res);
 });
 
 

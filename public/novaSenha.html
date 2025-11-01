@@ -95,9 +95,7 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const email = urlParams.get("email");
-
-    console.log("Email recuperado:", email);
+    var idUsuario = sessionStorage.getItem("idUsuario")
 
     function togglePassword(inputId, iconElement) {
       const input = document.getElementById(inputId);
@@ -122,12 +120,15 @@
         return;
       }
 
-      fetch("/usuarios/redefinirSenha", {
+      console.log(senha)
+      console.log(idUsuario)
+
+      fetch("./usuarios/redefinirSenha", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          emailServer: email,
-          novaSenhaServer: senha
+          idUsuario: idUsuario,
+          novaSenha: senha
         }),
       })
         .then(response => {

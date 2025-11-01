@@ -10,6 +10,8 @@
 
   <link rel="stylesheet" href="./../css/modal.css">
   <link rel="stylesheet" href="./../css/cabecalho3.css">
+  <link rel="stylesheet" href="./../css/conta.css">
+
   
   <script src="../js/sessao.js"></script>
   <script src="./../js/alerta.js"></script>
@@ -71,6 +73,48 @@
             </div>
           </div>
         </div>
+
+         <div class="conta-container">
+          <div class="conta-header">
+            <div class="conta-foto"></div>
+            <div>
+              <h2>Conta de Fernanda</h2>
+              <p class="texto-sub">Gerencie suas informações de perfil</p>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <p><b>Nome:</b> Fernanda Caramico</p>
+            <p><b>Empresa:</b> SPTech</p>
+            <p><b>E-mail principal:</b> fernanda.caramico@sptech.school</p>
+
+            <div class="editable">
+              <b>E-mail secundário:</b>
+              <input type="text" id="emailSecundario" placeholder="Digite o e-mail secundário">
+              <i class="fa-solid fa-pen"></i>
+            </div>
+
+            <div class="editable">
+              <b>Telefone:</b>
+              <input type="text" id="telefone" placeholder="Digite o telefone">
+              <i class="fa-solid fa-pen"></i>
+            </div>
+          </div>
+
+          <div class="senha-section">
+            <h3>Alterar Senha</h3>
+            <input type="password" id="senhaAtual" placeholder="Senha atual">
+            <input type="password" id="novaSenha" placeholder="Nova senha">
+            <button class="btn-salvar" onclick="alterarSenha()">Salvar nova senha</button>
+            <div id="mensagemSucesso" class="mensagem-sucesso">Alteração realizada com sucesso!</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div id="alertaConta" class="alerta-conta"></div>
         
         <div id="modalUsuarios" class="modal">
           <div class="modal-content">
@@ -129,12 +173,6 @@
           </div>
         </div>
 
-      </div>
-    </div>
-  </div>
-
-</body>
-
 </html>
 
 
@@ -188,8 +226,6 @@
         });
     }
 
-
-
     btnNotificacao.addEventListener("click", () => {
         modalNotificacoes.classList.add("active"); 
         carregarAlertas(); 
@@ -197,9 +233,6 @@
 
     btnFecharModal.addEventListener("click", () => modalNotificacoes.classList.remove("active"));
     modalNotificacoes.addEventListener("click", (e) => { if (e.target === modalNotificacoes) modalNotificacoes.classList.remove("active"); });
-
-
-
     
     const modalUsuarios = document.getElementById('modalUsuarios');
     const btnAbrir = document.querySelector('.btn-user');
@@ -287,4 +320,49 @@
             carregarUsuarios();
         });
 
-</script>
+
+    const icons = document.querySelectorAll('.editable i');
+    
+  icons.forEach(icon => {
+    icon.addEventListener('click', () => {
+      const input = icon.previousElementSibling;
+      const label = icon.parentElement.querySelector('b'); 
+      const ativo = input.style.display === 'inline-block';
+
+      if (ativo) {
+      const valor = input.value.trim();
+      if (valor) {
+        label.innerHTML = `${label.textContent.split(':')[0]}: <span class="valor-salvo">${valor}</span>`;
+      }
+      input.style.display = 'none';
+      icon.classList.remove('fa-check');
+      icon.classList.add('fa-pen');
+      } else {
+      input.style.display = 'inline-block';
+      icon.classList.remove('fa-pen');
+      icon.classList.add('fa-check');
+      input.focus();
+    }
+  });
+});
+
+    function alterarSenha() {
+  const senhaAtual = document.getElementById("senhaAtual").value.trim();
+  const novaSenha = document.getElementById("novaSenha").value.trim();
+  const msg = document.getElementById("mensagemSucesso");
+
+  if (senhaAtual && novaSenha) {
+    document.getElementById("senhaAtual").value = "";
+    document.getElementById("novaSenha").value = "";
+
+    msg.classList.add("mostrar");
+
+    setTimeout(() => msg.classList.remove("mostrar"), 2500);
+  } else {
+    alert("Preencha os dois campos de senha!");
+  }
+}
+    
+  </script>
+</body>
+</html>
