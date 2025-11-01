@@ -1,0 +1,135 @@
+.conta-container {
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px 50px;
+  width: 75%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  font-family: "Poppins", sans-serif;
+}
+
+.conta-header {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
+.conta-foto {
+  width: 100px;
+  height: 100px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+}
+
+.conta-header h2 {
+  color: #027c68;
+  font-size: 26px;
+  margin: 0;
+}
+
+.texto-sub {
+  color: #666;
+  font-size: 15px;
+}
+
+.info-section p {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.info-section b {
+  color: #027c68;
+}
+
+.editable {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.editable input {
+  display: none;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 15px;
+  width: 250px;
+}
+
+.editable i {
+  color: #027c68;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.editable i:hover {
+  color: #019b80;
+}
+
+.senha-section {
+  margin-top: 35px;
+  border-top: 2px solid #e0e0e0;
+  padding-top: 25px;
+}
+
+.senha-section h3 {
+  color: #027c68;
+  margin-bottom: 15px;
+}
+
+.senha-section input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.btn-salvar {
+  background-color: #019b80;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.btn-salvar:hover {
+  background-color: #027c68;
+}
+
+.mensagem-sucesso {
+  position: fixed;
+  top: 20px;
+  right: 25px;
+  background-color: #e6fff4;
+  color: #027c68;
+  border: 1px solid #b8f0d4;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.mensagem-sucesso.mostrar {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.valor-salvo {
+  color: #333;
+  font-weight: 500;
+  margin-left: 5px;
+}
