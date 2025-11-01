@@ -375,18 +375,17 @@ tbody tr:hover {
   border-radius: 8px;
   cursor: pointer;
   font-family: "montserrat", sans-serif;
-  font-weight: 600;
-  font-size: 13px;
+  /* font-weight: 600; */
+  font-size: 16px;
   transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+   letter-spacing: 0.5px;
   white-space: nowrap;
 }
 
 .btn-user:hover {
+  transition: scale 0.3s ease-in-out;
+  scale: 1.1;
   background-color: #06503d;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(11, 121, 91, 0.4);
 }
 
 @keyframes modalFadeIn {

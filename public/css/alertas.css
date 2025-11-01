@@ -6,14 +6,14 @@ body {
   overflow: hidden; /* evita scroll lateral desnecessário */
 }
 
-.dashboard-low-right-side {
+/* .dashboard-low-right-side {
   display: flex;
   flex-direction: column;
-  width: calc(100vw - 16vw); /* 100% menos a sidebar */
-  height: 100vh;
+  width: calc(100vw - 16vw); 100% menos a sidebar */
+  /* height: 100vh;
   background-color: #EDEDED;
   overflow: hidden;
-}
+} */
 
 .conteudo-principal {
   flex: 1;
@@ -222,7 +222,7 @@ body {
   gap: 1rem;
   width: auto;
 }
-
+/* 
 .btn-conta {
   width: 55px;
   height: 55px;
@@ -233,9 +233,9 @@ body {
   border: 2px solid #18B187;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+} */
 
-.btn-conta:hover {
+/* .btn-conta:hover {
   transform: scale(1.05);
   box-shadow: 0 0 8px rgba(24, 177, 135, 0.3);
-}
+} */

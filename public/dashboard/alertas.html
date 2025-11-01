@@ -5,12 +5,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alertas - SolarData</title>
-  <link rel="stylesheet" href="./../css/dashboards.css">
+  <!-- <link rel="stylesheet" href="./../css/dashboards.css"> -->
   <link rel="stylesheet" href="./../css/alertas.css">
+  <link rel="stylesheet" href="../css/cabecalho3.css">
+  <link rel="stylesheet" href="./../css/modal.css">
+
+    <!-- Script -->
+  <script src="../js/sessao.js"></script>
+  <script src="./../js/alerta.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!--FONT AWESOME-->
+  <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+
+  <!-- Links -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
   <!-- ======= CONTAINER PRINCIPAL ======= -->
+
+      <!-- Cabeçalho -->
+  <div class="total-dash">
   <div class="dashboard-bg">
 
     <!-- ==== SIDEBAR LATERAL ==== -->
@@ -36,7 +54,7 @@
         </a>
       </nav>
 
-      <a href="/public/index.html" class="dashboard-logout">
+      <a href=".././index.html" class="dashboard-logout">
         <div class="icon-logout"></div>
         <h3>Logout</h3>
       </a>
@@ -47,11 +65,18 @@
 
       <!-- ===== BARRA SUPERIOR ===== -->
       <header class="dashboard-topbar">
-        <h2>Alertas - SolarData</h2>
+        <a href="alertas.html" class="btn-voltar">Alertas - SolarData</a>
         <div class="btns-topbar">
+        <a href="relatorios.html" class="btn-gerar-relatorio">
+            Gerar relatório
+            </a>
+           <div class="btn-padrao">
+            <button class="btn-notificacao"></button>
           <a href="conta.html" class="btn-conta"></a>
         </div>
+        </div>
       </header>
+    
 
       <!-- ===== CONTEÚDO PRINCIPAL ===== -->
       <main class="conteudo-principal">
@@ -95,6 +120,14 @@
       </main>
     </section>
   </div>
+  </div>
+    <div id="modalNotificacoes">
+    <div class="modal-content">
+      <div id="alertasContainer"></div>
+      <button id="btnFecharModal">Fechar</button>
+    </div>
+  </div>
+  <!-- </section> -->
 
   <!-- ====== SCRIPT DE FILTRO E RENDERIZAÇÃO ====== -->
   <script>
