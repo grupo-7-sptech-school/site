@@ -565,3 +565,103 @@ body {
 
 
 
+/* ===== MODAL ALTERAR MÉTRICAS ===== */
+.modal-metricas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  font-family: "Montserrat", sans-serif;
+}
+
+.modal-metricas.active {
+  display: flex;
+}
+
+.modal-metricas-content {
+  background: #fff;
+  border-radius: 20px;
+  width: 420px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  text-align: center;
+  color: #0B795B;
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-metricas-content h2 {
+  margin-bottom: 0.5rem;
+  color: #18B187;
+}
+
+.form-metricas {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.form-metricas label {
+  font-weight: 600;
+  color: #0B795B;
+  font-size: 0.95rem;
+}
+
+.form-metricas input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.form-metricas input:focus {
+  border-color: #18B187;
+  box-shadow: 0 0 5px rgba(24,177,135,0.3);
+}
+
+.botoes-modal {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.btn-salvar, .btn-cancelar {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-salvar {
+  background-color: #18B187;
+  color: white;
+}
+
+.btn-cancelar {
+  background-color: #ddd;
+  color: #333;
+}
+
+.btn-salvar:hover {
+  background-color: #149d76;
+}
+
+.btn-cancelar:hover {
+  background-color: #c7c7c7;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

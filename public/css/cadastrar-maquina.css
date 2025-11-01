@@ -1,86 +1,99 @@
-.total-dash{
-    height: 100vh;
-    width: 100vh;
-    display: flex;
+/* ===== LAYOUT PRINCIPAL ===== */
+.total-dash {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
 }
 
-.dashboard-bg{
-   display: flex;
-   flex: 1;
-   background-color: #f4f4f4;
+.dashboard-bg {
+  display: flex;
+  flex: 1;
+  background-color: #f4f4f4;
 }
 
-
-.box-fundo-dash{
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #eeeeee;
+.box-fundo-dash {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eeeeee;
 }
 
-.box-fundo{
-    background-color: #006b4b;
-    width: 60vh;
-    max-width: 600px;
-    border-radius: 20px;
-    box-shadow: 0 0 8px black;
-    padding: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* ===== CONTAINER DO FORMULÁRIO ===== */
+.box-fundo {
+  background-color: #006b4b;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.box-cadastrar{
-    width: 100%;
-    color: white;
-    text-align: center;
+.box-cadastrar {
+  width: 100%;
+  color: white;
+  text-align: center;
 }
 
-.box-cadastrar h2{
-    margin-bottom: 25px;
-    font-size: 1.8rem;
-    font-weight: bold;
+.box-cadastrar h2 {
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.form-maquina{
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    align-items: stretch;
+/* ===== FORMULÁRIO ===== */
+.form-maquina {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  align-items: stretch;
 }
 
-.form-maquina label{
-    text-align: left;
-    font-size: 1.3rem;
-    font-weight: 500;
-    color: white;
-    margin-top: 10px;
+.form-maquina label {
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 6px;
 }
 
-.form-maquina input{
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-    box-sizing: 1px 1px 3px black;
+.form-maquina input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  background-color: #f9f9f9;
+  color: #333;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
 }
 
-.btd-cadastrar{
-    margin-top: 2.5rem;
-    padding: 12px;
-    background-color: #009e60;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s;
+.form-maquina input:focus {
+  box-shadow: 0 0 0 2px #18B187;
 }
 
-.btd-cadastrar:hover{
-    background-color: #013421;
+/* ===== BOTÃO ===== */
+.btd-cadastrar {
+  margin-top: 2rem;
+  padding: 12px;
+  background-color: #18B187;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btd-cadastrar:hover {
+  background-color: #0b795b;
 }
 

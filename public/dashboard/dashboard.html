@@ -82,67 +82,67 @@
                         </div>
                     </div>
                 </div>
-                <!-- Fim Cabeçalho -->           
-                 <div class="kpis">
-                <div class="kpi">
-                    <div class="kpi-upper">
-                    <select  id="selectKPI" class="select-kpi" onload="kpiCaptura()">
-                        <option value="alertaCPU" value="1">CPU</option>
-                        <option value="alertaRAM" value="2">RAM</option>
-                        <option value="alertaDisco" value="3">Disco</option>
-                    </select>
-                    <h3>Utilização por componente</h3>
-                </div>
-                    <div id="consumoComp" class="kpi1">
-
-                    </div>
-                </div>
-                <div class="kpi">
-                    <h3>Processo que mais consome CPU</h3>
-                    <h2 id="statusUps" style="color: #18B187;">PID</h2>
-                </div>
-                <div class="kpi">
-                    <h3>Processo que mais consome RAM</h3>
-                    <h2 style="color: #18B187;">PID </h2>
-                </div>
-                <div class="kpi" >
-                    <h3 style="width: 18vw;">CPU: 80% RAM: 90% Disco 85% </h3>
-                    <button>Alterar métricas</button>
-                </div>
-            </div>
-            <div class="dashboard-charts">
-                <div class="line-charts">
-                    <h3>Consumo de CPU</h3>
-                    <div class="grafico-cpu">
-                        <canvas id="graficoCpuCanvas"></canvas>
-                    </div>
-                    <h2>Consumo de RAM</h2>
-                    <div class="grafico-ram">
-                        <canvas id="graficoRamCanvas"></canvas>
-                    </div>
-                </div>
-                <div class="cup-charts">
-                    <h3>Armazenamento de Disco</h3>
-                    <div class="grafico-disco">
-                        <div class="copo">
-                            
-                            <canvas id="graficoDiscoCanvas"></canvas>
-                            
-                            <div class="elipse-meio" id="elipseMeio"></div>
-                            
+                <!-- Fim Cabeçalho -->
+                <div class="kpis">
+                    <div class="kpi">
+                        <div class="kpi-upper">
+                            <select id="selectKPI" class="select-kpi" onload="kpiCaptura()">
+                                <option value="alertaCPU" value="1">CPU</option>
+                                <option value="alertaRAM" value="2">RAM</option>
+                                <option value="alertaDisco" value="3">Disco</option>
+                            </select>
+                            <h3>Utilização por componente</h3>
                         </div>
-                        <div class="uso-livre-disco">
-                            <h2>
-                                <div style="background-color: rgb(228, 148, 0);
+                        <div id="consumoComp" class="kpi1">
+
+                        </div>
+                    </div>
+                    <div class="kpi">
+                        <h3>Processo que mais consome CPU</h3>
+                        <h2 id="statusUps" style="color: #18B187;">PID</h2>
+                    </div>
+                    <div class="kpi">
+                        <h3>Processo que mais consome RAM</h3>
+                        <h2 style="color: #18B187;">PID </h2>
+                    </div>
+                    <div class="kpi">
+                        <h3 style="width: 18vw;">CPU: 80% RAM: 90% Disco 85% </h3>
+                        <button>Alterar métricas</button>
+                    </div>
+                </div>
+                <div class="dashboard-charts">
+                    <div class="line-charts">
+                        <h3>Consumo de CPU</h3>
+                        <div class="grafico-cpu">
+                            <canvas id="graficoCpuCanvas"></canvas>
+                        </div>
+                        <h2>Consumo de RAM</h2>
+                        <div class="grafico-ram">
+                            <canvas id="graficoRamCanvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="cup-charts">
+                        <h3>Armazenamento de Disco</h3>
+                        <div class="grafico-disco">
+                            <div class="copo">
+
+                                <canvas id="graficoDiscoCanvas"></canvas>
+
+                                <div class="elipse-meio" id="elipseMeio"></div>
+
+                            </div>
+                            <div class="uso-livre-disco">
+                                <h2>
+                                    <div style="background-color: rgb(228, 148, 0);
                         border-radius: 90px;
                         height: 2vh;
                         width: 1vw;"></div>Alerta crítico
-                                <h1 id="h1_alertaCritico" style="color: rgb(228, 148, 0);">
-                                    85%
-                                </h1>
-                            </h2>
-                            <h2>
-                                <div style="background-color: #939393;
+                                    <h1 id="h1_alertaCritico" style="color: rgb(228, 148, 0);">
+                                        85%
+                                    </h1>
+                                </h2>
+                                <h2>
+                                    <div style="background-color: #939393;
                         border-radius: 90px;
                         height: 2vh;
                         width: 1vw;"></div><br>Armazenamento <br> Livre
@@ -176,8 +176,60 @@
             <button id="btnFecharModal">Fechar</button>
         </div>
     </div>
+
+    <!-- MODAL ALTERAR MÉTRICAS -->
+    <div id="modalMetricas" class="modal-metricas">
+        <div class="modal-metricas-content">
+            <h2>Alterar métricas</h2>
+
+            <p>Defina os limites de alerta para cada componente:</p>
+
+            <div class="form-metricas">
+                <label for="limiteCPU">CPU (%)</label>
+                <input type="number" id="limiteCPU" min="0" max="100" value="80">
+
+                <label for="limiteRAM">RAM (%)</label>
+                <input type="number" id="limiteRAM" min="0" max="100" value="90">
+
+                <label for="limiteDisco">Disco (%)</label>
+                <input type="number" id="limiteDisco" min="0" max="100" value="85">
+            </div>
+
+            <div class="botoes-modal">
+                <button id="salvarMetricas" class="btn-salvar">Salvar</button>
+                <button id="fecharMetricas" class="btn-cancelar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 <script>
+    
+    const modalMetricas = document.getElementById("modalMetricas");
+    const btnAbrirMetricas = document.querySelector(".kpi button");
+    const btnFecharMetricas = document.getElementById("fecharMetricas");
+    const btnSalvarMetricas = document.getElementById("salvarMetricas");
+
+    btnAbrirMetricas.addEventListener("click", () => {
+        modalMetricas.classList.add("active");
+    });
+
+    btnFecharMetricas.addEventListener("click", () => {
+        modalMetricas.classList.remove("active");
+    });
+
+    modalMetricas.addEventListener("click", (e) => {
+        if (e.target === modalMetricas) modalMetricas.classList.remove("active");
+    });
+
+    btnSalvarMetricas.addEventListener("click", () => {
+        const cpu = document.getElementById("limiteCPU").value;
+        const ram = document.getElementById("limiteRAM").value;
+        const disco = document.getElementById("limiteDisco").value;
+
+        modalMetricas.classList.remove("active");
+    });
+
 
     // const btnNotificacao = document.querySelector('.btn-notificacao');
     // const modal = document.getElementById('modalNotificacoes');
@@ -431,7 +483,7 @@
     var dadosRam = [];
     for (var i = 0; i < 20; i++) {
         dadosCpu.push(Math.random() * 30 + 30);
-        dadosRam.push(Math.random() * 30 +30);
+        dadosRam.push(Math.random() * 30 + 30);
     }
 
     //Função que gera novos valores aleatórios para os gráficos de linha
@@ -493,25 +545,25 @@
             },
             plugins: {
                 annotation: {
-            annotations: {
-                limiteCPU: {
-                    type: 'line',
-                    yMin: 80,
-                    yMax: 80,
-                    borderColor: 'orange',
-                    borderWidth: 2,
-                    borderDash: [6, 6],
-                    label: {
-                        display: true,
-                        content: 'Limite Crítico (80%)',
-                        position: 'start',
-                        backgroundColor: 'white',
-                        color: 'orange'
+                    annotations: {
+                        limiteCPU: {
+                            type: 'line',
+                            yMin: 80,
+                            yMax: 80,
+                            borderColor: 'orange',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                display: true,
+                                content: 'Limite Crítico (80%)',
+                                position: 'start',
+                                backgroundColor: 'white',
+                                color: 'orange'
+                            }
+                        }
+
                     }
-                }
-                
-            }
-        },
+                },
                 legend: {
                     display: false
                 }
@@ -568,25 +620,25 @@
             },
             plugins: {
                 annotation: {
-            annotations: {
-                limiteCPU: {
-                    type: 'line',
-                    yMin: 90,
-                    yMax: 90,
-                    borderColor: 'orange',
-                    borderWidth: 2,
-                    borderDash: [6, 6],
-                    label: {
-                        display: true,
-                        content: 'Limite Crítico (90%)',
-                        position: 'start',
-                        backgroundColor: 'white',
-                        color: 'orange'
+                    annotations: {
+                        limiteCPU: {
+                            type: 'line',
+                            yMin: 90,
+                            yMax: 90,
+                            borderColor: 'orange',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                display: true,
+                                content: 'Limite Crítico (90%)',
+                                position: 'start',
+                                backgroundColor: 'white',
+                                color: 'orange'
+                            }
+                        }
+
                     }
-                }
-                
-            }
-        },
+                },
                 legend: {
                     display: false
                 }
@@ -636,144 +688,144 @@
     }, 30000); // 30 segundos
 
     const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
-    var usoDisco =  Math.floor(Math.random() * 100)
+    var usoDisco = Math.floor(Math.random() * 100)
     var usoLivre = 100 - usoDisco;
     h1_usoDisco.innerHTML = usoDisco + "%"
     h1_usoLivre.innerHTML = usoLivre + "%"
     if (usoDisco < 3) {
         elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
-    }else{
+    } else {
         setTimeout(() => {
             elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
         }, 15);
     }
 
-    if (usoDisco >= 85){
-        setTimeout(() =>{
+    if (usoDisco >= 85) {
+        setTimeout(() => {
             elipseMeio.style.borderTop = 'none'
- 
+
         }, 750)
-    } else if (usoDisco >= 97){
-        setTimeout(()=>{
+    } else if (usoDisco >= 97) {
+        setTimeout(() => {
             elipseTopo.style.backgroundColor = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)'
         })
     }
 
     new Chart(ctxDisco, {
-    type: 'bar',
-    data: {
-        labels: [usoDisco + '%'],
-        datasets: [{
-            data: [usoDisco],
-            backgroundColor: 'transparent'
+        type: 'bar',
+        data: {
+            labels: [usoDisco + '%'],
+            datasets: [{
+                data: [usoDisco],
+                backgroundColor: 'transparent'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true }
+            },
+            scales: {
+                x: { display: false },
+                y: { display: false, min: 0, max: 100 }
+            },
+            animation: {
+                duration: 800,
+                easing: 'easeInOutQuad'
+            }
+        },
+        plugins: [{
+            id: 'liquidoDisco',
+            beforeDatasetsDraw(graficoDisco) {
+                const ctx = graficoDisco.ctx;
+                const area = graficoDisco.chartArea;
+                const meta = graficoDisco.getDatasetMeta(0);
+                const barra = meta.data[0];
+
+                const margemVertical = area.height * 0.025;
+
+                const areaUtil = {
+                    left: area.left,
+                    right: area.right,
+                    top: area.top + margemVertical,
+                    bottom: area.bottom - margemVertical
+                };
+
+                const yTopo = barra.y;
+                const yBase = areaUtil.bottom;
+
+                const yTopoAjustado = Math.max(yTopo, areaUtil.top + 7);
+
+                ctx.beginPath();
+                ctx.ellipse(
+                    (areaUtil.left + areaUtil.right) / 2,
+                    yTopoAjustado,
+                    (areaUtil.right - areaUtil.left) / 2,
+                    18,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
+
+                const gradienteHorizontal = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
+                gradienteHorizontal.addColorStop(0, '#25a683');
+                gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
+                gradienteHorizontal.addColorStop(0.85, '#25a683');
+
+                ctx.fillStyle = gradienteHorizontal;
+
+
+                const alturaPreenchimento = yBase - yTopoAjustado;
+                if (alturaPreenchimento > 0) {
+                    ctx.fillRect(areaUtil.left, yTopoAjustado, areaUtil.right - areaUtil.left, alturaPreenchimento);
+                }
+
+                ctx.beginPath();
+                ctx.ellipse(
+                    (areaUtil.left + areaUtil.right) / 2,
+                    yTopoAjustado,
+                    (areaUtil.right - areaUtil.left) / 2,
+                    18,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
+
+                const gradienteEscuro = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
+                gradienteEscuro.addColorStop(0, '#1d8066');
+                gradienteEscuro.addColorStop(0.33, '#18a47d');
+                gradienteEscuro.addColorStop(0.85, '#1d8066');
+
+                ctx.fillStyle = gradienteEscuro;
+                ctx.fill();
+
+                ctx.restore();
+            }
         }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { 
-            legend: { display: false }, 
-            tooltip: { enabled: true } 
-        },
-        scales: { 
-            x: { display: false }, 
-            y: { display: false, min: 0, max: 100 } 
-        },
-        animation: {
-            duration: 800,
-            easing: 'easeInOutQuad'
+    });
+
+
+    function kpiCaptura() {
+        let valorKpi = 0;
+        const select = document.getElementById("selectKPI");
+
+        if (select.value == "alertaCPU") {
+            valorKpi = dadosCpu[dadosCpu.length - 1];
+        } else if (select.value == "alertaRAM") {
+            valorKpi = dadosRam[dadosRam.length - 1];
+        } else if (select.value == "alertaDisco") {
+            valorKpi = usoDisco;
         }
-    },
-    plugins: [{
-        id: 'liquidoDisco',
-        beforeDatasetsDraw(graficoDisco) {
-    const ctx = graficoDisco.ctx;
-    const area = graficoDisco.chartArea;
-    const meta = graficoDisco.getDatasetMeta(0);
-    const barra = meta.data[0];
 
-    const margemVertical = area.height * 0.025;
-    
-    const areaUtil = {
-        left: area.left,
-        right: area.right,
-        top: area.top + margemVertical,
-        bottom: area.bottom - margemVertical
-    };
-
-    const yTopo = barra.y;
-    const yBase = areaUtil.bottom;
-
-    const yTopoAjustado = Math.max(yTopo, areaUtil.top + 7); 
-
-    ctx.beginPath();
-    ctx.ellipse(
-        (areaUtil.left + areaUtil.right) / 2,
-        yTopoAjustado,
-        (areaUtil.right - areaUtil.left) / 2,
-        18,
-        0,
-        0,
-        Math.PI * 2
-    );
-
-    const gradienteHorizontal = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
-    gradienteHorizontal.addColorStop(0, '#25a683');
-    gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
-    gradienteHorizontal.addColorStop(0.85, '#25a683');
-
-    ctx.fillStyle = gradienteHorizontal;
-    
-
-    const alturaPreenchimento = yBase - yTopoAjustado;
-    if (alturaPreenchimento > 0) {
-        ctx.fillRect(areaUtil.left, yTopoAjustado, areaUtil.right - areaUtil.left, alturaPreenchimento);
+        consumoComp.innerHTML = valorKpi.toFixed(0) + "%";
     }
 
-    ctx.beginPath();
-    ctx.ellipse(
-        (areaUtil.left + areaUtil.right) / 2,
-        yTopoAjustado,
-        (areaUtil.right - areaUtil.left) / 2,
-        18,
-        0,
-        0,
-        Math.PI * 2
-    );
-
-    const gradienteEscuro = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
-    gradienteEscuro.addColorStop(0, '#1d8066');
-    gradienteEscuro.addColorStop(0.33, '#18a47d');
-    gradienteEscuro.addColorStop(0.85, '#1d8066');
-
-    ctx.fillStyle = gradienteEscuro;
-    ctx.fill();
-
-    ctx.restore();
-}
-    }]
-});
-        
-    
- function kpiCaptura() {
-    let valorKpi = 0;
-    const select = document.getElementById("selectKPI");
-
-    if (select.value == "alertaCPU") {
-        valorKpi = dadosCpu[dadosCpu.length - 1];
-    } else if (select.value == "alertaRAM") {
-        valorKpi = dadosRam[dadosRam.length - 1];
-    } else if (select.value == "alertaDisco") {
-        valorKpi = usoDisco;
-    }
-
-    consumoComp.innerHTML = valorKpi.toFixed(0) + "%";
-}
-
-document.getElementById("selectKPI").addEventListener("change", kpiCaptura);
+    document.getElementById("selectKPI").addEventListener("change", kpiCaptura);
 
 
-window.addEventListener("load", kpiCaptura);
+    window.addEventListener("load", kpiCaptura);
 
 
 
