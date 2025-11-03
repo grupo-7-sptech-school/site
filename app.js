@@ -31,17 +31,17 @@ app.use("/medidas", medidasRouter);
 app.use("/empresas", empresasRouter);
 
 
-
-const PDFDocument = require('pdfkit');
+const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
+const fs = require('fs');
 
 
 app.get("/relatorio/pdf", async (req, res) => {
     try {
-        console.log('Gerando PDF completo...');
+        console.log('Gerando PDF com pdf-lib...');
 
         const usuarioModel = require("./src/models/usuarioModel.js");
         const processos = await usuarioModel.puxarProcesso();
-
+        
         if (!processos || processos.length === 0) {
             return res.status(404).json({
                 success: false,
@@ -51,207 +51,207 @@ app.get("/relatorio/pdf", async (req, res) => {
 
         const analise = gerarAnaliseLocalSimples(processos);
 
-        const doc = new PDFDocument({ margin: 20 });
+        // Criar novo documento PDF
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage([595.28, 841.89]); // A4 em pontos
 
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename="relatorio_solardata_${Date.now()}.pdf"`);
+        // Configurações
+        const { width, height } = page.getSize();
+        const margin = 50;
+        const maxWidth = width - (margin * 2);
+        
+        // Carregar fontes
+        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-        doc.pipe(res);
+        let y = height - margin;
 
-        const corPrimaria = '#18B187';
-        const corSecundaria = '#2C3E50';
-        const corAlerta = '#E74C3C';
-        const corSucesso = '#27AE60';
-        const corAtencao = '#F39C12';
+        // Função auxiliar para desenhar texto - CORRIGIDA
+        const drawText = (text, x, yPos, size = 10, isBold = false, color = rgb(0, 0, 0), maxWidth = width - (margin * 2)) => {
+            // CONVERTER PARA STRING sempre
+            const textString = String(text);
+            const currentFont = isBold ? fontBold : font;
+            page.drawText(textString, {
+                x,
+                y: yPos,
+                size,
+                font: currentFont,
+                color,
+                maxWidth,
+            });
+            return yPos - (size + 2);
+        };
 
-        doc.fillColor(corPrimaria)
-            .rect(0, 0, doc.page.width, 70)
-            .fill();
+        // Cabeçalho
+        y = drawText('SolarData - Relatório de Monitoramento', margin, y, 16, true, rgb(0.173, 0.243, 0.314));
+        y = drawText(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, margin, y, 8, false, rgb(0.5, 0.5, 0.5));
+        
+        y -= 10; // Espaço
 
-        doc.fillColor('#FFFFFF')
-            .fontSize(20)
-            .font('Helvetica-Bold')
-            .text('SOLARDATA', 50, 25)
-            .fontSize(10)
-            .text('Monitoramento de Servidores Verdes', 50, 50);
-
-        doc.fillColor(corSecundaria)
-            .fontSize(8)
-            .text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 400, 35, { align: 'right' });
-
-        let yPosition = 100;
-
-        const statusColor = analise.status === 'Crítico' ? corAlerta :
-            analise.status === 'Atenção' ? corAtencao : corSucesso;
-
-        doc.fillColor(statusColor)
-            .rect(50, yPosition, doc.page.width - 100, 30)
-            .fill();
-
-        doc.fillColor('#FFFFFF')
-            .fontSize(14)
-            .font('Helvetica-Bold')
-            .text(`STATUS: ${analise.status}`, 60, yPosition + 8);
-
-        yPosition += 40;
-
-        doc.fillColor(corSecundaria)
-            .fontSize(14)
-            .font('Helvetica-Bold')
-            .text('MÉTRICAS PRINCIPAIS', 50, yPosition);
-
-        yPosition += 25;
-
-        const metrics = [
-            { label: 'Processos Totais', value: processos.length },
-            { label: 'Processos Ativos', value: analise.ativos },
-            { label: 'Uso CPU Total', value: `${analise.totalCPU ? analise.totalCPU.toFixed(1) : '0.0'}%` },
-            { label: 'Uso RAM Total', value: `${analise.totalRAM ? analise.totalRAM.toFixed(1) : '0.0'}%` }
-        ];
-
-        metrics.forEach((metric, index) => {
-            const y = yPosition + (index * 20);
-
-            doc.fillColor(corSecundaria)
-                .fontSize(9)
-                .text(`• ${metric.label}:`, 60, y);
-
-            doc.fontSize(9)
-                .font('Helvetica-Bold')
-                .text(metric.value, 200, y);
+        // Linha divisória
+        page.drawLine({
+            start: { x: margin, y },
+            end: { x: width - margin, y },
+            thickness: 1,
+            color: rgb(0.173, 0.243, 0.314),
         });
 
-        yPosition += 100;
+        y -= 20;
 
-        if (analise.alertas && analise.alertas.length > 0) {
-            doc.fillColor(corSecundaria)
-                .fontSize(14)
-                .font('Helvetica-Bold')
-                .text('ALERTAS', 50, yPosition);
+        // STATUS DO SISTEMA
+        const statusColor = analise.status === 'Crítico' ? rgb(1, 0, 0) :
+                           analise.status === 'Atenção' ? rgb(0.953, 0.612, 0.071) : 
+                           rgb(0.153, 0.682, 0.376);
 
-            yPosition += 20;
+        y = drawText(`STATUS DO SISTEMA: ${analise.status}`, margin, y, 14, true, statusColor);
+
+        y -= 25;
+
+        // MÉTRICAS PRINCIPAIS - CORRIGIDO: converter valores para string
+        y = drawText('Métricas Principais', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
+
+        y -= 15;
+
+        const metrics = [
+            { label: 'Processos Totais', value: String(processos.length) }, // CONVERTER
+            { label: 'Processos Ativos', value: String(analise.ativos) },   // CONVERTER
+            { label: 'Uso CPU Total', value: `${Math.min(analise.totalCPU, 100)?.toFixed(1) || 0}%` },
+            { label: 'Uso RAM Total', value: `${Math.min(analise.totalRAM, 100)?.toFixed(1) || 0}%` }
+        ];
+
+        metrics.forEach((m, index) => {
+            const coluna = index % 2 === 0 ? margin : margin + 200;
+            const linha = y - (Math.floor(index / 2) * 15);
+            
+            drawText(`${m.label}:`, coluna, linha, 9, false, rgb(0.5, 0.5, 0.5));
+            drawText(m.value, coluna + 80, linha, 9, true, rgb(0.204, 0.286, 0.369));
+        });
+
+        y -= 40;
+
+        // ALERTAS
+        if (analise.alertas?.length > 0) {
+            y = drawText('Alertas', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
+            y -= 15;
 
             analise.alertas.forEach((alerta) => {
-                doc.fillColor(corAlerta)
-                    .fontSize(9)
-                    .text(`⚠ ${alerta}`, 60, yPosition);
-                yPosition += 15;
+                y = drawText(`• ${alerta}`, margin + 10, y, 9, false, rgb(1, 0, 0), maxWidth - 10);
+                y -= 2;
             });
-
-            yPosition += 5;
+            y -= 5;
         }
 
-        if (analise.topCPU && analise.topCPU.length > 0) {
-            doc.fillColor(corSecundaria)
-                .fontSize(14)
-                .font('Helvetica-Bold')
-                .text('TOP 5 - MAIOR CONSUMO CPU', 50, yPosition);
+        // TOP PROCESSOS CPU
+        y = drawText('Top 5 - Maior Consumo de CPU', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
+        y -= 15;
 
-            yPosition += 20;
+        // Cabeçalho da tabela
+        drawText('#', margin, y, 8, true, rgb(0.204, 0.286, 0.369));
+        drawText('Processo', margin + 30, y, 8, true, rgb(0.204, 0.286, 0.369));
+        drawText('Uso CPU', width - margin - 40, y, 8, true, rgb(0.204, 0.286, 0.369));
 
-            doc.fillColor(corSecundaria)
-                .fontSize(9)
-                .text('#', 60, yPosition)
-                .text('Processo', 100, yPosition)
-                .text('Uso CPU', 400, yPosition, { align: 'right' });
+        y -= 10;
 
-            yPosition += 15;
+        // Linha divisória
+        page.drawLine({
+            start: { x: margin, y },
+            end: { x: width - margin, y },
+            thickness: 0.5,
+            color: rgb(0.173, 0.243, 0.314),
+        });
 
-            analise.topCPU.slice(0, 5).forEach((proc, index) => {
-                const usage = proc.cpuPorcentagem || 0;
+        y -= 8;
 
-                doc.fillColor(corSecundaria)
-                    .fontSize(9)
-                    .text(`${index + 1}.`, 60, yPosition)
-                    .text(proc.nome || 'Processo', 100, yPosition)
-                    .text(`${usage.toFixed(1)}%`, 400, yPosition, { align: 'right' });
+        // Dados CPU - CORRIGIDO: converter números para string
+        analise.topCPU.slice(0, 5).forEach((proc, index) => {
+            const usage = Math.min(proc.cpuPorcentagem, 100);
+            drawText(String(index + 1) + '.', margin, y, 8, false, rgb(0.5, 0.5, 0.5)); // CONVERTER
+            drawText((proc.nome || 'Processo').substring(0, 25), margin + 20, y, 8, false, rgb(0.5, 0.5, 0.5));
+            drawText(`${usage?.toFixed(1) || 0}%`, width - margin - 40, y, 8, false, rgb(0.5, 0.5, 0.5));
+            y -= 12;
+        });
 
-                yPosition += 15;
+        y -= 10;
+
+        // TOP PROCESSOS RAM
+        y = drawText('Top 5 - Maior Consumo de RAM', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
+        y -= 15;
+
+        // Cabeçalho da tabela
+        drawText('#', margin, y, 8, true, rgb(0.204, 0.286, 0.369));
+        drawText('Processo', margin + 30, y, 8, true, rgb(0.204, 0.286, 0.369));
+        drawText('Uso RAM', width - margin - 40, y, 8, true, rgb(0.204, 0.286, 0.369));
+
+        y -= 10;
+
+        // Linha divisória
+        page.drawLine({
+            start: { x: margin, y },
+            end: { x: width - margin, y },
+            thickness: 0.5,
+            color: rgb(0.173, 0.243, 0.314),
+        });
+
+        y -= 8;
+
+        // Dados RAM - CORRIGIDO: converter números para string
+        analise.topRAM.slice(0, 5).forEach((proc, index) => {
+            const usage = Math.min(proc.ramPorcentagem, 100);
+            drawText(String(index + 1) + '.', margin, y, 8, false, rgb(0.5, 0.5, 0.5)); // CONVERTER
+            drawText((proc.nome || 'Processo').substring(0, 25), margin + 20, y, 8, false, rgb(0.5, 0.5, 0.5));
+            drawText(`${usage?.toFixed(1) || 0}%`, width - margin - 40, y, 8, false, rgb(0.5, 0.5, 0.5));
+            y -= 12;
+        });
+
+        y -= 15;
+
+        // RECOMENDAÇÕES
+        const recomendacoes = gerarRecomendacoes(analise.alertas);
+        if (recomendacoes?.length > 0) {
+            y = drawText('Recomendações', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
+            y -= 15;
+
+            recomendacoes.forEach((rec) => {
+                y = drawText(`• ${rec}`, margin + 10, y, 9, false, rgb(0.5, 0.5, 0.5), maxWidth - 10);
+                y -= 2;
             });
-
-            yPosition += 15;
         }
 
-        if (analise.topRAM && analise.topRAM.length > 0) {
-            doc.fillColor(corSecundaria)
-                .fontSize(14)
-                .font('Helvetica-Bold')
-                .text('TOP 5 - MAIOR CONSUMO RAM', 50, yPosition);
+        // Rodapé
+        const footerY = 30;
+        drawText('SolarData - Monitoramento de Servidores Sustentáveis', margin, footerY, 8, false, rgb(0.173, 0.243, 0.314));
+        drawText('Relatório gerado automaticamente', width - margin - 120, footerY, 8, false, rgb(0.173, 0.243, 0.314));
 
-            yPosition += 20;
+        // Gerar PDF
+        const pdfBytes = await pdfDoc.save();
 
-            doc.fillColor(corSecundaria)
-                .fontSize(9)
-                .text('#', 60, yPosition)
-                .text('Processo', 100, yPosition)
-                .text('Uso RAM', 400, yPosition, { align: 'right' });
-
-            yPosition += 15;
-
-            analise.topRAM.slice(0, 5).forEach((proc, index) => {
-                const usage = proc.ramPorcentagem || 0;
-
-                doc.fillColor(corSecundaria)
-                    .fontSize(9)
-                    .text(`${index + 1}.`, 60, yPosition)
-                    .text(proc.nome || 'Processo', 100, yPosition)
-                    .text(`${usage.toFixed(1)}%`, 400, yPosition, { align: 'right' });
-
-                yPosition += 15;
-            });
-
-            yPosition += 15;
-        }
-
-        const espaçoRestante = doc.page.height - yPosition - 50;
+        // Configurar resposta
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="relatorio_solardata_${Date.now()}.pdf"`);
         
-        if (espaçoRestante > 50) {
-            const recomendacoes = gerarRecomendacoes(analise.alertas);
+        res.send(Buffer.from(pdfBytes));
+        
+        console.log('PDF gerado com sucesso usando pdf-lib!');
 
-            if (recomendacoes.length > 0) {
-                doc.fillColor(corPrimaria)
-                    .fontSize(14)
-                    .font('Helvetica-Bold')
-                    .text('RECOMENDAÇÕES', 50, yPosition);
-
-                yPosition += 20;
-
-                recomendacoes.forEach((recomendacao) => {
-                    if (yPosition < doc.page.height - 50) {
-                        doc.fillColor(corSecundaria)
-                            .fontSize(9)
-                            .text(`• ${recomendacao}`, 60, yPosition, {
-                                width: doc.page.width - 120,
-                                align: 'justify'
-                            });
-                        yPosition += 12;
-                    }
-                });
-            }
-        }
-
-        // RODAPÉ FIXO NA PRIMEIRA PÁGINA
-        doc.fillColor(corPrimaria)
-            .rect(0, doc.page.height - 30, doc.page.width, 30)
-            .fill();
-
-        doc.fillColor('#FFFFFF')
-            .fontSize(7)
-            .text('SolarData - Monitoramento de Servidores Sustentáveis', 50, doc.page.height - 20)
-            .text('Relatório gerado automaticamente', 400, doc.page.height - 20, { align: 'right' });
-
-        doc.end();
-
-        console.log('PDF gerado e enviado!');
-    } catch (error) {
-        console.error('Erro ao gerar PDF:', error);
+    } catch (err) {
+        console.error('Erro ao gerar PDF:', err);
         res.status(500).json({
             success: false,
             error: 'Falha ao gerar relatório PDF',
-            details: error.message
+            details: err.message
         });
     }
 });
+
+
+
+
+
+
+
+
+
+
 
 
 
