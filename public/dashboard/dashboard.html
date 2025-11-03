@@ -133,11 +133,11 @@
                             </div>
                             <div class="uso-livre-disco">
                                 <h2>
-                                    <div style="background-color: rgb(228, 148, 0);
+                                    <div style="background-color: rgb(192, 31, 31);
                         border-radius: 90px;
                         height: 2vh;
                         width: 1vw;"></div>Alerta crítico
-                                    <h1 id="h1_alertaCritico" style="color: rgb(228, 148, 0);">
+                                    <h1 id="h1_alertaCritico" style="color: rgb(200, 31, 31);">
                                         85%
                                     </h1>
                                 </h2>
@@ -489,7 +489,13 @@
     //Função que gera novos valores aleatórios para os gráficos de linha
     function novoValor(prev) {
         var variacao = (Math.random() - 0.5) * 20;
+        
         var novo = prev + variacao;
+        if (novo >= 70){
+            novo -= 30
+        } else if (novo <= 30){
+            novo += 30
+        }
         if (novo < 0) novo = 0;
         if (novo > 100) novo = 100;
         return Math.round(novo);
@@ -550,7 +556,7 @@
                             type: 'line',
                             yMin: 80,
                             yMax: 80,
-                            borderColor: 'orange',
+                            borderColor: 'rgb(200, 31, 31)',
                             borderWidth: 2,
                             borderDash: [6, 6],
                             label: {
@@ -558,9 +564,26 @@
                                 content: 'Limite Crítico (80%)',
                                 position: 'start',
                                 backgroundColor: 'white',
-                                color: 'orange'
+                                color: 'rgb(200, 31, 31)'
+                            }
+                        },
+
+                        ociosoCPU: {
+                            type: 'line',
+                            yMin: 20,
+                            yMax: 20,
+                            borderColor: 'purple',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                display: true,
+                                content: 'Limite de ociosidade (20%)',
+                                position: 'start',
+                                backgroundColor: 'rgba(140, 220, 220, 1)',
+                                color: 'purple'
                             }
                         }
+
 
                     }
                 },
@@ -580,8 +603,8 @@
             datasets: [{
                 label: 'Uso RAM (%)',
                 data: dadosRam,
-                borderColor: '#ff4d4d',
-                backgroundColor: 'rgba(255, 77, 77, 0.6)',
+                borderColor: 'rgba(255, 150, 200, 0.6)',
+                backgroundColor: 'rgba(255, 150, 200, 0.6)',
                 borderWidth: 2,
                 pointRadius: 1.5,
                 tension: 0.3,
@@ -621,11 +644,11 @@
             plugins: {
                 annotation: {
                     annotations: {
-                        limiteCPU: {
+                        limiteRAM: {
                             type: 'line',
                             yMin: 90,
                             yMax: 90,
-                            borderColor: 'orange',
+                            borderColor: 'rgb(200, 31, 31)',
                             borderWidth: 2,
                             borderDash: [6, 6],
                             label: {
@@ -633,9 +656,27 @@
                                 content: 'Limite Crítico (90%)',
                                 position: 'start',
                                 backgroundColor: 'white',
-                                color: 'orange'
+                                color: 'rgb(200, 31, 31)'
+                            }
+                        },
+
+                        ociosoRAM: {
+                            type: 'line',
+                            yMin: 20,
+                            yMax: 20,
+                            borderColor: 'purple',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                display: true,
+                                content: 'Limite de ociosidade (20%)',
+                                position: 'start',
+                                backgroundColor: 'rgba(255, 187, 230, 1)',
+                                color: 'purple'
                             }
                         }
+                       
+                        
 
                     }
                 },
