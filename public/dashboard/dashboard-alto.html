@@ -68,7 +68,7 @@
             <a id="btnCadastrarMaquina" href="cadastrar-maquina.html" class="btn-cadastrar-maquina">
               Cadastrar Máquina
             </a>
-        
+
             <!-- <a href="relatorios.html" class="btn-gerar-relatorio">
                             Gerar relatorio
                         </a> -->
@@ -82,9 +82,49 @@
         </div>
         <!-- Fim Cabeçalho -->
         <div class="box-dashboard">
-
+<br>
           <div class="box-notificacao">
+            <div class="kpis-dashboard">
+              <div class="kpi-card">
+                <div class="kpi-icon">
+                  <i class="fas fa-server"></i>
+                </div>
+                <div class="kpi-content">
+                  <h3>Total de Máquinas</h3>
+                  <div class="kpi-value" id="totalMaquinas">0</div>
+                </div>
+              </div>
 
+              <div class="kpi-card">
+                <div class="kpi-icon">
+                  <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="kpi-content">
+                  <h3>Máquinas Ativas</h3>
+                  <div class="kpi-value" id="maquinasAtivas">0</div>
+                </div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-icon">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="kpi-content">
+                  <h3>Em Alerta</h3>
+                  <div class="kpi-value" id="maquinasAlerta">0</div>
+                </div>
+              </div>
+
+              <div class="kpi-card">
+                <div class="kpi-icon">
+                  <i class="fas fa-bed"></i>
+                </div>
+                <div class="kpi-content">
+                  <h3>Máquinas Ociosas</h3>
+                  <div class="kpi-value" id="maquinasOciosas">0</div>
+                </div>
+              </div>
+            </div>
             <!-- Topo  quadro de monitoramento -->
             <div class="container-maquinas">
               <div class="header-maquinas">
@@ -128,6 +168,7 @@
       <button id="btnFecharModal">Fechar</button>
     </div>
   </div>
+  <script src="./../js/dashboard-alto.js"></script>
 </body>
 
 <script>
