@@ -15,7 +15,6 @@ body {
 }
 
 .dashboard-sidebar {
-  /* justify-self: flex-start; */
   color: white;
   background-color: #0B795B;
   height: 100vh;
@@ -132,7 +131,7 @@ body {
   transition: background-color 0.3s ease-in-out;
   color: #D4E157;
   background-color: #d3e15731;
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 .icon-alert {
@@ -140,6 +139,7 @@ body {
   height: 3vh;
   width: 3vw;
   background-repeat: no-repeat;
+  margin-left: 4vh;
 }
 
 .icon-user {
@@ -147,6 +147,8 @@ body {
   height: 3vh;
   width: 3vw;
   background-repeat: no-repeat;
+  margin-left: 4vh;
+
 }
 
 .icon-dashboard {
@@ -155,6 +157,8 @@ body {
   width: 3vw;
   background-repeat: no-repeat;
   filter: grayscale();
+  margin-left: 4vh;
+
 }
 
 .icon-relatory {
@@ -171,6 +175,8 @@ body {
   height: 4vh;
   width: 3vw;
   background-repeat: no-repeat;
+  margin-left: 4vh;
+
 }
 
 .icon-logout {
@@ -180,6 +186,8 @@ body {
   background-repeat: no-repeat;
   background-position-x: center;
   background-position-y: center;
+  margin-left: 5vh;
+
 }
 
 .dashboard-logout:hover {
