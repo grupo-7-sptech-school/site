@@ -513,7 +513,6 @@ body {
 
 #btnFecharModal:hover { opacity: 0.95; }
 
-/* small helper to ensure the notification button is clickable & visible */
 .btn-notificacao {
   width: 36px; height: 36px;
   border-radius: 8px;
@@ -565,7 +564,6 @@ body {
 
 
 
-/* ===== MODAL ALTERAR MÉTRICAS ===== */
 .modal-metricas {
   position: fixed;
   top: 0;
@@ -664,4 +662,106 @@ body {
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
+}
+
+
+.kpi-metricas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "montserrat", sans-serif;
+  background-color: white;
+  width: 18vw;
+  height: 14vh;
+  border-radius: 25px;
+  padding: 1.5vh 1vw;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-metricas:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.kpi-metricas::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
+
+.kpi-metricas h3 {
+  width: 100%;
+  text-align: center;
+  margin: 0 0 1.5vh 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0B795B;
+  line-height: 1.3;
+}
+
+.metricas-valores {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 1.5vh;
+}
+
+.metrica-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.metrica-valor {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #18B187;
+  margin-bottom: 0.2vh;
+}
+
+.metrica-label {
+  font-size: 0.7rem;
+  color: #666;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpi-metricas button {
+  width: 90%;
+  height: 4vh;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #18B187, #0B795B);
+  color: white;
+  font-family: "montserrat", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vw;
+}
+
+.kpi-metricas button:hover {
+  background: linear-gradient(135deg, #149d76, #06503d);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(11, 121, 91, 0.3);
+}
+
+.kpi-metricas button:active {
+  transform: translateY(0);
+}
+
+.kpi-metricas button::before {
+  font-size: 0.8rem;
 }
