@@ -208,7 +208,7 @@
 }
 
 .kpi-card:nth-child(1) .kpi-icon {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #18B187 0%, #764ba2 100%);
 }
 
 .kpi-card:nth-child(2) .kpi-icon {
@@ -216,7 +216,7 @@
 }
 
 .kpi-card:nth-child(3) .kpi-icon {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #fe0f73 0%, #f5576c 100%);
 }
 
 .kpi-card:nth-child(4) .kpi-icon {
