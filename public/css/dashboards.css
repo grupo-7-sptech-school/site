@@ -772,3 +772,151 @@ body {
 .kpi-metricas button::before {
   font-size: 0.8rem;
 }
+
+/* ===== Modal de Alterar Métricas ===== */
+.modal-metricas {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+}
+
+.modal-metricas-content {
+  background-color: #fff;
+  border-radius: 12px;
+  width: 420px;
+  padding: 30px 35px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-metricas-content h2 {
+  color: #008b6b;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.config-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.config-container label {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+#componenteSelect {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.metricas-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 15px 20px;
+  background-color: #f8f8f8;
+}
+
+.metricas-section h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+#critico{
+  color: red;
+}
+
+#prevent{
+  color:darkgoldenrod;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.input-group label {
+  font-size: 14px;
+  color: #333;
+  width: 40%;
+}
+
+.input-group input {
+  width: 80px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.botoes-modal {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.btn-salvar, .btn-cancelar {
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-salvar {
+  background-color: #008b6b;
+  color: #fff;
+}
+
+.btn-salvar:hover {
+  background-color: #007a5f;
+}
+
+.btn-cancelar {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.btn-cancelar:hover {
+  background-color: #ccc;
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  font-size: 22px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close:hover {
+  color: #000;
+}

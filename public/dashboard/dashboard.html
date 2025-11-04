@@ -101,7 +101,7 @@
                         <h2 style="color: black">PID</h2>
                     </div>
                     <div class="kpi-metricas">
-                        <h3>Limites de Alerta Atuais</h3>
+                        <h3>Limites de Alerta <a style="color: red;">Crítico</a> Atuais</h3>
                         <div class="metricas-valores">
                             <div class="metrica-item">
                                 <span class="metrica-valor" id="valorCPU">80%</span>
@@ -187,26 +187,51 @@
     </div>
 
     <!-- MODAL ALTERAR MÉTRICAS -->
-    <div id="modalMetricas" class="modal-metricas">
-        <div class="modal-metricas-content">
-            <h2>Alterar métricas</h2>
+    <div class="form-metricas">
+        <div id="modalMetricas" class="modal-metricas">
+            <div class="modal-metricas-content">
+                <span class="close" onclick="fecharmodalMetricas">&times;</span>
+                <h2>Alterar métricas</h2>
 
-            <p>Defina os limites de alerta para cada componente:</p>
+                <div class="config-container">
+                    <label for="componenteSelect">Componente:</label>
+                    <select id="componenteSelect" onchange="atualizarMetricasSelecionadas()">
+                        <option value="cpu">CPU</option>
+                        <option value="ram">RAM</option>
+                        <option value="disco">Disco</option>
+                    </select>
 
-            <div class="form-metricas">
-                <label for="limiteCPU">CPU (%)</label>
-                <input type="number" id="limiteCPU" min="0" max="100" value="80">
+                    <div class="metricas-section">
+                        <h3 id="prevent">Alerta Preventivo</h3>
+                        <div class="input-group">
+                            <label>De (%)</label>
+                            <input type="number" id="prevInicio" min="0" max="100" value="70">
+                        </div>
+                        <div class="input-group">
+                            <label>Até (%)</label>
+                            <input type="number" id="prevFim" min="0" max="100" value="85">
+                        </div>
+                    </div>
 
-                <label for="limiteRAM">RAM (%)</label>
-                <input type="number" id="limiteRAM" min="0" max="100" value="90">
+                    <div class="metricas-section">
+                        <h3 id="critico">Alerta Crítico</h3>
+                        <div class="input-group">
+                            <label>De (%)</label>
+                            <input type="number" id="critInicio" min="0" max="100" value="86">
+                        </div>
+                        <div class="input-group">
+                            <label>Até (%)</label>
+                            <input type="number" id="critFim" min="0" max="100" value="100">
+                        </div>
+                        
+                    </div>
+                    <div class="botoes-modal">
+                        <button id="salvarMetricas" class="btn-salvar">Salvar</button>
+                        <button id="fecharMetricas" class="btn-cancelar">Cancelar</button>
+                    </div>
+                </div>
 
-                <label for="limiteDisco">Disco (%)</label>
-                <input type="number" id="limiteDisco" min="0" max="100" value="85">
-            </div>
 
-            <div class="botoes-modal">
-                <button id="salvarMetricas" class="btn-salvar">Salvar</button>
-                <button id="fecharMetricas" class="btn-cancelar">Cancelar</button>
             </div>
         </div>
     </div>
