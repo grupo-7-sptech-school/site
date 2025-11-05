@@ -128,12 +128,12 @@
   <!-- ====== SCRIPT DE FILTRO E RENDERIZAÇÃO ====== -->
   <script>
     const alertasMock = [
-      { id: 1, maquina: 'Server-SP01', data: '2025-10-30 09:12', tipo: 'Sobreaquecimento', prioridade: 'Alta', mensagem: 'Temperatura acima do limite.' },
-      { id: 2, maquina: 'Server-SP02', data: '2025-10-30 08:45', tipo: 'Falha de Comunicação', prioridade: 'Média', mensagem: 'Perda intermitente de sinal.' },
-      { id: 3, maquina: 'Server-SP03', data: '2025-10-29 17:30', tipo: 'Baixa Produção', prioridade: 'Baixa', mensagem: 'Produção 30% abaixo do esperado.' },
-      { id: 4, maquina: 'Server-RJ01', data: '2025-10-29 12:05', tipo: 'Erro', prioridade: 'Alta', mensagem: 'Código E42: Falha no sensor.' },
-      { id: 5, maquina: 'Server-RJ02', data: '2025-10-28 15:20', tipo: 'Conexão', prioridade: 'Média', mensagem: 'Cabo desconectado parcialmente.' },
-      { id: 6, maquina: 'Server-RJ03', data: '2025-10-27 10:00', tipo: 'Manutenção', prioridade: 'Baixa', mensagem: 'Agendar revisão preventiva.' }
+      { id: 1, maquina: 'Server-SP01', data: '2025-10-30 09:12', tipo: 'Consumo elevado de CPU', prioridade: 'Crítico', mensagem: 'Consumo de CPU acima do limite.' },
+      { id: 2, maquina: 'Server-SP02', data: '2025-10-30 08:45', tipo: 'Consumo elevado de CPU', prioridade: 'Preventivo', mensagem: 'Consumo de CPU atingindo o limite.' },
+      { id: 3, maquina: 'Server-SP03', data: '2025-10-29 17:30', tipo: 'Consumo elevado de RAM', prioridade: 'Preventivo', mensagem: 'Consumo de RAM atingindo o limite.' },
+      { id: 4, maquina: 'Server-RJ01', data: '2025-10-29 12:05', tipo: 'Máquina ociosa', prioridade: 'Ociosidade', mensagem: 'Máquina ociosa.' },
+      { id: 5, maquina: 'Server-RJ02', data: '2025-10-28 15:20', tipo: 'Consumo elevado de RAM', prioridade: 'Crítico', mensagem: 'Consumo de RAM acima do limite.' },
+      { id: 6, maquina: 'Server-RJ03', data: '2025-10-27 10:00', tipo: 'Consumo elevado de DISCO', prioridade: 'Preventivo', mensagem: 'Consumo de DISCO atingindo o limite.' }
     ];
 
     const selectMaquina = document.getElementById('selectMaquina');
@@ -158,8 +158,8 @@
         lista.forEach(a => {
           const tr = document.createElement('tr');
           const prioridadeClasse =
-            a.prioridade.toLowerCase() === 'alta' ? 'prioridade-alta' :
-              a.prioridade.toLowerCase() === 'média' ? 'prioridade-media' : 'prioridade-baixa';
+            a.prioridade.toLowerCase() === 'crítico' ? 'prioridade-alta' :
+              a.prioridade.toLowerCase() === 'preventivo' ? 'prioridade-media' : 'prioridade-baixa';
           tr.innerHTML = `
             <td>${a.data}</td>
             <td>${a.maquina}</td>
