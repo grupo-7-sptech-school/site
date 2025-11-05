@@ -233,10 +233,11 @@ body{
 }
 
 .btn-conta{
-  background-image: url(../assets/icon/icon-svg.svg);
+  background-image: url(../assets/icon/foto-usuario.jpeg);
   display: flex;
   background-position: center;
   background-repeat: no-repeat;
+  background-size: cover;
   align-items: center;
   justify-content: center;
   width: 50px;
