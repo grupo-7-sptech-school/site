@@ -329,7 +329,7 @@ body {
   display: flex;
   flex-direction: column;
   padding-bottom: 3vh;
-  padding-top: 0;
+  padding-top: 0vh;
   font-family: "montserrat", sans-serif;
   color: #0B795B;
 }

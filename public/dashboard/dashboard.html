@@ -94,11 +94,11 @@
                     </div>
                     <div class="kpi">
                         <h3>Processo que mais consome CPU</h3>
-                        <h2 id="statusUps" style="color: black;">System </h2>
+                        <h2 id="statusUps" style="color: black;">PID</h2>
                     </div>
                     <div class="kpi">
                         <h3>Processo que mais consome RAM</h3>
-                        <h2 style="color: black">Ntoskrnl.exe</h2>
+                        <h2 style="color: black">PID</h2>
                     </div>
                     <div class="kpi-metricas">
                         <h3>Limites de Alerta <a style="color: red;">Crítico</a> Atuais</h3>
@@ -185,9 +185,6 @@
             <button id="btnFecharModal">Fechar</button>
         </div>
     </div>
-
-    <!-- MODAL ALTERAR MÉTRICAS -->
-    <div class="form-metricas">
         <div id="modalMetricas" class="modal-metricas">
             <div class="modal-metricas-content">
                 <span class="close" onclick="fecharmodalMetricas">&times;</span>
@@ -234,7 +231,7 @@
 
             </div>
         </div>
-    </div>
+    
 
 </body>
 <script>
@@ -887,14 +884,14 @@
         const select = document.getElementById("selectKPI");
 
         if (select.value == "alertaCPU") {
-            valorKpi = 1;
+            valorKpi = dadosCpu[dadosCpu.length - 1];
         } else if (select.value == "alertaRAM") {
-            valorKpi = 3;
+            valorKpi = dadosRam[dadosRam.length - 1];
         } else if (select.value == "alertaDisco") {
-            valorKpi = 1;
+            valorKpi = usoDisco;
         }
 
-        consumoComp.innerHTML = valorKpi.toFixed(0);
+        consumoComp.innerHTML = valorKpi.toFixed(0) + "%";
     }
 
     document.getElementById("selectKPI").addEventListener("change", kpiCaptura);
