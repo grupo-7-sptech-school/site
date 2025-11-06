@@ -11,6 +11,9 @@ body {
   height: 100vh;
   width: 100vw;
   display: flex;
+  border: 0;
+  margin: 0;
+  padding: 0;
   background-color: #EDEDED;
 }
 
@@ -24,6 +27,7 @@ body {
   flex-direction: column;
   padding-right: 0.5vw;
   gap: 7vh;
+  
   font-family: "montserrat", sans-serif;
 }
 
@@ -226,7 +230,7 @@ body {
   width: 78vw;
   height: 20vh;
   align-items: center;
-  padding-top: 3vh;
+  padding-top: 1vh;
   padding-bottom: 3vh;
 }
 
@@ -244,7 +248,7 @@ body {
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 1.7rem;
   margin-top: 6.2vh;
 }
 
@@ -337,14 +341,15 @@ body {
 .line-charts h2{
   height: 2vh;
   margin-top: 1vh;
+  font-size: 1.2rem;
 }
 
 .line-charts h3{
   height: 2vh;
   margin-top: 0;
 
-  margin-bottom: 3vh;
-  font-size: 1.5rem;
+  margin-bottom: 2vh;
+  font-size: 1.2rem;
   font-family: "montserrat", sans-serif;
   color: #0B795B;
 }
@@ -356,13 +361,14 @@ body {
   flex-direction: column;
   padding-bottom: 3vh;
   align-items: start;
+  font-size: 0.9rem;
   font-family: "montserrat", sans-serif;
 }
 
 .cup-charts h3{
   height: 2vh;
   margin-top: 1vh;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-family: "montserrat", sans-serif;
   color: #0B795B;
 }
@@ -487,6 +493,7 @@ body {
 .kpi h3{
   width: 10vw;
   text-align: center;
+  font-size: 0.9rem;
 }
 
 .kpi h2 {
@@ -496,7 +503,7 @@ body {
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 1.3rem;
   margin-top: 6.2vh;  
   margin: 1.4vh;
   display: flex;
