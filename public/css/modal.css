@@ -1,5 +1,6 @@
 
 #modalNotificacoes {
+  
   position: fixed;
   inset: 0;
   display: none;
@@ -8,7 +9,9 @@
   background: rgba(0,0,0,0.45);
   z-index: 9999;
   padding: 20px;
+  
 }
+
 
 #modalNotificacoes.active {
   display: flex;
@@ -17,16 +20,24 @@
 #modalNotificacoes .modal-content {
   width: 420px;
   max-width: calc(100% - 40px);
-  max-height: 80vh;
+  max-height: 90vh;
   overflow-y: auto;
   background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%);
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   animation: modalPop 0.18s ease;
-  font-family: "Poppins", sans-serif;
+  font-family: "montserrat", sans-serif;
 }
 
+#modalNotificacoes .modal-content::before{
+  content: 'Notificações';
+  color: #0B795B;
+  z-index: 10000;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1vh;
+}
 /* ====== ITENS DE ALERTA ====== */
 .alerta-item {
   display: block;
