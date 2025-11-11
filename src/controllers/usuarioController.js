@@ -249,6 +249,26 @@ function puxarMaquinas(req, res) {
 
 
 
+function kpisDashAlta(req, res) {
+    usuarioModel.kpisDashAlta()
+        .then(resultado => {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).send("Nenhuma máquina encontrada!");
+            }
+        })
+        .catch(erro => {
+            console.error("Erro:", erro);
+            res.status(500).json({
+                message: "Erro ao buscar maquinas",
+                erro: erro.sqlMessage || erro.message
+            });
+        });
+}
+
+
+
 function puxarProcesso(req, res) {
     usuarioModel.puxarProcesso()
         .then(resultado => {
@@ -347,5 +367,6 @@ module.exports = {
     puxarMaquinas,
     cadastrarComponentes,
     validarTokenRecuperacao,
-    redefinirSenha
+    redefinirSenha,
+    kpisDashAlta
 }

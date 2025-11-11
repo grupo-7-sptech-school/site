@@ -28,6 +28,10 @@ router.get("/puxarAlerta", function (req, res) {
     usuarioController.puxarAlerta(req, res);
 });
 
+router.get("/kpisDashAlta", function (req, res) {
+    usuarioController.kpisDashAlta(req, res);
+});
+
 router.post("/validarEmailRecuperar", function (req, res) {
     usuarioController.validarEmailRecuperar(req, res);
 });

@@ -96,6 +96,80 @@ function puxarAlerta() {
     return database.executar(instrucaoSql);
 }
 
+
+function kpisDashAlta() {
+    var instrucaoSql = `SELECT 
+    m.hostName AS HostName,
+    m.identificador AS Identificador,
+    m.ip AS IP,
+    m.dtCriacao AS DataCriacao,
+    ult.estado AS EstadoAtual,
+    ult.dtHora AS UltimoAlerta,
+    ult.descricao AS DescricaoUltimoAlerta,
+
+    -- Buscar o último valor de CPU
+    (
+        SELECT r.captura
+        FROM Registro r
+        JOIN Componente c ON r.fkComponente = c.idComponente
+        WHERE c.nome LIKE 'CPU%' AND c.fkMaquina = m.hostName
+        ORDER BY r.dtRegistro DESC
+        LIMIT 1
+    ) AS CpuUso,
+
+    -- Buscar o último valor de RAM
+    (
+        SELECT r.captura
+        FROM Registro r
+        JOIN Componente c ON r.fkComponente = c.idComponente
+        WHERE c.nome LIKE 'RAM%' AND c.fkMaquina = m.hostName
+        ORDER BY r.dtRegistro DESC
+        LIMIT 1
+    ) AS RamUso,
+
+    CASE
+        WHEN ult.estado = 'CRITICO' THEN 'Crítico'
+        WHEN ult.estado = 'ALERTA' THEN 'Em Alerta'
+        WHEN ult.estado = 'NORMAL' THEN 'Normal'
+        WHEN (
+            (SELECT r.captura
+             FROM Registro r
+             JOIN Componente c ON r.fkComponente = c.idComponente
+             WHERE c.nome LIKE 'CPU%' AND c.fkMaquina = m.hostName
+             ORDER BY r.dtRegistro DESC
+             LIMIT 1) < 20
+            AND
+            (SELECT r.captura
+             FROM Registro r
+             JOIN Componente c ON r.fkComponente = c.idComponente
+             WHERE c.nome LIKE 'RAM%' AND c.fkMaquina = m.hostName
+             ORDER BY r.dtRegistro DESC
+             LIMIT 1) < 20
+        ) THEN 'Ociosa'
+        WHEN ult.estado IS NULL THEN 'Normal'
+        ELSE 'Desconhecido'
+    END AS StatusInterpretado
+
+FROM Maquina m
+LEFT JOIN (
+    SELECT 
+        a1.*
+    FROM Alerta a1
+    INNER JOIN (
+        SELECT fkComponente, MAX(dtHora) AS MaxHora
+        FROM Alerta
+        GROUP BY fkComponente
+    ) ultimos ON a1.fkComponente = ultimos.fkComponente AND a1.dtHora = ultimos.MaxHora
+) AS ult
+ON ult.fkComponente IN (
+    SELECT idComponente FROM Componente WHERE fkMaquina = m.hostName
+)
+ORDER BY m.hostName;`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 function puxarMaquinas() {
     var instrucaoSql = `SELECT 
     m.hostName AS 'HostName',
@@ -175,5 +249,6 @@ module.exports = {
     puxarMaquinas,
     cadastrarComponentes,
     validarTokenRecuperacao,
-    redefinirSenha
+    redefinirSenha,
+    kpisDashAlta
 }
