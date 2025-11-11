@@ -96,6 +96,19 @@ function puxarAlerta() {
     return database.executar(instrucaoSql);
 }
 
+function infoUsuario(idUsuario) {
+    var instrucaoSql = `SELECT 
+    u.nome AS Nome,
+    e.nomeFantasia AS Empresa,
+    u.email AS Email
+    FROM Usuario u
+    JOIN Empresa e ON u.fkEmpresa = e.idEmpresa
+    WHERE u.idUsuario = ${idUsuario};`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 
 function kpisDashAlta() {
     var instrucaoSql = `SELECT 
@@ -250,5 +263,6 @@ module.exports = {
     cadastrarComponentes,
     validarTokenRecuperacao,
     redefinirSenha,
-    kpisDashAlta
+    kpisDashAlta,
+    infoUsuario
 }

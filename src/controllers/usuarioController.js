@@ -255,13 +255,13 @@ function kpisDashAlta(req, res) {
             if (resultado.length > 0) {
                 res.status(200).json(resultado);
             } else {
-                res.status(204).send("Nenhuma máquina encontrada!");
+                res.status(204).send("Nenhuma informação encontrada!");
             }
         })
         .catch(erro => {
             console.error("Erro:", erro);
             res.status(500).json({
-                message: "Erro ao buscar maquinas",
+                message: "Erro ao buscar informações",
                 erro: erro.sqlMessage || erro.message
             });
         });
@@ -295,6 +295,28 @@ function puxarAlerta(req, res) {
                 res.status(200).json(resultado);
             } else {
                 res.status(204).send("Nenhum alerta encontrado!");
+            }
+        })
+        .catch(erro => {
+            console.error("Erro:", erro);
+            res.status(500).json({
+                message: "Erro ao buscar alerta",
+                erro: erro.sqlMessage || erro.message
+            });
+        });
+}
+
+
+function infoUsuario(req, res) {
+
+    idUsuario = req.body.idUsuario
+
+    usuarioModel.infoUsuario(idUsuario)
+        .then(resultado => {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).send("Nenhum usuario encontrado!");
             }
         })
         .catch(erro => {
@@ -368,5 +390,6 @@ module.exports = {
     cadastrarComponentes,
     validarTokenRecuperacao,
     redefinirSenha,
-    kpisDashAlta
+    kpisDashAlta,
+    infoUsuario
 }

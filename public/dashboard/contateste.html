@@ -25,7 +25,7 @@
   <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body onload="validarSessao()">
   <!-- Cabeçalho -->
   <div class="total-dash">
     <div class="dashboard-bg">
@@ -78,15 +78,16 @@
           <div class="conta-header">
             <div class="conta-foto"></div>
             <div>
-              <h2>Conta de Juliana</h2>
+              <h2>Conta de <span id="nomeUsuario">Carregando...</span> </h2>
               <p class="texto-sub">Gerencie suas informações de perfil</p>
             </div>
           </div>
 
           <div class="info-section">
-            <p><b>Nome:</b> Juliana</p>
-            <p><b>Empresa:</b> Global Gate</p>
-            <p><b>E-mail:</b> julianatech@gmail.com</p>
+          <p><b>Nome:</b> <span id="nomeUsuario2">Carregando...</span></p>
+          <p><b>Empresa:</b> <span id="empresaUsuario">Carregando...</span></p>
+          <p><b>E-mail:</b> <span id="emailUsuario">Carregando...</span></p>
+
 
             <!-- <div class="editable">
               <b>E-mail secundário:</b>
@@ -190,14 +191,7 @@
         if (btnGerenciarUsuarios) {
             btnGerenciarUsuarios.style.display = "none"; 
         }
-    }  
-
-    const alertasMock = [
-        { identificador: "Server-SP01", componenteNome: "CPU", captura: 87.5, estado: "ALERTA CRITICO", dtHora: "2025-10-28T21:05:17" },
-        { identificador: "Server-SP02", componenteNome: "RAM", captura: 82.1, estado: "ALERTA PREVENTIVO", dtHora: "2025-10-28T21:03:12" },
-        { identificador: "Server-SP03", componenteNome: "DISCO", captura: 91.3, estado: "ALERTA CRITICO", dtHora: "2025-10-28T21:01:45" },
-        { identificador: "Server-SP01", componenteNome: "CPU", captura: 68.9, estado: "ALERTA PREVENTIVO", dtHora: "2025-10-28T21:00:32" }
-    ];
+    } 
 
     function formatarData(iso) {
         if (!iso) return "—";
@@ -206,25 +200,58 @@
         return d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
     }
 
-    function carregarAlertas() {
-        alertasContainer.innerHTML = ""; 
-        if (!alertasMock.length) {
-            alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta.</p>";
-            return;
-        }
-        alertasMock.forEach(a => {
-            const tipoClasse = a.estado === "ALERTA CRITICO" ? "danger" : a.estado === "ALERTA PREVENTIVO" ? "warning" : "success";
-            const div = document.createElement("div");
-            div.className = `alerta-item ${tipoClasse}`;
-            div.innerHTML = `
-                <strong>${a.identificador}</strong>
-                <small style="display:block;margin-top:4px;">${a.componenteNome} • <b>${a.captura}%</b></small>
-                <div style="margin-top:6px;"><small>Estado: <b>${a.estado}</b></small></div>
-                <small style="display:block;margin-top:6px;color:#555">${formatarData(a.dtHora)}</small>
-            `;
-            alertasContainer.appendChild(div);
-        });
-    }
+    async function carregarAlertas() {
+      alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
+
+      try {
+          const resposta = await fetch("/usuarios/puxarAlerta");
+          if (!resposta.ok) throw new Error("Erro ao buscar alertas do servidor.");
+
+          const alertas = await resposta.json();
+          alertasContainer.innerHTML = "";
+
+          if (alertas.length == 0) {
+              alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta encontrado.</p>";
+              return;
+          }
+
+          alertas.forEach(alerta => {
+              let tipoClasse = "";
+              switch (alerta.estado) {
+                  case "CRITICO":
+                      tipoClasse = "danger";
+                      break;
+                  case "ALERTA":
+                      tipoClasse = "warning";
+                      break;
+                  case "NORMAL":
+                      tipoClasse = "success";
+                      break;
+                  default:
+                      tipoClasse = "success";
+              }
+
+              const dataFormatada = new Date(alerta.dtHora).toLocaleString("pt-BR");
+
+
+              const div = document.createElement("div");
+              div.className = `alerta-item ${tipoClasse}`;
+              div.innerHTML = `
+              <strong>Identificador da máquina:</strong> <small>${alerta.identificador || "Desconhecida"}</small><br>
+              <strong>${alerta.componenteNome || "Componente"}:</strong> ${alerta.captura || "Sem dados."}<br>
+              <strong>Estado:</strong> <small>${alerta.estado || "DESCONHECIDO"}</small><br>
+              <small>${new Date(alerta.dtHora).toLocaleString("pt-BR")}</small>
+          `;
+
+              alertasContainer.appendChild(div);
+          });
+      } catch (error) {
+          console.error("Erro ao carregar alertas:", error);
+          alertasContainer.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
+      }
+  }
+
+
 
     btnNotificacao.addEventListener("click", () => {
         modalNotificacoes.classList.add("active"); 
@@ -362,6 +389,45 @@
     alert("Preencha os dois campos de senha!");
   }
 }
+
+
+
+function infoUsuario() {
+  const idUsuario = sessionStorage.getItem("ID_USUARIO");
+
+  if (!idUsuario) {
+    return;
+  }
+
+  fetch("/usuarios/infoUsuario", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ idUsuario })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Erro ao buscar dados do usuário");
+      return res.json();
+    })
+    .then(dados => {
+      if (!dados || dados.length == 0) {
+        return;
+      }
+
+      document.getElementById("nomeUsuario").textContent = dados[0].Nome || "Nome não encontrado";
+      document.getElementById("nomeUsuario2").textContent = dados[0].Nome || "Nome não encontrado";
+      document.getElementById("empresaUsuario").textContent = dados[0].Empresa || "Empresa não encontrada";
+      document.getElementById("emailUsuario").textContent = dados[0].Email || "Email não encontrado";
+    })
+    .catch(erro => {
+      console.error("Erro ao buscar informações do usuário:", erro);
+      document.getElementById("nomeUsuario").textContent = "Erro";
+      document.getElementById("nomeUsuario2").textContent = "Erro";
+      document.getElementById("empresaUsuario").textContent = "Erro";
+      document.getElementById("emailUsuario").textContent = "Erro";
+    });
+}
+
+infoUsuario()
     
   </script>
 </body>

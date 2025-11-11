@@ -72,4 +72,8 @@ router.get("/puxarMaquinas", function (req, res) {
     usuarioController.puxarMaquinas(req, res);
 });
 
+router.post("/infoUsuario", function (req, res) {
+    usuarioController.infoUsuario(req, res);
+});
+
 module.exports = router;
