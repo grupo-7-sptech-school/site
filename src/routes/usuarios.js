@@ -84,4 +84,8 @@ router.put("/senhaAlterada", function (req, res) {
     usuarioController.senhaAlterada(req, res);
 });
 
+router.get("/puxarTodosAlertas", function (req, res) {
+    usuarioController.puxarTodosAlertas(req, res);
+});
+
 module.exports = router;

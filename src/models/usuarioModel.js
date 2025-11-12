@@ -247,6 +247,39 @@ function puxarMaquinas() {
 }
 
 
+
+
+function puxarTodosAlertas() {
+    var instrucaoSql = `SELECT 
+    DATE_FORMAT(a.dtHora, '%Y-%m-%d %H:%i') AS dataHora,
+    m.identificador AS maquina,
+    CASE 
+        WHEN c.nome LIKE 'CPU%' THEN 'Consumo elevado de CPU'
+        WHEN c.nome LIKE 'RAM%' THEN 'Consumo elevado de RAM'
+        WHEN c.nome LIKE 'DISCO%' THEN 'Consumo elevado de DISCO'
+        ELSE CONCAT('Anomalia em ', c.nome)
+    END AS tipoAlerta,
+    CASE 
+        WHEN a.estado = 'CRITICO' THEN 'Crítico'
+        WHEN a.estado = 'ALERTA' THEN 'Preventivo'
+        WHEN a.estado = 'NORMAL' THEN 'Ociosidade'
+        ELSE 'Desconhecido'
+    END AS prioridade,
+    a.descricao AS descricao
+    FROM Alerta a
+    JOIN Componente c ON a.fkComponente = c.idComponente
+    JOIN Maquina m ON c.fkMaquina = m.hostName
+    ORDER BY a.dtHora DESC
+    LIMIT 10;`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
+
+
+
 function cadastrarMaquina(identificador, hostname, mac, ip, fkEmpresa) {
     var instrucaoSql = `
         INSERT INTO Maquina (hostName, identificador, fkEmpresa, macAdress, ip)
@@ -286,5 +319,6 @@ module.exports = {
     kpisDashAlta,
     infoUsuario,
     validarSenha,
-    senhaAlterada
+    senhaAlterada,
+    puxarTodosAlertas
 }

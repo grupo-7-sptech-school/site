@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../css/cabecalho3.css">
   <link rel="stylesheet" href="./../css/modal.css">
 
-    <!-- Script -->
+  <!-- Script -->
   <script src="../js/sessao.js"></script>
   <script src="./../js/alerta.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -27,151 +27,187 @@
 <body>
   <!-- ======= CONTAINER PRINCIPAL ======= -->
 
-      <!-- Cabeçalho -->
+  <!-- Cabeçalho -->
   <div class="total-dash">
-  <div class="dashboard-bg">
+    <div class="dashboard-bg">
 
-    <!-- ==== SIDEBAR LATERAL ==== -->
-    <aside class="dashboard-sidebar">
-      <div class="dashboard-logo"></div>
+      <!-- ==== SIDEBAR LATERAL ==== -->
+      <aside class="dashboard-sidebar">
+        <div class="dashboard-logo"></div>
 
-      <nav class="dashboard-sidebar-btns">
-        <a href="alertas.html" class="dashboard-sidebar-btn">
-          <div class="icon-alert"></div>
-          <h3>Alertas</h3>
+        <nav class="dashboard-sidebar-btns">
+          <a href="alertas.html" class="dashboard-sidebar-btn">
+            <div class="icon-alert"></div>
+            <h3>Alertas</h3>
+          </a>
+          <a href="contateste.html" class="dashboard-sidebar-btn">
+            <div class="icon-user"></div>
+            <h3>Conta</h3>
+          </a>
+          <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+            <div class="icon-dashboard"></div>
+            <h3>Painel de <br> Controle</h3>
+          </a>
+          <a href="suporte.html" class="dashboard-sidebar-btn">
+            <div class="icon-support"></div>
+            <h3>Suporte</h3>
+          </a>
+        </nav>
+
+        <a href=".././index.html" class="dashboard-logout">
+          <div class="icon-logout"></div>
+          <h3>Logout</h3>
         </a>
-        <a href="contateste.html" class="dashboard-sidebar-btn">
-          <div class="icon-user"></div>
-          <h3>Conta</h3>
-        </a>
-        <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
-          <div class="icon-dashboard"></div>
-          <h3>Painel de <br> Controle</h3>
-        </a>
-        <a href="suporte.html" class="dashboard-sidebar-btn">
-          <div class="icon-support"></div>
-          <h3>Suporte</h3>
-        </a>
-      </nav>
+      </aside>
 
-      <a href=".././index.html" class="dashboard-logout">
-        <div class="icon-logout"></div>
-        <h3>Logout</h3>
-      </a>
-    </aside>
+      <!-- ==== ÁREA PRINCIPAL (DIREITA) ==== -->
+      <section class="dashboard-low-right-side">
 
-    <!-- ==== ÁREA PRINCIPAL (DIREITA) ==== -->
-    <section class="dashboard-low-right-side">
-
-      <!-- ===== BARRA SUPERIOR ===== -->
-      <header class="dashboard-topbar">
-        <a href="alertas.html" class="btn-voltar">Alertas - SolarData</a>
-        <div class="btns-topbar">
-        <!-- <a href="relatorios.html" class="btn-gerar-relatorio">
+        <!-- ===== BARRA SUPERIOR ===== -->
+        <header class="dashboard-topbar">
+          <a href="alertas.html" class="btn-voltar">Alertas - SolarData</a>
+          <div class="btns-topbar">
+            <!-- <a href="relatorios.html" class="btn-gerar-relatorio">
             Gerar relatório
             </a> -->
-           <!-- <div class="btn-padrao">
+            <!-- <div class="btn-padrao">
             <button class="btn-notificacao"></button> -->
-          <a href="contateste.html" class="btn-conta"></a>
-        <!-- </div> -->
-        </div>
-      </header>
-    
+            <a href="contateste.html" class="btn-conta"></a>
+            <!-- </div> -->
+          </div>
+        </header>
 
-      <!-- ===== CONTEÚDO PRINCIPAL ===== -->
-      <main class="conteudo-principal">
 
-        <!-- Título e subtítulo -->
-      
+        <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+        <main class="conteudo-principal">
 
-        <!-- Área de filtro -->
-        <div class="filtro-area">
-          <label for="selectMaquina" class="filtro-label">Filtrar por máquina:</label>
-          <select id="selectMaquina" class="filtro-select">
-            <option value="all">Todas as máquinas</option>
-          </select>
-          <input type="text" id="buscaAlertas" class="filtro-busca" placeholder="Buscar alerta..."
-            aria-label="Buscar alerta">
+          <!-- Título e subtítulo -->
 
-          <span id="total-count" class="badge">0 alertas</span>
-        </div>
 
-        <!-- Tabela de alertas -->
-        <div class="tabela-wrap">
-          <table class="table-alertas" id="tabelaAlertas">
-            <thead>
-              <tr>
-                <th>Data / Hora</th>
-                <th>Máquina</th>
-                <th>Tipo de Alerta</th>
-                <th>Prioridade</th>
-                <th>Descrição</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Linhas inseridas via JS -->
-            </tbody>
-          </table>
-        </div>
-      </main>
-    </section>
+          <!-- Área de filtro -->
+          <div class="filtro-area">
+            <label for="selectMaquina" class="filtro-label">Filtrar por máquina:</label>
+            <select id="selectMaquina" class="filtro-select">
+              <option value="all">Todas as máquinas</option>
+            </select>
+            <input type="text" id="buscaAlertas" class="filtro-busca" placeholder="Buscar alerta..."
+              aria-label="Buscar alerta">
+
+            <span id="total-count" class="badge">0 alertas</span>
+          </div>
+
+          <!-- Tabela de alertas -->
+          <div class="tabela-wrap">
+            <table class="table-alertas" id="tabelaAlertas">
+              <thead>
+                <tr>
+                  <th>Data / Hora</th>
+                  <th>Máquina</th>
+                  <th>Tipo de Alerta</th>
+                  <th>Prioridade</th>
+                  <th>Descrição</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Linhas inseridas via JS -->
+              </tbody>
+            </table>
+          </div>
+        </main>
+      </section>
+    </div>
   </div>
-  </div>
-    <div id="modalNotificacoes">
+  <div id="modalNotificacoes">
     <div class="modal-content">
       <div id="alertasContainer"></div>
       <button id="btnFecharModal">Fechar</button>
     </div>
   </div>
-  <!-- </section> -->
 
-  <!-- ====== SCRIPT DE FILTRO E RENDERIZAÇÃO ====== -->
   <script>
-    const alertasMock = [
-      { id: 1, maquina: 'Server-SP01', data: '2025-10-30 09:12', tipo: 'Consumo elevado de CPU', prioridade: 'Crítico', mensagem: 'Consumo de CPU acima do limite.' },
-      { id: 2, maquina: 'Server-SP02', data: '2025-10-30 08:45', tipo: 'Consumo elevado de CPU', prioridade: 'Preventivo', mensagem: 'Consumo de CPU atingindo o limite.' },
-      { id: 3, maquina: 'Server-SP03', data: '2025-10-29 17:30', tipo: 'Consumo elevado de RAM', prioridade: 'Preventivo', mensagem: 'Consumo de RAM atingindo o limite.' },
-      { id: 4, maquina: 'Server-RJ01', data: '2025-10-29 12:05', tipo: 'Máquina ociosa', prioridade: 'Ociosidade', mensagem: 'Máquina ociosa.' },
-      { id: 5, maquina: 'Server-RJ02', data: '2025-10-28 15:20', tipo: 'Consumo elevado de RAM', prioridade: 'Crítico', mensagem: 'Consumo de RAM acima do limite.' },
-      { id: 6, maquina: 'Server-RJ03', data: '2025-10-27 10:00', tipo: 'Consumo elevado de DISCO', prioridade: 'Preventivo', mensagem: 'Consumo de DISCO atingindo o limite.' }
-    ];
+    window.addEventListener("DOMContentLoaded", async function () {
+      const tabela = document.querySelector("#tabelaAlertas tbody");
+      const selectMaquina = document.getElementById("selectMaquina");
+      const totalAlertas = document.getElementById("total-count");
 
-    const selectMaquina = document.getElementById('selectMaquina');
-    const tabelaBody = document.querySelector('#tabelaAlertas tbody');
-    const totalCount = document.getElementById('total-count');
+      try {
+        const resposta = await fetch("/usuarios/puxarTodosAlertas");
+        if (!resposta.ok) {
+          throw new Error("Erro ao buscar alertas");
+        }
 
-    function populaSelect() {
-      const maquinas = [...new Set(alertasMock.map(a => a.maquina))].sort();
-      maquinas.forEach(m => {
-        const opt = document.createElement('option');
-        opt.value = m;
-        opt.textContent = m;
-        selectMaquina.appendChild(opt);
-      });
-    }
+        const alertas = await resposta.json();
 
-    function renderTabela(lista) {
-      tabelaBody.innerHTML = '';
-      if (!lista.length) {
-        tabelaBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:16px;">Nenhum alerta encontrado.</td></tr>';
-      } else {
-        lista.forEach(a => {
-          const tr = document.createElement('tr');
-          const prioridadeClasse =
-            a.prioridade.toLowerCase() === 'crítico' ? 'prioridade-alta' :
-              a.prioridade.toLowerCase() === 'preventivo' ? 'prioridade-media' : 'prioridade-baixa';
-          tr.innerHTML = `
-            <td>${a.data}</td>
-            <td>${a.maquina}</td>
-            <td>${a.tipo}</td>
-            <td><span class="${prioridadeClasse}">${a.prioridade}</span></td>
-            <td>${a.mensagem}</td>
-          `;
-          tabelaBody.appendChild(tr);
+        if (!alertas || alertas.length == 0) {
+          tabela.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Nenhum alerta encontrado.</td></tr>";
+          totalAlertas.textContent = "0 alertas";
+          return;
+        }
+
+        const maquinas = [];
+        for (var i = 0; i < alertas.length; i++) {
+          const nomeMaquina = alertas[i].maquina;
+          if (!maquinas.includes(nomeMaquina)) {
+            maquinas.push(nomeMaquina);
+            const opcao = document.createElement("opcao");
+            opcao.value = nomeMaquina;
+            opcao.textContent = nomeMaquina;
+            selectMaquina.appendChild(opcao);
+          }
+        }
+
+        function mostrarTabela(lista) {      
+          for (var i = 0; i < lista.length; i++) {
+            
+            var alerta = lista[i];
+            var prioridadeAlerta = "";
+
+            if (alerta.prioridade == "Crítico") {
+              prioridadeAlerta = "prioridade-alta";
+            } else if (alerta.prioridade == "Preventivo") {
+              prioridadeAlerta = "prioridade-media";
+            } else {
+              prioridadeAlerta = "prioridade-baixa";
+            }
+
+            const linha = document.createElement("tr");
+            linha.innerHTML =
+              "<td>" + alerta.dataHora + "</td>" +
+              "<td>" + alerta.maquina + "</td>" +
+              "<td>" + alerta.tipoAlerta + "</td>" +
+              "<td><span class='" + prioridadeAlerta + "'>" + alerta.prioridade + "</span></td>" +
+              "<td>" + alerta.descricao + "</td>";;
+
+            tabela.appendChild(linha);
+          }
+          totalAlertas.textContent = lista.length + " alertas";
+        }
+
+
+
+
+
+
+
+        mostrarTabela(alertas);
+        selectMaquina.addEventListener("change", function () {
+          const filtro = selectMaquina.value;
+          const filtrados = [];
+          for (let i = 0; i < alertas.length; i++) {
+            if (filtro == "all" || alertas[i].maquina == filtro) {
+              filtrados.push(alertas[i]);
+            }
+          }
+          mostrarTabela(filtrados);
         });
+
+      } catch (erro) {
+        console.error("Erro");
       }
-      totalCount.textContent = `${lista.length} ${lista.length === 1 ? 'alerta' : 'alertas'}`;
-    }
+    });
+
+
+
 
     function aplicarFiltro() {
       const filtro = selectMaquina.value;
