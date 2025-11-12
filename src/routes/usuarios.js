@@ -76,4 +76,12 @@ router.post("/infoUsuario", function (req, res) {
     usuarioController.infoUsuario(req, res);
 });
 
+router.post("/validarSenha", function (req, res) {
+    usuarioController.validarSenha(req, res);
+});
+
+router.put("/senhaAlterada", function (req, res) {
+    usuarioController.senhaAlterada(req, res);
+});
+
 module.exports = router;

@@ -179,6 +179,7 @@
 
 <script>
   const fkTipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
+  const idUsuario = sessionStorage.getItem("ID_USUARIO")
 
   document.addEventListener("DOMContentLoaded", () => {
     const btnNotificacao = document.querySelector('.btn-notificacao');
@@ -373,28 +374,58 @@
   });
 });
 
-    function alterarSenha() {
-  const senhaAtual = document.getElementById("senhaAtual").value.trim();
-  const novaSenha = document.getElementById("novaSenha").value.trim();
+
+  function alterarSenha() {
+
+  const senhaAtual = document.getElementById("senhaAtual").value;
+  const novaSenha = document.getElementById("novaSenha").value;
   const msg = document.getElementById("mensagemSucesso");
 
-  if (senhaAtual && novaSenha) {
-    document.getElementById("senhaAtual").value = "";
-    document.getElementById("novaSenha").value = "";
+    fetch("/usuarios/validarSenha", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ senhaAtual, idUsuario })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Erro ao buscar dados do usuário");
+      return res.json();
+    })
+    .then(dados => {
+      if (!dados || dados.length == 0) {
+        return;
+    } else{
+      senhaAlterada()
+    }
+    })
+  };
 
-    msg.classList.add("mostrar");
 
-    setTimeout(() => msg.classList.remove("mostrar"), 2500);
-  } else {
-    alert("Preencha os dois campos de senha!");
-  }
-}
+  function senhaAlterada() {
+
+  const senhaAtual = document.getElementById("senhaAtual").value;
+  const novaSenha = document.getElementById("novaSenha").value;
+  const msg = document.getElementById("mensagemSucesso");
+
+    fetch("/usuarios/senhaAlterada", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({novaSenha, idUsuario })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Erro ao buscar dados do usuário");
+      return res.json();
+    })
+    .then(dados => {
+      if (!dados || dados.length == 0) {
+        return;
+    }
+    }
+  )}
 
 
 
 function infoUsuario() {
-  const idUsuario = sessionStorage.getItem("ID_USUARIO");
-
+  
   if (!idUsuario) {
     return;
   }

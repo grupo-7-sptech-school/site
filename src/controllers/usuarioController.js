@@ -113,6 +113,52 @@ function validarCodigo(req, res) {
 }
 
 
+function validarSenha(req, res) {
+
+    var senha = req.body.senhaAtual;
+    var idUsuario = req.body.idUsuario
+
+    console.log(`Recuperando código de ativação`);
+
+    usuarioModel.validarSenha(senha, idUsuario).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar o código de ativação.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+
+
+function senhaAlterada(req, res) {
+
+    var novaSenha = req.body.novaSenha;
+    var idUsuario = req.body.idUsuario
+
+    console.log(`Recuperando código de ativação`);
+
+    usuarioModel.senhaAlterada(novaSenha, idUsuario).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar o código de ativação.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+
+
 function validarTokenRecuperacao(req, res) {
 
     var validarTokenRecebido = req.body.validarTokenRecebido;
@@ -391,5 +437,7 @@ module.exports = {
     validarTokenRecuperacao,
     redefinirSenha,
     kpisDashAlta,
-    infoUsuario
+    infoUsuario,
+    validarSenha,
+    senhaAlterada
 }

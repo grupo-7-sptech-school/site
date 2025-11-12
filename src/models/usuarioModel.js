@@ -110,6 +110,26 @@ function infoUsuario(idUsuario) {
 }
 
 
+function validarSenha(senha, idUsuario) {
+    var instrucaoSql = `SELECT
+     *FROM Usuario where senha = "${senha}" 
+     AND idUsuario = "${idUsuario}";`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
+function senhaAlterada(senha, idUsuario) {
+    var instrucaoSql = `UPDATE 
+    Usuario SET senha = "${senha}" 
+    where idUsuario = "${idUsuario}";`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
 function kpisDashAlta() {
     var instrucaoSql = `SELECT 
     m.hostName AS HostName,
@@ -264,5 +284,7 @@ module.exports = {
     validarTokenRecuperacao,
     redefinirSenha,
     kpisDashAlta,
-    infoUsuario
+    infoUsuario,
+    validarSenha,
+    senhaAlterada
 }
