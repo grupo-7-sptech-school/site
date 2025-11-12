@@ -144,17 +144,6 @@
           return;
         }
 
-        const maquinas = [];
-        for (var i = 0; i < alertas.length; i++) {
-          const nomeMaquina = alertas[i].maquina;
-          if (!maquinas.includes(nomeMaquina)) {
-            maquinas.push(nomeMaquina);
-            const opcao = document.createElement("opcao");
-            opcao.value = nomeMaquina;
-            opcao.textContent = nomeMaquina;
-            selectMaquina.appendChild(opcao);
-          }
-        }
 
         function mostrarTabela(lista) {      
           for (var i = 0; i < lista.length; i++) {
