@@ -29,7 +29,29 @@ function buscarMedidasEmTempoReal(idAquario) {
     return database.executar(instrucaoSql);
 }
 
+
+function alertaPorComponente(hostName) {
+
+    var instrucaoSql = `SELECT 
+      a.dtHora AS dataHora,
+      m.hostName AS hostname,
+      m.identificador AS maquina,
+      a.estado AS prioridade,
+      a.descricao,
+      a.captura,
+      c.nome AS componente
+    FROM Alerta a
+      JOIN Componente c ON a.fkComponente = c.idComponente
+      JOIN Maquina m ON c.fkMaquina = m.hostName
+    WHERE m.hostName = ${hostName}
+    ORDER BY a.dtHora DESC;`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     buscarUltimasMedidas,
-    buscarMedidasEmTempoReal
+    buscarMedidasEmTempoReal,
+    alertaPorComponente
 }

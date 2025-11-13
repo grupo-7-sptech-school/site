@@ -162,7 +162,7 @@
                                 <h2>
                                     <div style=" background-color: #18B187; border-radius: 90px; height: 2vh; width:
                                             1vw; "></div><br>Armazenamento <br> utilizado
-                                    <h1 id="h1_usoDisco">
+                                    <h1 id=" h1_usoDisco">
 
                                         </h1>
                                     </h2>
@@ -694,8 +694,8 @@
     const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
     var usoDisco = Math.floor(Math.random() * 100)
     var usoLivre = 100 - usoDisco;
-    h1_usoDisco.innerHTML = usoDisco + "%"
-    h1_usoLivre.innerHTML = usoLivre + "%"
+    // h1_usoDisco.innerHTML = usoDisco + "%"
+    // h1_usoLivre.innerHTML = usoLivre + "%"
     if (usoDisco < 3) {
         elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
     } else {
@@ -811,25 +811,59 @@
     });
 
 
-    function kpiCaptura() {
-        let valorKpi = 0;
-        const select = document.getElementById("selectKPI");
+    alertaPorComponente();
+    setInterval(alertaPorComponente, 15000);
 
-        if (select.value == "alertaCPU") {
-            valorKpi = 1;
-        } else if (select.value == "alertaRAM") {
-            valorKpi = 3;
-        } else if (select.value == "alertaDisco") {
-            valorKpi = 1;
+    const select = document.getElementById("selectKPI");
+    select.addEventListener("change", alertaPorComponente);
+
+    async function alertaPorComponente() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const host = params.get("id");
+
+            const consumoComp = document.getElementById("consumoComp");
+
+            const resposta = await fetch("/medidas/alertaPorComponente", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ host }),
+            });
+
+            const alertas = await resposta.json();
+            var totalCPU = 0
+            var totalRAM = 0
+            var totalDISCO = 0;
+
+            for (let i = 0; i < alertas.length; i++) {
+                var nome = (alertas[i].componente || "").toUpperCase();
+                if (nome.includes("CPU")) {
+                    totalCPU++;
+                }
+                else if (nome.includes("RAM")) {
+                    totalRAM++;
+                }
+                else if (nome.includes("DISCO")) {
+                    totalDISCO++;
+                }
+            }
+            let total = 0;
+            if (select.value == "alertaCPU") {
+                total = totalCPU;
+            }
+            else if (select.value == "alertaRAM") {
+                total = totalRAM;
+            }
+            else if (select.value == "alertaDisco") {
+                total = totalDISCO;
+            }
+
+            consumoComp.innerHTML = `<h2>${total}</h2>`;
+        } catch (erro) {
+            console.error("Erro:", erro);
+            consumoComp.innerHTML = "<h2>0</h2>";
         }
-
-        consumoComp.innerHTML = valorKpi.toFixed(0);
     }
-
-    document.getElementById("selectKPI").addEventListener("change", kpiCaptura);
-
-
-    window.addEventListener("load", kpiCaptura);
 
 
     function filtrarRelatorio() {

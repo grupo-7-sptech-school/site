@@ -86,11 +86,11 @@
 
           <!-- Área de filtro -->
           <div class="filtro-area">
-            <label for="selectMaquina" class="filtro-label">Filtrar por máquina:</label>
+            <label for="selectMaquina" class="filtro-label">Filtrar alertas:</label>
             <select id="selectMaquina" class="filtro-select">
-              <option value="all">Todas as máquinas</option>
+              <option value="all">Todos os alertas</option>
             </select>
-            <input type="text" id="buscaAlertas" class="filtro-busca" placeholder="Buscar alerta..."
+            <input type="text" id="buscaAlertas" class="filtro-busca" placeholder="Buscar por nome da máquina..."
               aria-label="Buscar alerta">
 
             <span id="total-count" class="badge">0 alertas</span>
@@ -145,9 +145,23 @@
         }
 
 
-        function mostrarTabela(lista) {      
+        const maquinas = [];
+        for (let i = 0; i < alertas.length; i++) {
+          const estadoAlerta = alertas[i].prioridade;
+          if (!maquinas.includes(estadoAlerta)) {
+            maquinas.push(estadoAlerta);
+            const option = document.createElement("option");
+            option.value = estadoAlerta;
+            option.textContent = estadoAlerta;
+            selectMaquina.appendChild(option);
+          }
+        }
+
+
+        function mostrarTabela(lista) {
+          tabela.innerHTML = "";
           for (var i = 0; i < lista.length; i++) {
-            
+
             var alerta = lista[i];
             var prioridadeAlerta = "";
 
@@ -173,17 +187,28 @@
         }
 
 
-
-
-
-
-
         mostrarTabela(alertas);
+        const inputBusca = document.getElementById("buscaAlertas");
+
         selectMaquina.addEventListener("change", function () {
           const filtro = selectMaquina.value;
           const filtrados = [];
+
           for (let i = 0; i < alertas.length; i++) {
-            if (filtro == "all" || alertas[i].maquina == filtro) {
+            if (filtro == "all" || alertas[i].prioridade == filtro) {
+              filtrados.push(alertas[i]);
+            }
+          }
+          mostrarTabela(filtrados);
+        });
+
+        inputBusca.addEventListener("input", function () {
+          var nomeBuscado = inputBusca.value.toLowerCase();
+          var filtrados = [];
+
+          for (let i = 0; i < alertas.length; i++) {
+            const nomeMaquina = alertas[i].maquina.toLowerCase();
+            if (nomeMaquina.indexOf(nomeBuscado) === 0 || nomeMaquina.includes(" " + nomeBuscado)) {
               filtrados.push(alertas[i]);
             }
           }
@@ -195,40 +220,6 @@
       }
     });
 
-
-
-
-    function aplicarFiltro() {
-      const filtro = selectMaquina.value;
-      const filtrados = filtro === 'all' ? alertasMock : alertasMock.filter(a => a.maquina === filtro);
-      renderTabela(filtrados);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      populaSelect();
-      renderTabela(alertasMock);
-      selectMaquina.addEventListener('change', aplicarFiltro);
-    });
-
-
-    const inuptBusca = document.getElementById('buscaAlertas');
-
-    inuptBusca.addEventListener("input", () => {
-      const termo = inuptBusca.value.toLowerCase;
-      const maquinaSelecionada = selectMaquina.value;
-
-      const filtrados = alertasMock.filter(a => {
-        const combinaTexto =
-          a.tipo.toLowerCase().includes(termo) ||
-          a.mensagem.toLowerCase().includes(termo) ||
-          a.maquina.toLowerCase().includes(termo);
-
-        const combinarMaquina = maquinaSelecionada === 'all' || a.maquina === maquinaSelecionada;
-
-        return combinaTexto && combinarMaquina;
-      });
-      renderTabela(filtrados);
-    });
   </script>
 </body>
 
