@@ -30,7 +30,7 @@
 
 <!-- <body onload=" atualizarFeed()"> -->
 
-<body onload="filtrarRelatorio()">
+<body onload="filtrarRelatorio(); puxarMetricas();">
     <!-- Cabeçalho -->
     <div class="total-dash">
         <div class="dashboard-bg">
@@ -94,26 +94,38 @@
                     </div>
                     <div class="kpi">
                         <h3>Processo que mais consome CPU</h3>
-                        <h2 id="statusUps" style="color:rgb(96, 89, 89)">System</h2>
+                        <h2 id="statusUps" style="color:rgb(96, 89, 89)"></h2>
                     </div>
                     <div class="kpi">
                         <h3>Processo que mais consome RAM</h3>
-                        <h2 style="color:rgb(96, 89, 89)">TrustedInstaller</h2>
+                        <h2 id="statusRam" style="color:rgb(96, 89, 89)">TrustedInstaller</h2>
                     </div>
                     <div class="kpi-metricas">
                         <h3>Limites de Alerta <a style="color: red;">Crítico</a> Atuais</h3>
                         <div class="metricas-valores">
                             <div class="metrica-item">
-                                <span class="metrica-valor" id="valorCPU">80%</span>
-                                <span class="metrica-label">CPU</span>
+                                <span class="metrica-valor" id="valorCPU"></span>
+                                <span class="metrica-label">CPU prev</span>
                             </div>
                             <div class="metrica-item">
-                                <span class="metrica-valor" id="valorRAM">90%</span>
-                                <span class="metrica-label">RAM</span>
+                                <span class="metrica-valor" id="valorRAM"></span>
+                                <span class="metrica-label">RAM prev</span>
                             </div>
                             <div class="metrica-item">
-                                <span class="metrica-valor" id="valorDisco">85%</span>
-                                <span class="metrica-label">Disco</span>
+                                <span class="metrica-valor" id="valorDisco"></span>
+                                <span class="metrica-label">Disco prev</span>
+                            </div>
+                            <div class="metrica-item">
+                                <span class="metrica-valor" id="valorCPU2"></span>
+                                <span class="metrica-label">CPU <br> crit</span>
+                            </div>
+                            <div class="metrica-item">
+                                <span class="metrica-valor" id="valorRAM2"></span>
+                                <span class="metrica-label">RAM crit</span>
+                            </div>
+                            <div class="metrica-item">
+                                <span class="metrica-valor" id="valorDisco2"></span>
+                                <span class="metrica-label">Disco crit</span>
                             </div>
                         </div>
                         <button>Alterar Métricas</button>
@@ -199,11 +211,11 @@
                         <h3 id="prevent">Alerta Preventivo</h3>
                         <div class="input-group">
                             <label>De (%)</label>
-                            <input type="number" id="prevInicio" min="0" max="100" value="70">
+                            <input type="number" id="preventivoInicio" min="0" max="100" value="70">
                         </div>
                         <div class="input-group">
                             <label>Até (%)</label>
-                            <input type="number" id="prevFim" min="0" max="100" value="85">
+                            <input type="number" id="preventivoFim" min="0" max="100" value="85">
                         </div>
                     </div>
 
@@ -211,16 +223,16 @@
                         <h3 id="critico">Alerta Crítico</h3>
                         <div class="input-group">
                             <label>De (%)</label>
-                            <input type="number" id="critInicio" min="0" max="100" value="86">
+                            <input type="number" id="criticoInicio" min="0" max="100" value="86">
                         </div>
                         <div class="input-group">
                             <label>Até (%)</label>
-                            <input type="number" id="critFim" min="0" max="100" value="100">
+                            <input type="number" id="criticoFim" min="0" max="100" value="100">
                         </div>
 
                     </div>
                     <div class="botoes-modal">
-                        <button id="salvarMetricas" class="btn-salvar">Salvar</button>
+                        <button onclick="salvarMetricas()" class="btn-salvar">Salvar</button>
                         <button id="fecharMetricas" class="btn-cancelar">Cancelar</button>
                     </div>
                 </div>
@@ -250,35 +262,96 @@
         if (e.target === modalMetricas) modalMetricas.classList.remove("active");
     });
 
-    btnSalvarMetricas.addEventListener("click", () => {
-        const cpu = document.getElementById("limiteCPU").value;
-        const ram = document.getElementById("limiteRAM").value;
-        const disco = document.getElementById("limiteDisco").value;
-
-        modalMetricas.classList.remove("active");
-    });
-
 
     const btnNotificacao = document.querySelector('.btn-notificacao');
     const modal = document.getElementById('modalNotificacoes');
     const btnFecharModal = document.getElementById('btnFecharModal');
     const alertasContainer = document.getElementById('alertasContainer');
 
-    // Função para abrir o modal
     btnNotificacao.addEventListener('click', () => {
         modal.classList.add('active');
         carregarAlertas();
     });
 
-    // Fechar o modal
     btnFecharModal.addEventListener('click', () => modal.classList.remove('active'));
 
-    // Fecha ao clicar fora da caixa
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
     });
 
 
+
+    async function salvarMetricas() {
+    const nomeComponente = document.getElementById("componenteSelect").value;
+    const params = new URLSearchParams(window.location.search);
+    const hostName = params.get("id");
+
+    const preventivoInicio = document.getElementById("preventivoInicio").value;
+    const preventivoFim = document.getElementById("preventivoFim").value;
+    const criticoInicio = document.getElementById("criticoInicio").value;
+    const criticoFim = document.getElementById("criticoFim").value;
+
+    const resp = await fetch("/medidas/alterarMetricas", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            nomeComponente,
+            hostName,
+            preventivoInicio,
+            preventivoFim,
+            criticoInicio,
+            criticoFim
+        })
+    });
+
+    if (!resp.ok) {
+        console.error("Erro ao salvar métricas");
+        return;
+    }
+
+    window.location.reload();
+}
+
+
+
+async function puxarMetricas() {
+     const hostName = new URLSearchParams(window.location.search).get("id");
+    const componentes = ["cpu", "ram", "disco"];
+
+    for (const componente of componentes) {
+        const body = { hostName, nomeComponente: componente };
+
+        try {
+            const resp = await fetch("/medidas/puxarMetricas", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+
+            if (!resp.ok) continue;
+
+            const dados = await resp.json();
+
+            if (componente == "cpu") {
+                document.getElementById("valorCPU").textContent = dados.preventivoInicio + "%";
+                document.getElementById("valorCPU2").textContent = dados.criticoInicio+ "%";
+            }
+
+            if (componente == "ram") {
+                document.getElementById("valorRAM").textContent = dados.preventivoInicio + "%";
+                document.getElementById("valorRAM2").textContent = dados.criticoInicio + "%";
+            }
+
+            if (componente == "disco") {
+                document.getElementById("valorDisco").textContent = dados.preventivoInicio + "%";
+                document.getElementById("valorDisco2").textContent = dados.criticoInicio + "%";
+            }
+
+        } catch (e) {
+            alert("quero dormir por favor meu deus funciona")
+        }
+    }
+}
 
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -862,6 +935,77 @@
         } catch (erro) {
             console.error("Erro:", erro);
             consumoComp.innerHTML = "<h2>0</h2>";
+        }
+    }
+
+
+
+
+
+
+
+    maiorProcessoCpu();
+    setInterval(maiorProcessoCpu, 15000);
+
+    async function maiorProcessoCpu() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const host = params.get("id");
+
+            const statusCPU = document.getElementById("statusUps");
+
+            const resposta = await fetch("/medidas/maiorProcessoCpu", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ host }),
+            });
+
+            const alertas = await resposta.json();
+
+            statusCPU.innerHTML = `<h2>${alertas[0].nome}</h2>`;
+        } catch (erro) {
+            console.error("Erro:", erro);
+            statusCPU.innerHTML = "<h2>0</h2>";
+        }
+    }
+
+
+    function filtrarRelatorio() {
+        const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
+        btnGerarRelatorio = document.getElementById("btnGerarRelatorio");
+        const dropdownContainer = document.querySelector(".btn-relatorio-container");
+
+        console.log("TESTE1");
+    }
+
+
+
+
+
+
+
+    maiorProcessoRam();
+    setInterval(maiorProcessoRam, 15000);
+
+    async function maiorProcessoRam() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const host = params.get("id");
+
+            const statusRAM = document.getElementById("statusRam");
+
+            const resposta = await fetch("/medidas/maiorProcessoRam", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ host }),
+            });
+
+            const alertas = await resposta.json();
+
+            statusRAM.innerHTML = `<h2>${alertas[0].nome}</h2>`;
+        } catch (erro) {
+            console.error("Erro:", erro);
+            statusRAM.innerHTML = "<h2>0</h2>";
         }
     }
 

@@ -15,6 +15,20 @@ router.post("/alertaPorComponente", function (req, res) {
     medidaController.alertaPorComponente(req, res);
 })
 
+router.post("/maiorProcessoCpu", function (req, res) {
+    medidaController.maiorProcessoCpu(req, res);
+})
 
+router.post("/maiorProcessoRam", function (req, res) {
+    medidaController.maiorProcessoRam(req, res);
+})
+
+router.put("/alterarMetricas", function (req, res) {
+    medidaController.alterarMetricas(req, res);
+})
+
+router.post("/puxarMetricas", function (req, res) {
+    medidaController.puxarMetricas(req, res);
+})
 
 module.exports = router;

@@ -50,8 +50,148 @@ function alertaPorComponente(hostName) {
     return database.executar(instrucaoSql);
 }
 
+
+
+function maiorProcessoCpu(hostName) {
+
+    var instrucaoSql = `SELECT 
+    p.nome,
+    p.cpuPorcentagem,
+    p.dtRegistro
+FROM (
+    SELECT *
+    FROM Processo 
+    WHERE fkMaquina = ${hostName} 
+      AND nome NOT IN (
+        'idle', 'systemd', 'kthreadd', 'ksoftirqd', 'rcu_sched', 'migration',
+        'system', 'init', 'udevd', 'cron', 'syslogd', 'kjournald'
+      )
+      AND nome NOT LIKE '%kernel%'
+      AND nome NOT LIKE '%system%'
+      AND nome NOT LIKE 'kworker/%'
+      AND nome NOT LIKE 'rcu/%'
+      AND nome NOT LIKE 'irq/%'
+      AND nome NOT LIKE 'watchdog/%'
+    ORDER BY dtRegistro DESC 
+    LIMIT 100
+) AS p
+ORDER BY p.cpuPorcentagem DESC
+LIMIT 1;`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
+
+function maiorProcessoRam(hostName) {
+
+    var instrucaoSql = `SELECT 
+    p.nome,
+    p.ramPorcentagem,
+    p.dtRegistro
+FROM (
+    SELECT *
+    FROM Processo 
+    WHERE fkMaquina = 1598329989 
+      AND nome NOT IN (
+        'idle', 'systemd', 'kthreadd', 'ksoftirqd', 'rcu_sched', 'migration',
+        'system', 'init', 'udevd', 'cron', 'syslogd', 'kjournald'
+      )
+      AND nome NOT LIKE '%kernel%'
+      AND nome NOT LIKE '%system%'
+      AND nome NOT LIKE 'kworker/%'
+      AND nome NOT LIKE 'rcu/%'
+      AND nome NOT LIKE 'irq/%'
+      AND nome NOT LIKE 'watchdog/%'
+    ORDER BY dtRegistro DESC 
+    LIMIT 100
+) AS p
+ORDER BY p.ramPorcentagem DESC
+LIMIT 1;`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
+
+
+function maiorProcessoRam(body) {
+
+    var instrucaoSql = `SELECT 
+    p.nome,
+    p.ramPorcentagem,
+    p.dtRegistro
+FROM (
+    SELECT *
+    FROM Processo 
+    WHERE fkMaquina = 1598329989 
+      AND nome NOT IN (
+        'idle', 'systemd', 'kthreadd', 'ksoftirqd', 'rcu_sched', 'migration',
+        'system', 'init', 'udevd', 'cron', 'syslogd', 'kjournald'
+      )
+      AND nome NOT LIKE '%kernel%'
+      AND nome NOT LIKE '%system%'
+      AND nome NOT LIKE 'kworker/%'
+      AND nome NOT LIKE 'rcu/%'
+      AND nome NOT LIKE 'irq/%'
+      AND nome NOT LIKE 'watchdog/%'
+    ORDER BY dtRegistro DESC 
+    LIMIT 100
+) AS p
+ORDER BY p.ramPorcentagem DESC
+LIMIT 1;`;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
+
+
+function alterarMetricas(nomeComponente, hostName, preventivoInicio, preventivoFim, criticoInicio, criticoFim) {
+
+    const instrucaoSql = `
+            UPDATE Metrica m
+        JOIN Componente c ON m.fkComponente = c.idComponente
+        JOIN Maquina ma ON c.fkMaquina = ma.hostName
+        SET 
+            m.preventivoInicio = ${preventivoInicio},
+            m.preventivoFim = ${preventivoFim},
+            m.criticoInicio = ${criticoInicio},
+            m.criticoFim = ${criticoFim}
+        WHERE c.nome = '${nomeComponente}'
+          AND ma.hostName = '${hostName}';
+    `;
+    return database.executar(instrucaoSql);
+}
+
+
+function puxarMetricas(body) {
+
+    const instrucaoSql = `
+            SELECT 
+    preventivoInicio,
+    preventivoFim,
+    criticoInicio,
+    criticoFim
+    FROM Metrica
+    JOIN Componente ON fkComponente = idComponente
+    WHERE fkMaquina = '${body.hostName}'
+    AND nome = '${body.nomeComponente}';
+    `;
+
+    return database.executar(instrucaoSql);
+}
+
+
+
 module.exports = {
     buscarUltimasMedidas,
     buscarMedidasEmTempoReal,
-    alertaPorComponente
+    alertaPorComponente,
+    maiorProcessoCpu,
+    maiorProcessoRam,
+    alterarMetricas,
+    puxarMetricas
 }

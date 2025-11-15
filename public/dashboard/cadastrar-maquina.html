@@ -202,6 +202,14 @@
         }
 
 
+        function javaStringHashCodeNonNegative(s) {
+                    let h = 0;
+                    for (let i = 0; i < s.length; i++) {
+                        h = Math.imul(31, h) + s.charCodeAt(i);
+                        h |= 0;
+                    }
+                    return h & 0x7FFFFFFF; // equivalente a conversão do JAVA
+                }
 
 
 
