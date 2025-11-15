@@ -9,6 +9,7 @@
   <title>SolarData | Conta</title>
 
   <link rel="stylesheet" href="./../css/modal.css">
+  <link rel="stylesheet" href="./../css/ger-usuario.css">
   <link rel="stylesheet" href="./../css/cabecalho3.css">
   <link rel="stylesheet" href="./../css/conta.css">
 
@@ -59,14 +60,13 @@
       <div class="dashboard-low-right-side">
         <div class="dashboard-topbar">
           <a href="conta.html" class="btn-voltar">
-            Conta - SolarData
+            Gerenciamento de Usuários
           </a>
           <div class="btns-topbar">
             <div class="btn-padrao">
-              <a href="gerenciamento-usuario.html">
-                <button id="btnGerenciarUsuarios" class="btn-user">
+                <!-- <button id="btnGerenciarUsuarios" class="btn-user">
                 Ger. usuário
-              </button></a>
+              </button> -->
               <button class="btn-notificacao">
               </button>
               <a href="contateste.html" class="btn-conta">
@@ -75,7 +75,7 @@
           </div>
         </div>
 
-         <div class="conta-container">
+         <!-- <div class="conta-container">
           <div class="conta-header">
             <div class="conta-foto"></div>
             <div>
@@ -87,7 +87,7 @@
           <div class="info-section">
           <p><b>Nome:</b> <span id="nomeUsuario2">Carregando...</span></p>
           <p><b>Empresa:</b> <span id="empresaUsuario">Carregando...</span></p>
-          <p><b>E-mail:</b> <span id="emailUsuario">Carregando...</span></p>
+          <p><b>E-mail:</b> <span id="emailUsuario">Carregando...</span></p> -->
 
 
             <!-- <div class="editable">
@@ -101,19 +101,76 @@
               <input type="text" id="telefone" placeholder="Digite o telefone">
               <i class="fa-solid fa-pen"></i>
             </div> -->
-          </div>
+          <!-- </div> -->
 
-          <div class="senha-section">
+          <!-- <div class="senha-section">
             <h3>Alterar Senha</h3>
             <input type="password" id="senhaAtual" placeholder="Senha atual">
             <input type="password" id="novaSenha" placeholder="Nova senha">
             <button class="btn-salvar" onclick="alterarSenha()">Salvar nova senha</button>
-            <div id="mensagemSucesso" class="mensagem-sucesso">Alteração realizada com sucesso!</div>
-          </div>
+            <div id="mensagemSucesso" class="mensagem-sucesso">Alteração realizada com sucesso!</div> -->
+          <!-- </div> -->
 
+
+       <div class="pagina-gerenciar">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Gestão de Usuários</h2>
+              <!-- <span class="close">&times;</span> -->
+            </div>
+            <div class="modal-body">
+              <div class="form-adicionar-usuario">
+                <h3>Adicionar Novo Usuário</h3>
+                <form id="formNovoUsuario">
+                  <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required placeholder="exemplo@empresa.com">
+                  </div>
+                  <div class="form-group">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required placeholder="**********">
+                  </div>
+                  <div class="form-group">
+                    <label for="permissao">Tipo de Permissão:</label>
+                    <select id="permissao" name="permissao" required>
+                      <option value="">Selecione o tipo de permissão...</option>
+                      <option value="admin">Administrador</option>
+                      <option value="usuario">Usuário</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn-adicionar">Adicionar Usuário</button>
+                </form>
+              </div>
+
+              <div class="lista-usuarios">
+                <h3>Usuários do Sistema</h3>
+                <div class="tabela-usuarios">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>E-mail</th>
+                        <th>Tipo de Permissão</th>
+                        <th>Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tabelaUsuarios">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <div id="modalNotificacoes">
+          <div class="modal-content">
+            <div id="alertasContainer"></div>
+            <button id="btnFecharModal">Fechar</button>
+          </div>
+        </div>
     </div>
+            </div>
+      </div>
   </div>
 
 <div id="alertaConta" class="alerta-conta"></div>
@@ -263,9 +320,10 @@
     btnFecharModal.addEventListener("click", () => modalNotificacoes.classList.remove("active"));
     modalNotificacoes.addEventListener("click", (e) => { if (e.target === modalNotificacoes) modalNotificacoes.classList.remove("active"); });
     
-    const modalUsuarios = document.getElementById('modalUsuarios');
-    const btnAbrir = document.querySelector('.btn-user');
-    const spanFechar = document.querySelector('.close');
+    
+    // const modalUsuarios = document.getElementById('modalUsuarios');
+    // const btnAbrir = document.querySelector('.btn-user');
+    // const spanFechar = document.querySelector('.close');
     const formNovoUsuario = document.getElementById('formNovoUsuario');
     const tabelaUsuarios = document.getElementById('tabelaUsuarios');
 
@@ -274,20 +332,20 @@
         { email: 'analista1@solardata.com', permissao: 'usuario' },
     ];
 
-    btnAbrir.addEventListener('click', function() {
-        modalUsuarios.style.display = 'block';
-        carregarUsuarios();
-    });
+    // btnAbrir.addEventListener('click', function() {
+    //     modalUsuarios.style.display = 'block';
+    //     carregarUsuarios();
+    // });
 
-    spanFechar.addEventListener('click', function() {
-        modalUsuarios.style.display = 'none';
-    });
+    // spanFechar.addEventListener('click', function() {
+    //     modalUsuarios.style.display = 'none';
+    // });
 
-    window.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
+    // window.addEventListener('click', function(event) {
+    //             if (event.target === modal) {
+    //                 modal.style.display = 'none';
+    //             }
+    //         });
 
             function carregarUsuarios() {
                 tabelaUsuarios.innerHTML = '';
