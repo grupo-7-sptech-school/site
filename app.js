@@ -1,4 +1,4 @@
-var ambiente_processo = 'producao';
+var ambiente_processo = 'dev';
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 
 require("dotenv").config({ path: caminho_env });
@@ -16,6 +16,7 @@ var app = express();
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var medidasRouter = require("./src/routes/medidas");
+var graficoRouter = require("./src/routes/grafico.js");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -25,6 +26,7 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/medidas", medidasRouter);
+app.use("/grafico", graficoRouter)
 
 
 const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
