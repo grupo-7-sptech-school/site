@@ -30,7 +30,7 @@
 
 <!-- <body onload=" atualizarFeed()"> -->
 
-<body onload="filtrarRelatorio(); puxarMetricas();">
+<body onload="filtrarRelatorio();">
     <!-- Cabeçalho -->
     <div class="total-dash">
         <div class="dashboard-bg">
@@ -244,6 +244,8 @@
 
 </body>
 <script>
+
+    
 
     const modalMetricas = document.getElementById("modalMetricas");
     const btnAbrirMetricas = document.querySelector(".kpi-metricas button");
@@ -492,50 +494,23 @@ async function puxarMetricas() {
         }
     }
 
-    // Função para gerar labels dos ultimos 10 min
-    function labelsTempoReal() {
-        var labels = [];
-        var agora = new Date();
-        for (var i = 19; i >= 0; i--) {
-            var tempo = new Date(agora.getTime() - i * 30 * 1000);
-            var horas = String(tempo.getHours()).padStart(2, '0');
-            var minutos = String(tempo.getMinutes()).padStart(2, '0');
-            // mostra label de 2 em 2 plots
-            if (i % 2 === 0) {
-                labels.push(horas + ':' + minutos);
-            } else {
-                labels.push('');
-            }
-        }
-        return labels;
+    
+function labelsTempoReal() {
+    var labels = [];
+    for (var i = 0; i < 10; i++) {
+        labels.push(i + " min");
     }
+    return labels;
+}
+
+var dadosCpu = [];
+var dadosRam = [];
+var labelsCpu = labelsTempoReal();
+var labelsRam = labelsTempoReal();
 
 
-    var labelsCpu = labelsTempoReal();
-    var labelsRam = labelsTempoReal();
+    
 
-    // Inicializa com valores aleatorios
-    var dadosCpu = [];
-    var dadosRam = [];
-    for (var i = 0; i < 20; i++) {
-        dadosCpu.push(Math.random() * 30 + 30);
-        dadosRam.push(Math.random() * 30 + 30);
-    }
-
-    //Função que gera novos valores aleatórios para os gráficos de linha
-    function novoValor(prev) {
-        var variacao = (Math.random() - 0.5) * 20;
-
-        var novo = prev + variacao;
-        if (novo >= 70) {
-            novo -= 30
-        } else if (novo <= 30) {
-            novo += 30
-        }
-        if (novo < 0) novo = 0;
-        if (novo > 100) novo = 100;
-        return Math.round(novo);
-    }
 
     // Gráfico CPU
     var ctxCpu = document.getElementById('graficoCpuCanvas').getContext('2d');
@@ -629,6 +604,9 @@ async function puxarMetricas() {
             }
         }
     });
+
+     
+    
     var mostrarLabel = false;
     //Gráfico RAM
     var ctxRam = document.getElementById('graficoRamCanvas').getContext('2d');
@@ -723,70 +701,14 @@ async function puxarMetricas() {
         }
     });
 
-    // Atualização em tempo real (30 segundos)
-    setInterval(function () {
-        // Gera novos dados
-        var novoCpu = novoValor(dadosCpu[dadosCpu.length - 1]);
-        var novoRam = novoValor(dadosRam[dadosRam.length - 1]);
-
-        // Atualiza o percurso do gráfico mantendo os 20 pontos
-        dadosCpu.push(novoCpu);
-        dadosCpu.shift();
-        dadosRam.push(novoRam);
-        dadosRam.shift();
-
-        // Atualiza labels
-        var agora = new Date();
-        var horas = String(agora.getHours()).padStart(2, '0');
-        var minutos = String(agora.getMinutes()).padStart(2, '0');
-
-
-        // formata o horario
-        var labelAgora = (agora.getSeconds() == 0) ?
-            (horas + ':' + minutos) :
-            (horas + ':' + minutos);
-
-        var novaLabel = mostrarLabel ? horas + ':' + minutos : '';
-        mostrarLabel = !mostrarLabel;
-
-        labelsCpu.push(novaLabel);
-        labelsCpu.shift();
-        labelsRam.push(novaLabel);
-        labelsRam.shift();
-
-        // Atualiza gráficos
-        graficoCpu.update('none');
-        graficoRam.update('none'); var mediaRack = (novoCpu + novoRam + usoDisco) / 3;
-        var porcentagemRack = document.getElementById("porcentagemRack");
-
-        if (porcentagemRack) {
-            porcentagemRack.innerHTML = mediaRack.toFixed(0) + "%";
-        }
-    }, 30000); // 30 segundos
+    
 
     const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
-    var usoDisco = Math.floor(Math.random() * 100)
+    
     var usoLivre = 100 - usoDisco;
     // h1_usoDisco.innerHTML = usoDisco + "%"
     // h1_usoLivre.innerHTML = usoLivre + "%"
-    if (usoDisco < 3) {
-        elipseBase.style.background = 'linear-gradient(to right, #1d8066 0%, #18a47d 33%, #1d8066 85%)';
-    } else {
-        setTimeout(() => {
-            elipseBase.style.background = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)';
-        }, 15);
-    }
-
-    if (usoDisco >= 85) {
-        setTimeout(() => {
-            elipseMeio.style.borderTop = 'none'
-
-        }, 750)
-    } else if (usoDisco >= 97) {
-        setTimeout(() => {
-            elipseTopo.style.backgroundColor = 'linear-gradient(to right,#25a683 0%, #1ed1a1 33%, #25a683 85%)'
-        })
-    }
+    
 
     new Chart(ctxDisco, {
         type: 'bar',
@@ -883,6 +805,79 @@ async function puxarMetricas() {
         }]
     });
 
+    function atualizarGraficos() {
+
+    // CPU
+    fetch("/grafico/dadosGrafico/1")
+    .then(r => r.json())
+    .then(dados => {
+        var valores = [];
+        var labels = [];
+
+        for (var i = dados.length - 1; i >= 0; i--) {
+            valores.push(dados[i].valor);
+            labels.push(dados[i].momento_grafico);
+        }
+
+        graficoCpu.data.labels = labels;
+        graficoCpu.data.datasets[0].data = valores;
+        graficoCpu.update();
+    });
+
+
+    // RAM
+    fetch("/grafico/dadosGrafico/2")
+        .then(function (respostaRam) {
+            return respostaRam.json();
+        })
+        .then(function (dadosRamServidor) {
+            if (dadosRamServidor.length > 0) {
+                var valores = [];
+                var labels = [];
+
+                for (var i = dadosRamServidor.length - 1; i >= 0; i--) {
+                    valores.push(dadosRamServidor[i].valor);
+                    labels.push(dadosRamServidor[i].momento_grafico);
+                }
+
+                graficoRam.data.labels = labels;
+                graficoRam.data.datasets[0].data = valores;
+                graficoRam.update("none");
+            }
+        });
+
+    // DISCO
+    fetch("/grafico/dadosGrafico/3")
+        .then(function (respostaDisco) {
+            return respostaDisco.json();
+        })
+        .then(function (dadosDiscoServidor) {
+            if (dadosDiscoServidor.length > 0) {
+
+                usoDisco = dadosDiscoServidor[0].valor;
+                usoLivre = 100 - usoDisco;
+
+                var hDisco = document.getElementById("h1_usoDisco");
+                var hLivre = document.getElementById("h1_usoLivre");
+
+                if (hDisco) hDisco.innerHTML = usoDisco + "%";
+                if (hLivre) hLivre.innerHTML = usoLivre + "%";
+
+                if (graficoDisco) {
+                    graficoDisco.data.datasets[0].data = [usoDisco];
+                    graficoDisco.update();
+                }
+            }
+        });
+}
+
+// Atualiza sozinho a cada 30s
+setInterval(atualizarGraficos, 30000);
+
+// Atualiza ao carregar página
+atualizarGraficos();
+
+
 
     alertaPorComponente();
     setInterval(alertaPorComponente, 15000);
@@ -952,7 +947,7 @@ async function puxarMetricas() {
             const params = new URLSearchParams(window.location.search);
             const host = params.get("id");
 
-            const statusCPU = document.getElementById("statusUps");
+            const statusUps = document.getElementById("statusUps");
 
             const resposta = await fetch("/medidas/maiorProcessoCpu", {
                 method: "POST",
@@ -962,10 +957,10 @@ async function puxarMetricas() {
 
             const alertas = await resposta.json();
 
-            statusCPU.innerHTML = `<h2>${alertas[0].nome}</h2>`;
+            statusUps.innerHTML = `<h2>${alertas[0].nome}</h2>`;
         } catch (erro) {
             console.error("Erro:", erro);
-            statusCPU.innerHTML = "<h2>0</h2>";
+            statusUps.innerHTML = "<h2>0</h2>";
         }
     }
 
