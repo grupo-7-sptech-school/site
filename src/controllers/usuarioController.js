@@ -439,7 +439,11 @@ function enviarRecuperacao(email, token) {
 
 async function atualizarFoto(req, res) {
     try {
-        const  idUsuario  = req.user.id;
+        const idUsuario = req.body.idUsuario;
+
+        if (!req.file) {
+            return res.status(400).json({ erro: "Nenhum arquivo enviado." });
+        }
         const nomeArquivo = req.file.filename
 
         const urlFoto = `/uploads/${nomeArquivo}`;
@@ -480,5 +484,6 @@ module.exports = {
     infoUsuario,
     validarSenha,
     senhaAlterada,
-    puxarTodosAlertas
+    puxarTodosAlertas,
+    atualizarFoto
 }

@@ -13,10 +13,8 @@ const storage = multer.diskStorage({
     }
 });
 
-// EXTENSÕES PERMITIDAS
 const extensoesPermitidas = [".png", ".jpg", ".jpeg"];
 
-// FILTRO DE ARQUIVOS
 function fileFilter(req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase();
 
@@ -29,7 +27,7 @@ function fileFilter(req, file, cb) {
 
 const upload = multer({
     storage,
-    fileFilter
+    fileFilter  
 });
 
 module.exports = upload;

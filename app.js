@@ -23,6 +23,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
@@ -45,6 +47,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage});
+
+
 
 
 app.get("/relatorio/pdf", async (req, res) => {

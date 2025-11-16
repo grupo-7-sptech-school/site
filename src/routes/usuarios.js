@@ -53,14 +53,15 @@ router.put("/redefinirSenha", function (req, res) {
 
 
 router.post("/enviarRecuperacao", async function (req, res) {
-    const { email, token } = req.body; 
+    const { email, token } = req.body;
     try {
         await usuarioController.enviarRecuperacao(email, token);
         res.status(200).json({ message: "E-mail enviado com sucesso!" });
     } catch (erro) {
         console.error(erro);
         res.status(500).json({ message: "Erro ao enviar e-mail", error: erro.message });
-    }});
+    }
+});
 
 
 router.post("/cadastrarMaquina", function (req, res) {
@@ -91,11 +92,10 @@ router.get("/puxarTodosAlertas", function (req, res) {
     usuarioController.puxarTodosAlertas(req, res);
 });
 
-router.post("/uploadFoto",
-    autenticar,
-     upload.single("foto"),
-      usuarioController.atualizarFoto
-    );
+router.post('/uploadFoto', upload.single('foto'), (req, res) => {
+    usuarioController.atualizarFoto(req, res);
+});
+
 
 
 module.exports = router;
