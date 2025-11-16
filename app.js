@@ -1,4 +1,4 @@
-var ambiente_processo = 'dev';
+var ambiente_processo = 'producao';
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 
 require("dotenv").config({ path: caminho_env });
@@ -18,6 +18,7 @@ var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var medidasRouter = require("./src/routes/medidas");
 var graficoRouter = require("./src/routes/grafico.js");
+const upsRoutes = require('./src/routes/upsRoutes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -31,6 +32,40 @@ app.use("/usuarios", usuarioRouter);
 app.use("/medidas", medidasRouter);
 app.use("/grafico", graficoRouter)
 
+
+//console.log('Registrando rotas UPS...');
+app.use('/api/ups', upsRoutes);
+//console.log('Rotas UPS registradas em /api/ups');
+
+app.get('/api/ups/teste-simples', (req, res) => {
+  //  console.log('Rota /api/ups/teste-simples ACESSADA');
+    res.json({ 
+        message: 'Rota UPS funcionando!',
+        timestamp: new Date().toISOString()
+    });
+});
+
+app.get('/api/ups/health', (req, res) => {
+    //console.log('Rota /api/ups/health ACESSADA');
+    res.json({ 
+        status: 'OK', 
+        message: 'UPS API funcionando',
+        timestamp: new Date().toISOString()
+    });
+});
+app.get('/api/ups/routes', (req, res) => {
+    const routes = [
+        '/api/ups/health',
+        '/api/ups/teste-simples', 
+        '/api/ups/routes',
+        '/api/ups/status',
+        '/api/ups/estatisticas',
+        '/api/ups/graficos',
+        '/api/ups/lista',
+        '/api/ups/teste'
+    ];
+    res.json({ availableRoutes: routes });
+});
 
 const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 const fs = require('fs');

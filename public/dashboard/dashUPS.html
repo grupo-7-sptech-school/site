@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="shortcut icon" href="../assets/icon/logo-branca.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarData | Gerenciamento de UPS</title>
+
+    <link rel="stylesheet" href="./../css/dashboards.css">
+    <link rel="stylesheet" href="./../css/cabecalho3.css">
+    <link rel="stylesheet" href="./../css/modal.css">
+    <script src="../js/sessao.js"></script>
+    <script src="./../js/alerta.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;disco1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- scripts do Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
+
+    <!--FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-low-right-side {
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kpis-ups {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding-right: 3vw;
+            padding-left: 3vw;
+            width: 78vw;
+            height: 20vh;
+            align-items: center;
+            padding-top: 2vh;
+            padding-bottom: 2vh;
+            flex-shrink: 0;
+        }
+
+        .kpi-card-ups {
+            background-color: white;
+            width: 18vw;
+            height: 14vh;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: "montserrat", sans-serif;
+            padding: 1.5vh 1vw;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .kpi-card-ups:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-card-ups span {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: #18B187;
+            margin: 8px 0;
+        }
+
+        .kpi-card-ups small {
+            color: #8a8a8a;
+            font-weight: 400;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .btn-add-ups {
+            width: 12vw;
+            height: 14vh;
+            border-radius: 25px;
+            border: none;
+            color: #ffffff;
+            background: #0B795B;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "montserrat", sans-serif;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
+        }
+
+        .btn-add-ups:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .charts-row-ups {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 3vw;
+            margin-top: 1vh;
+            gap: 2vw;
+            height: 50vh;
+            flex-shrink: 0;
+            flex: 1;
+        }
+
+        .chart-card-ups {
+            background-color: white;
+            border-radius: 25px;
+            width: 35vw;
+            height: 80%;
+            padding: 15px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chart-card-ups h3 {
+            margin: 0 0 10px 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+            font-family: "montserrat", sans-serif;
+            color: #0B795B;
+            flex-shrink: 0;
+        }
+
+        .chart-container {
+            width: 100% !important;
+            height: 100% !important;
+            flex: 1;
+            position: relative;
+            min-height: 0;
+            padding: 5px;
+        }
+
+        .dashboard-bg {
+            overflow: hidden;
+        }
+
+        .total-dash {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .filtros-periodo {
+            padding: 0 3vw;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-atualizar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #18B187;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="total-dash">
+        <div class="dashboard-bg">
+            <div class="dashboard-sidebar">
+                <div class="dashboard-logo"></div>
+                <div class="dashboard-sidebar-btns">
+                    <a href="alertas.html" class="dashboard-sidebar-btn">
+                        <div class="icon-alert"></div>
+                        <h3>Alertas</h3>
+                    </a>
+                    <a href="contateste.html" class="dashboard-sidebar-btn">
+                        <div class="icon-user"></div>
+                        <h3>Conta</h3>
+                    </a>
+                    <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+                        <div class="icon-dashboard"></div>
+                        <h3>Painel de <br> Controle</h3>
+                    </a>
+                    <a href="suporte.html" class="dashboard-sidebar-btn">
+                        <div class="icon-support"></div>
+                        <h3>Suporte</h3>
+                    </a>
+                </div>
+                <a href=".././index.html" class="dashboard-logout">
+                    <div class="icon-logout"></div>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+
+            <div class="dashboard-low-right-side">
+                <div class="dashboard-topbar">
+                    <a href="dashboard-alto.html" class="btn-voltar">
+                        Gerenciamento de UPS
+                    </a>
+                    <div class="btns-topbar">
+                        <div class="btn-padrao">
+                            <button class="btn-notificacao"></button>
+                            <a href="contateste.html" class="btn-conta"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpis-ups">
+                    <div class="kpi-card-ups">
+                        Qtd. UPS
+                        <span>854</span>
+                        <small>+6,5% em relação ao último mês</small>
+                    </div>
+
+                    <div class="kpi-card-ups">
+                        P.U.E
+                        <span>1.2</span>
+                        <small>-0,03% em relação ao último dia</small>
+                    </div>
+
+                    <div class="kpi-card-ups">
+                        Energia disponível
+                        <span>60%</span>
+                        <small>-0,2% em relação ao último dia</small>
+                    </div>
+
+                    <button class="btn-add-ups">Incluir UPS</button>
+                </div>
+
+                <div class="filtros-periodo">
+                    <label style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: #666;">
+                        Período:
+                    </label>
+                    <select id="seletorPeriodo" style="
+                        padding: 5px 10px;
+                        border-radius: 8px;
+                        border: 1px solid #ddd;
+                        font-family: 'Montserrat', sans-serif;
+                    ">
+                        <option value="24h">Últimas 24h</option>
+                        <option value="7d" selected>Últimos 7 dias</option>
+                        <option value="30d">Últimos 30 dias</option>
+                    </select>
+                </div>
+
+                <div class="charts-row-ups">
+                    <div class="chart-card-ups">
+                        <h3>Uso das UPS</h3>
+                        <div class="chart-container">
+                            <canvas id="donutChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card-ups">
+                        <h3>Histórico de Acionamentos</h3>
+                        <div class="chart-container">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class UPSDashboard {
+            constructor() {
+                this.baseURL = '/api/ups';
+                this.donutChart = null;
+                this.lineChart = null;
+                this.dadosAtuais = {
+                    status: [],
+                    estatisticas: {},
+                    graficos: {}
+                };
+                this.init();
+            }
+
+            init() {
+                console.log('Inicializando UPS Dashboard...');
+                this.inicializarGraficos();
+                this.carregarDados();
+                this.configurarEventos();
+
+                setInterval(() => this.carregarDados(), 30000);
+                console.log('UPS Dashboard inicializado');
+            }
+
+            async carregarDados() {
+                try {
+                    console.log('Iniciando carregamento de dados...');
+                    const [status, estatisticas, graficos] = await Promise.all([
+                        this.carregarStatus(),
+                        this.carregarEstatisticas(),
+                        this.carregarGraficos()
+                    ]);
+
+                    this.dadosAtuais = { status, estatisticas, graficos };
+                    console.log('Dados carregados com sucesso');
+
+                } catch (error) {
+                    console.error('Erro crítico ao carregar dados:', error);
+                    this.usarDadosMock();
+                }
+            }
+
+            async carregarStatus() {
+                try {
+                    console.log(' Buscando status UPS...');
+                    const response = await fetch(`${this.baseURL}/status`);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                    const status = await response.json();
+                    console.log(`Status carregado: ${status.length} UPS(s)`);
+                    return status;
+
+                } catch (error) {
+                    console.error('Falha ao carregar status:', error.message);
+                    throw error;
+                }
+            }
+
+            async carregarEstatisticas() {
+                try {
+                    console.log('Buscando estatísticas...');
+                    const response = await fetch(`${this.baseURL}/estatisticas`);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                    const estatisticas = await response.json();
+                    console.log('Estatísticas recebidas:', estatisticas);
+                    this.atualizarKPI(estatisticas);
+                    return estatisticas;
+
+                } catch (error) {
+                    console.error('Falha ao carregar estatísticas:', error.message);
+                    throw error;
+                }
+            }
+
+            async carregarGraficos() {
+                try {
+                    const periodo = document.getElementById('seletorPeriodo').value;
+                    console.log(`Buscando dados gráficos - período: ${periodo}`);
+
+                    const response = await fetch(`${this.baseURL}/graficos?periodo=${periodo}`);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                    const graficos = await response.json();
+                    console.log('Dados gráficos recebidos');
+                    this.atualizarGraficos(graficos);
+                    return graficos;
+
+                } catch (error) {
+                    console.error('Falha ao carregar gráficos:', error.message);
+                    throw error;
+                }
+            }
+
+            atualizarKPI(estatisticas) {
+                console.log('Atualizando KPIs com:', estatisticas);
+                const kpis = document.querySelectorAll('.kpi-card-ups');
+
+                if (!kpis.length) {
+                    console.error('Elementos KPI não encontrados');
+                    return;
+                }
+
+                // KPI 1: Quantidade de UPS
+                if (kpis[0]) {
+                    const quantidade = estatisticas.quantidadeUPS || 0;
+                    kpis[0].querySelector('span').textContent = quantidade;
+                    kpis[0].querySelector('small').textContent = this.gerarVariacao(quantidade, 'quantidade');
+                }
+
+                // KPI 2: P.U.E
+                if (kpis[1]) {
+                    const pue = estatisticas.pue || 1.2;
+                    kpis[1].querySelector('span').textContent = pue.toFixed(1);
+                    kpis[1].querySelector('small').textContent = this.gerarVariacao(pue, 'pue');
+                }
+
+                // KPI 3: Energia disponível
+                if (kpis[2]) {
+                    const energia = estatisticas.energiaDisponivel || 0;
+                    kpis[2].querySelector('span').textContent = `${energia}%`;
+                    kpis[2].querySelector('small').textContent = this.gerarVariacao(energia, 'energia');
+                }
+
+                this.atualizarCoresStatus(estatisticas);
+                console.log('KPIs atualizados na interface');
+            }
+
+            gerarVariacao(valor, tipo) {
+                const variacoes = {
+                    quantidade: ['+2 novas esta semana', '+1 nova hoje', 'Estável'],
+                    pue: ['-0.03% em relação ao último dia', '+0.02% em relação ao último dia', 'Estável'],
+                    energia: ['-0.2% em relação ao último dia', '+0.5% em relação ao último dia', 'Estável']
+                };
+                const opcoes = variacoes[tipo] || variacoes.energia;
+                if (valor > 80) return opcoes[1];
+                if (valor < 20) return opcoes[0];
+                return opcoes[2];
+            }
+
+            inicializarGraficos() {
+                console.log('Inicializando gráficos...');
+                this.criarGraficoPizza();
+                this.criarGraficoLinha();
+            }
+
+            criarGraficoPizza() {
+                const ctx = document.getElementById('donutChart');
+                if (!ctx) {
+                    console.error('Canvas donutChart não encontrado');
+                    return;
+                }
+
+                if (this.donutChart) this.donutChart.destroy();
+
+                this.donutChart = new Chart(ctx, {
+                    type: "doughnut",
+                    data: {
+                        labels: ["Em uso", "Sem uso"],
+                        datasets: [{
+                            data: [65, 35],
+                            backgroundColor: ["#4bc0c0", "#FF6384"],
+                            borderWidth: 0,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: "65%",
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: {
+                                    color: '#333',
+                                    font: { family: "'Montserrat', sans-serif", size: 12 },
+                                    padding: 20
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            criarGraficoLinha() {
+                const ctx = document.getElementById('lineChart');
+                if (!ctx) {
+                    console.error('Canvas lineChart não encontrado');
+                    return;
+                }
+
+                if (this.lineChart) this.lineChart.destroy();
+
+                this.lineChart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+                        datasets: [{
+                            label: "Acionamentos de UPS",
+                            data: [3, 5, 2, 8, 4, 1, 6],
+                            tension: 0.4,
+                            borderWidth: 3,
+                            borderColor: "#4bc0c0",
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            pointRadius: 5,
+                            pointBackgroundColor: "#4bc0c0",
+                            pointBorderColor: "#fff",
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 7,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#333',
+                                    font: { family: "'Montserrat', sans-serif", size: 12 }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: (context) => `Dia: ${context[0].label}`,
+                                    label: (context) => `Acionamentos: ${context.raw} vez(es)`
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Número de Acionamentos',
+                                    font: { family: "'Montserrat', sans-serif", size: 12 }
+                                },
+                                border: { display: false },
+                                ticks: {
+                                    color: "#666",
+                                    font: { family: "'Montserrat', sans-serif", size: 11 },
+                                    stepSize: 1
+                                },
+                                grid: { color: "rgba(0,0,0,0.05)" }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Período',
+                                    font: { family: "'Montserrat', sans-serif", size: 12 }
+                                },
+                                border: { display: false },
+                                ticks: {
+                                    color: "#666",
+                                    font: { family: "'Montserrat', sans-serif", size: 11 }
+                                },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+                console.log('Gráfico de acionamentos inicializado');
+            }
+
+            atualizarGraficos(dados) {
+                console.log('Atualizando gráficos com dados:', dados);
+                try {
+                    if (this.donutChart && dados.donut) {
+                        this.donutChart.data.labels = dados.donut.labels || ["Em uso", "Sem uso"];
+                        this.donutChart.data.datasets[0].data = dados.donut.datasets?.[0]?.data || [65, 35];
+                        this.donutChart.data.datasets[0].backgroundColor = dados.donut.datasets?.[0]?.backgroundColor || ["#4bc0c0", "#FF6384"];
+                        this.donutChart.update();
+                        console.log('Gráfico de pizza atualizado');
+                    }
+
+                    if (this.lineChart && dados.linha) {
+                        this.lineChart.data.labels = dados.linha.labels || ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+                        this.lineChart.data.datasets[0].data = dados.linha.datasets?.[0]?.data || [3, 5, 2, 8, 4, 1, 6];
+                        this.lineChart.update();
+                        console.log('Gráfico de linha atualizado');
+                    }
+                } catch (error) {
+                    console.error('Erro ao atualizar gráficos:', error);
+                }
+            }
+
+            atualizarCoresStatus(estatisticas) {
+                const kpis = document.querySelectorAll('.kpi-card-ups');
+                kpis.forEach((kpi, index) => {
+                    kpi.classList.remove('status-critico', 'status-alerta', 'status-normal');
+                    let status = 'normal';
+
+                    switch (index) {
+                        case 0:
+                            if (estatisticas.quantidadeUPS === 0) status = 'critico';
+                            break;
+                        case 1:
+                            if (estatisticas.pue > 1.5) status = 'critico';
+                            else if (estatisticas.pue > 1.3) status = 'alerta';
+                            break;
+                        case 2:
+                            if (estatisticas.energiaDisponivel < 20) status = 'critico';
+                            else if (estatisticas.energiaDisponivel < 50) status = 'alerta';
+                            break;
+                    }
+                    kpi.classList.add(`status-${status}`);
+                });
+            }
+
+            usarDadosMock() {
+                console.warn('Usando dados mock para demonstração');
+                const estatisticasMock = {
+                    quantidadeUPS: 2,
+                    pue: 1.2,
+                    energiaDisponivel: 85
+                };
+
+                const graficosMock = {
+                    donut: {
+                        labels: ["Em uso", "Sem uso"],
+                        datasets: [{ data: [2, 0], backgroundColor: ["#4bc0c0", "#FF6384"] }]
+                    },
+                    linha: {
+                        labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+                        datasets: [{ label: "Acionamentos de UPS", data: [3, 5, 2, 8, 4, 1, 6] }]
+                    },
+                    usandoMock: true
+                };
+
+                this.atualizarKPI(estatisticasMock);
+                this.atualizarGraficos(graficosMock);
+                this.mostrarAlerta('Usando dados de demonstração. Servidor offline.', 'warning');
+            }
+
+            configurarEventos() {
+                console.log('Configurando eventos...');
+
+                const btnAddUPS = document.querySelector('.btn-add-ups');
+                if (btnAddUPS) {
+                    btnAddUPS.addEventListener('click', () => {
+                        this.abrirModalIncluirUPS();
+                    });
+                }
+
+                const seletorPeriodo = document.getElementById('seletorPeriodo');
+                if (seletorPeriodo) {
+                    seletorPeriodo.addEventListener('change', () => this.carregarGraficos());
+                }
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'F5') {
+                        e.preventDefault();
+                        this.carregarDados();
+                        this.mostrarAlerta('Dados atualizados!', 'success');
+                    }
+                });
+
+                console.log('Eventos configurados');
+            }
+
+            abrirModalIncluirUPS() {
+    console.log('Abrindo modal de inclusão UPS');
+    
+    const modalHTML = `
+        <div class="modal-overlay" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        ">
+            <div class="modal-content" style="
+                background: white;
+                padding: 25px;
+                border-radius: 20px;
+                width: 100%;
+                max-width: 500px;
+                max-height: 90vh;
+                overflow-y: auto;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                font-family: 'Montserrat', sans-serif;
+                box-sizing: border-box;
+            ">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0; color: #0B795B; font-size: 1.3rem; font-weight: 600;">Cadastrar Nova UPS</h3>
+                    <button onclick="this.closest('.modal-overlay').remove()" style="
+                        background: none;
+                        border: none;
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                        color: #666;
+                        padding: 5px;
+                        line-height: 1;
+                    ">×</button>
+                </div>
+
+                <form id="formIncluirUPS" style="display: flex; flex-direction: column; gap: 18px;">
+                    <!-- Identificador -->
+                    <div>
+                        <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 0.9rem;">
+                            Identificador *
+                        </label>
+                        <input type="text" id="identificador" name="identificador" required style="
+                            width: 100%;
+                            padding: 12px 14px;
+                            border: 2px solid #e1e1e1;
+                            border-radius: 8px;
+                            font-size: 0.95rem;
+                            transition: all 0.3s ease;
+                            font-family: 'Montserrat', sans-serif;
+                            box-sizing: border-box;
+                        " placeholder="Ex: UPS-SALA-01" 
+                        onfocus="this.style.borderColor='#18B187'; this.style.boxShadow='0 0 0 2px rgba(24, 177, 135, 0.1)'" 
+                        onblur="this.style.borderColor='#e1e1e1'; this.style.boxShadow='none'">
+                    </div>
+
+                    <!-- Modelo e Fabricante -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 0.9rem;">
+                                Modelo *
+                            </label>
+                            <input type="text" id="modelo" name="modelo" required style="
+                                width: 100%;
+                                padding: 12px 14px;
+                                border: 2px solid #e1e1e1;
+                                border-radius: 8px;
+                                font-size: 0.95rem;
+                                font-family: 'Montserrat', sans-serif;
+                                box-sizing: border-box;
+                                transition: all 0.3s ease;
+                            " placeholder="Ex: Smart-UPS 1500"
+                            onfocus="this.style.borderColor='#18B187'; this.style.boxShadow='0 0 0 2px rgba(24, 177, 135, 0.1)'" 
+                            onblur="this.style.borderColor='#e1e1e1'; this.style.boxShadow='none'">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 0.9rem;">
+                                Fabricante *
+                            </label>
+                            <select id="fabricante" name="fabricante" required style="
+                                width: 100%;
+                                padding: 12px 14px;
+                                border: 2px solid #e1e1e1;
+                                border-radius: 8px;
+                                font-size: 0.95rem;
+                                font-family: 'Montserrat', sans-serif;
+                                background: white;
+                                box-sizing: border-box;
+                                transition: all 0.3s ease;
+                                appearance: none;
+                                background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+                                background-repeat: no-repeat;
+                                background-position: right 12px center;
+                                background-size: 16px;
+                            " 
+                            onfocus="this.style.borderColor='#18B187'; this.style.boxShadow='0 0 0 2px rgba(24, 177, 135, 0.1)'" 
+                            onblur="this.style.borderColor='#e1e1e1'; this.style.boxShadow='none'">
+                                <option value="">Selecione...</option>
+                                <option value="APC">APC by Schneider Electric</option>
+                                <option value="Eaton">Eaton</option>
+                                <option value="Emerson">Emerson</option>
+                                <option value="Vertiv">Vertiv</option>
+                                <option value="Delta">Delta</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Capacidades -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 0.9rem;">
+                                Capacidade VA *
+                            </label>
+                            <input type="number" id="capacidadeVA" name="capacidadeVA" required min="100" step="100" style="
+                                width: 100%;
+                                padding: 12px 14px;
+                                border: 2px solid #e1e1e1;
+                                border-radius: 8px;
+                                font-size: 0.95rem;
+                                font-family: 'Montserrat', sans-serif;
+                                box-sizing: border-box;
+                                transition: all 0.3s ease;
+                            " placeholder="Ex: 1500"
+                            onfocus="this.style.borderColor='#18B187'; this.style.boxShadow='0 0 0 2px rgba(24, 177, 135, 0.1)'" 
+                            onblur="this.style.borderColor='#e1e1e1'; this.style.boxShadow='none'">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 0.9rem;">
+                                Capacidade Watts
+                            </label>
+                            <input type="number" id="capacidadeWatts" name="capacidadeWatts" min="100" step="100" style="
+                                width: 100%;
+                                padding: 12px 14px;
+                                border: 2px solid #e1e1e1;
+                                border-radius: 8px;
+                                font-size: 0.95rem;
+                                font-family: 'Montserrat', sans-serif;
+                                box-sizing: border-box;
+                                transition: all 0.3s ease;
+                            " placeholder="Calculado automaticamente"
+                            onfocus="this.style.borderColor='#18B187'; this.style.boxShadow='0 0 0 2px rgba(24, 177, 135, 0.1)'" 
+                            onblur="this.style.borderColor='#e1e1e1'; this.style.boxShadow='none'">
+                        </div>
+                    </div>
+
+                    <!-- IP e Status -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 0.9rem;">
+                                Endereço IP
+                            </label>
+                            <input type="text" id="ip" name="ip" style="
+                                width: 100%;
+                                padding: 12px 14px;
+                                border: 2px solid #e1e1e1;
+                                border-radius: 8px;
+                                font-size: 0.95rem;
+                                font-family: 'Montserrat', sans-serif;
+                                box-sizing: border-box;
+                                transition: all 0.3s ease;
+                            " placeholder="Ex: 192.168.1.100"
+                            onfocus="this.style.borderColor='#18B187'; this.style.boxShadow='0 0 0 2px rgba(24, 177, 135, 0.1)'" 
+                            onblur="this.style.borderColor='#e1e1e1'; this.style.boxShadow='none'">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 0.9rem;">
+                                Status
+                            </label>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px; height: 44px; align-items: center;">
+                                <input type="checkbox" id="ativo" name="ativo" checked style="
+                                    width: 18px;
+                                    height: 18px;
+                                    accent-color: #18B187;
+                                ">
+                                <label for="ativo" style="color: #333; font-size: 0.9rem;">UPS Ativa</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões -->
+                    <div style="display: flex; gap: 12px; margin-top: 15px;">
+                        <button type="button" onclick="this.closest('.modal-overlay').remove()" style="
+                            flex: 1;
+                            padding: 13px;
+                            border: 2px solid #e1e1e1;
+                            border-radius: 8px;
+                            background: white;
+                            color: #666;
+                            font-weight: 600;
+                            cursor: pointer;
+                            font-family: 'Montserrat', sans-serif;
+                            transition: all 0.3s ease;
+                            font-size: 0.95rem;
+                        " onmouseover="this.style.borderColor='#ccc'; this.style.backgroundColor='#f8f8f8'" 
+                        onmouseout="this.style.borderColor='#e1e1e1'; this.style.backgroundColor='white'">
+                            Cancelar
+                        </button>
+                        <button type="submit" style="
+                            flex: 1;
+                            padding: 13px;
+                            border: none;
+                            border-radius: 8px;
+                            background: linear-gradient(135deg, #18B187, #0B795B);
+                            color: white;
+                            font-weight: 600;
+                            cursor: pointer;
+                            font-family: 'Montserrat', sans-serif;
+                            transition: all 0.3s ease;
+                            font-size: 0.95rem;
+                        " onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(24, 177, 135, 0.3)'" 
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            Cadastrar UPS
+                        </button>
+                    </div>
+                </form>
+
+                <div id="mensagemResultado" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    this.configurarModalIncluirUPS();
+}
+
+            configurarModalIncluirUPS() {
+                const form = document.getElementById('formIncluirUPS');
+                const capacidadeVA = document.getElementById('capacidadeVA');
+                const capacidadeWatts = document.getElementById('capacidadeWatts');
+                const mensagemResultado = document.getElementById('mensagemResultado');
+
+                if (capacidadeVA && capacidadeWatts) {
+                    capacidadeVA.addEventListener('input', function () {
+                        if (this.value && !capacidadeWatts.value) {
+                            capacidadeWatts.value = Math.round(this.value * 0.8); // 80% do VA
+                        }
+                    });
+                }
+
+                if (form) {
+                    form.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+
+                        const formData = new FormData(form);
+                        const dados = {
+                            identificador: formData.get('identificador'),
+                            modelo: formData.get('modelo'),
+                            fabricante: formData.get('fabricante'),
+                            capacidadeVA: formData.get('capacidadeVA'),
+                            capacidadeWatts: formData.get('capacidadeWatts'),
+                            ip: formData.get('ip'),
+                            ativo: formData.get('ativo') === 'on'
+                        };
+
+                        console.log('Enviando dados da UPS:', dados);
+
+                        try {
+                            const response = await fetch(`${this.baseURL}/incluir`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(dados)
+                            });
+
+                            const resultado = await response.json();
+
+                            if (resultado.sucesso) {
+                                this.mostrarAlerta('UPS cadastrada com sucesso!', 'success');
+                                this.carregarDados(); // Atualiza os dados
+
+                                // Fechar modal após 1 segundo
+                                setTimeout(() => {
+                                    const modal = document.querySelector('.modal-overlay');
+                                    if (modal) modal.remove();
+                                }, 1000);
+
+                            } else {
+                                this.mostrarMensagemErro(resultado.error);
+                            }
+
+                        } catch (error) {
+                            console.error('❌ Erro ao cadastrar UPS:', error);
+                            this.mostrarMensagemErro('Erro de conexão com o servidor');
+                        }
+                    });
+                }
+            }
+
+            mostrarMensagemErro(mensagem) {
+                const mensagemDiv = document.getElementById('mensagemResultado');
+                if (mensagemDiv) {
+                    mensagemDiv.innerHTML = `
+            <div style="
+                background: #fee;
+                border: 1px solid #fcc;
+                color: #c33;
+                padding: 12px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+            ">
+                 ${mensagem}
+            </div>
+        `;
+                }
+            }
+            mostrarAlerta(mensagem, tipo = 'info') {
+                const cores = { success: '#28a745', error: '#dc3545', warning: '#ffc107', info: '#17a2b8' };
+                const alerta = document.createElement('div');
+                alerta.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; background: ${cores[tipo] || '#17a2b8'};
+                    color: white; padding: 15px 20px; border-radius: 8px; z-index: 1001;
+                    font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    animation: slideIn 0.3s ease;
+                `;
+                alerta.textContent = mensagem;
+                document.body.appendChild(alerta);
+
+                setTimeout(() => {
+                    alerta.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => alerta.remove(), 300);
+                }, 4000);
+            }
+
+            debugInfo() {
+                console.group(' Debug UPS Dashboard');
+                console.log('Dados atuais:', this.dadosAtuais);
+                console.log('Gráficos:', { donut: !!this.donutChart, linha: !!this.lineChart });
+                console.log('URL base:', this.baseURL);
+                console.groupEnd();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('DOM carregado, iniciando aplicação...');
+            window.upsDashboard = new UPSDashboard();
+
+            const dynamicStyles = `
+                @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+                @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+                .status-critico { border-left: 4px solid #dc3545 !important;}
+                .status-alerta { border-left: 4px solid #ffc107 !important;}
+                .status-normal { border-left: 4px solid #28a745 !important;}
+                .kpi-card-ups { transition: all 0.3s ease !important; }
+                .kpi-card-ups:hover { transform: translateY(-2px) !important; box-shadow: 0 6px 16px rgba(0,0,0,0.15) !important; }
+            `;
+
+            const styleSheet = document.createElement('style');
+            styleSheet.textContent = dynamicStyles;
+            document.head.appendChild(styleSheet);
+
+            console.log('Aplicação UPS Dashboard carregada com sucesso!');
+            window.debugUPS = () => window.upsDashboard?.debugInfo();
+        });
+
+        window.UPSUtils = {
+            formatarPercentual: (valor) => `${Math.round(valor)}%`,
+            formatarNumero: (valor) => new Intl.NumberFormat('pt-BR').format(valor),
+            formatarData: (data) => new Date(data).toLocaleString('pt-BR'),
+            testarConexao: async () => {
+                try {
+                    const response = await fetch('/api/ups/status');
+                    return { online: response.ok, status: response.status, statusText: response.statusText };
+                } catch (error) {
+                    return { online: false, error: error.message };
+                }
+            }
+        };
+        status - normal
+        console.log('UPS Dashboard Framework carregado');
+    </script>
+</body>
+
+</html>
