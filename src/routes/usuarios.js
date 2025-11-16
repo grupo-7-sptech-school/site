@@ -1,8 +1,11 @@
 var express = require("express");
+const upload = require("../config/multer-config");
+
 var router = express.Router();
 
 var usuarioController = require("../controllers/usuarioController");
 const { config } = require("dotenv");
+const { autenticar } = require("../models/usuarioModel");
 
 router.post("/cadastrar", function (req, res) {
     usuarioController.cadastrar(req, res);
@@ -87,5 +90,12 @@ router.put("/senhaAlterada", function (req, res) {
 router.get("/puxarTodosAlertas", function (req, res) {
     usuarioController.puxarTodosAlertas(req, res);
 });
+
+router.post("/uploadFoto",
+    autenticar,
+     upload.single("foto"),
+      usuarioController.atualizarFoto
+    );
+
 
 module.exports = router;

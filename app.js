@@ -7,6 +7,7 @@ var express = require("express");
 var cors = require("cors");
 var path = require("path");
 var axios = require("axios");
+var multer = require("multer");
 
 var PORTA_APP = process.env.APP_PORT || 80;
 var HOST_APP = process.env.APP_HOST || '0.0.0.0';
@@ -25,10 +26,24 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/medidas", medidasRouter);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 const fs = require('fs');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        const extensao = file.originalname.split('.').pop();
+        const nomeArquivo = `${Date.now()}.${extensao}`; 
+        cb(null, nomeArquivo);
+    }
+});
+
+const upload = multer({storage});
 
 
 app.get("/relatorio/pdf", async (req, res) => {

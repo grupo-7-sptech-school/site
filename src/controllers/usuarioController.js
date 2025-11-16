@@ -437,6 +437,26 @@ function enviarRecuperacao(email, token) {
     return transporter.sendMail(mailOptions);
 }
 
+async function atualizarFoto(req, res) {
+    try {
+        const  idUsuario  = req.user.id;
+        const nomeArquivo = req.file.filename
+
+        const urlFoto = `/uploads/${nomeArquivo}`;
+
+        const resultado = await usuarioModel.atualizarFoto(idUsuario, urlFoto);
+
+        res.status(200).json({
+            mensagem: "Foto atualizada com sucesso!",
+            fotoUrl: urlFoto
+        });
+    } catch (erro) {
+        console.error(erro);
+        res.status(500).json({ erro: "Erro ao atualizar foto do usuário" });
+
+    }
+}
+
 
 
 

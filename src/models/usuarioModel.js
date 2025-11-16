@@ -302,6 +302,17 @@ function cadastrarComponentes(fkMaquina) {
     return database.executar(instrucaoSql);
 }
 
+function atualizarFoto(idUsuario, urlFoto) {
+    const instrucaoSql = `
+        UPDATE Usuario 
+        SET fotoPerfil = '${urlFoto}'
+        WHERE idUsuario = ${idUsuario};
+    `;
+
+    return database.executar(instrucaoSql);
+}
+
+
 
 module.exports = {
     autenticar,
@@ -320,5 +331,6 @@ module.exports = {
     infoUsuario,
     validarSenha,
     senhaAlterada,
-    puxarTodosAlertas
+    puxarTodosAlertas,
+    atualizarFoto
 }
