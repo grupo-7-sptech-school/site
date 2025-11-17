@@ -551,7 +551,11 @@ body {
 .status-critical { background:#ffecec; color:#c71f1f; border:1px solid #f5c2c2; }
 .status-warning  { background:#fff6e6; color:#b77900; border:1px solid #f1d8b0; }
 .status-normal   { background:#e9fbf3; color:#0b795b; border:1px solid #cdeadb; }
-
+.status-ocioso {
+    background-color: #7f8c8d;
+    color: white;
+    border: 1px solid #6c7a89; 
+}
 .ranking-table tbody tr:hover { background: rgba(11,121,91,0.03); }
 #ranking-search:focus { outline:2px solid rgba(11,121,91,0.12); }
 
@@ -914,7 +918,8 @@ body {
   margin: 0;
   font-size: 28px;              
   font-weight: 700;
-  color: #111;
+  color: #111; 
+  margin-top: -2vh;
 }
 .server-sub {
   margin: 4px 0 0 0;

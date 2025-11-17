@@ -186,6 +186,80 @@ function puxarMetricas(body) {
 
 
 
+
+
+
+
+function puxarMaquinaProcessos(hostName) {
+
+    const instrucaoSql = `
+            SELECT
+    m.preventivoInicio,
+    m.preventivoFim,
+    m.criticoInicio,
+    m.criticoFim,
+    ma.identificador AS nomeMaquina,
+    ult.dtUltimaCaptura
+    FROM Metrica m
+    JOIN Componente c  ON m.fkComponente = c.idComponente
+    JOIN Maquina ma    ON c.fkMaquina = ma.hostName
+    JOIN (
+        SELECT 
+            c2.fkMaquina,
+            MAX(r2.dtRegistro) AS dtUltimaCaptura
+        FROM Registro r2
+        JOIN Componente c2 ON r2.fkComponente = c2.idComponente
+        GROUP BY c2.fkMaquina
+    ) AS ult ON ult.fkMaquina = ma.hostName
+    WHERE ma.hostName = '${hostName}';
+        `;
+
+    return database.executar(instrucaoSql);
+}
+
+function quantidadeAlertasProcessos(hostName) {
+
+    const instrucaoSql = `
+            SELECT 
+    COUNT(*) AS total_alertas_semana,
+    SUM(CASE WHEN a.estado = 'CRITICO' THEN 1 ELSE 0 END) AS total_criticos_semana,
+    SUM(CASE WHEN a.estado = 'ALERTA' THEN 1 ELSE 0 END) AS total_preventivos_semana
+    FROM Alerta a
+    JOIN Componente c ON a.fkComponente = c.idComponente
+    JOIN Maquina m ON c.fkMaquina = m.hostName
+    WHERE m.hostName = '${hostName}'
+    AND a.dtHora >= DATE_SUB(NOW(), INTERVAL 7 DAY);`;
+
+    return database.executar(instrucaoSql);
+}
+
+function rankingProcessos(hostName, limite) {
+
+    const instrucaoSql = `
+                 SELECT p1.nome AS processo,
+               p1.cpuPorcentagem AS cpu,
+               p1.ramPorcentagem AS ram,
+               CASE
+                   WHEN p1.cpuPorcentagem >= 20 THEN 'CRÍTICO'
+                   WHEN p1.cpuPorcentagem >= 10 THEN 'PREVENTIVO'
+                   ELSE 'NORMAL'
+               END AS status,
+               p1.dtRegistro AS data_registro
+        FROM Processo p1
+        INNER JOIN (
+            SELECT nome, MAX(idProcesso) AS maxId
+            FROM Processo
+            WHERE fkMaquina = ${hostName}
+            GROUP BY nome
+        ) p2 ON p1.nome = p2.nome AND p1.idProcesso = p2.maxId
+        WHERE p1.fkMaquina = ${hostName}
+        ORDER BY p1.cpuPorcentagem DESC
+        LIMIT ${limite};
+    `;
+
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     buscarUltimasMedidas,
     buscarMedidasEmTempoReal,
@@ -193,5 +267,8 @@ module.exports = {
     maiorProcessoCpu,
     maiorProcessoRam,
     alterarMetricas,
-    puxarMetricas
+    puxarMetricas,
+    puxarMaquinaProcessos,
+    quantidadeAlertasProcessos,
+    rankingProcessos
 }

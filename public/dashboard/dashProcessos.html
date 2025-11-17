@@ -27,7 +27,7 @@
     <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
 </head>
 
-<body onload="filtrarRelatorio();">
+<body>
 
     <div class="total-dash">
 
@@ -110,7 +110,7 @@
 
                 <div class="dashboard-charts">
                     <div class="line-charts">
-                        <h3>Consumo de CPU</h3>
+                        <h3>Consumo de CPU em processos de espaço do usuário </h3>
                         <div class="grafico-cpu">
                             <canvas id="graficoCpuCanvas"></canvas>
                         </div>
@@ -149,13 +149,13 @@
                             <div class="server-card">
                                 <div class="server-info">
 
-                                    <h1 class="server-title">Máquina Prod -01</h1>
-                                    <p class="server-sub">Última checagem: seg., 17 de nov., 19:10</p>
-
+                                    <h1 id="serverTitle" class="server-title"></h1>
+                                    <p id="serverSub" class="server-sub"></p>
                                     <div class="server-grid">
 
                                         <div class="item">
-                                            <span class="label">Variação do <br>consumo de <br> CPU dos<br>processos</span>
+                                            <span class="label">Variação do <br>consumo de <br> CPU
+                                                dos<br>processos</span>
                                             <div class="divider"></div>
                                             <div class="value-big">
                                                 <strong>Estável</strong>
@@ -164,21 +164,21 @@
                                         </div>
 
                                         <div class="item">
-                                            <span class="label">Quantidade total <br> de alertas diarios</span>
+                                            <span class="label">Quantidade total <br> de alertas</span>
                                             <div class="divider"></div>
-                                            <h2 class="value-center">4</h2>
+                                            <h2 class="value-center" id="totalAlertas"></h2>
                                         </div>
 
                                         <div class="item">
                                             <span class="label">Processos<br>em estado<br>alerta crítico</span>
                                             <div class="divider"></div>
-                                            <h2 class="value-center">3</h2>
+                                            <h2 class="value-center" id="totalCriticos"></h2>
                                         </div>
 
                                         <div class="item">
                                             <span class="label">Processos em<br>estado de <br>alerta preventivo</span>
                                             <div class="divider"></div>
-                                            <h2 class="value-center">1</h2>
+                                            <h2 class="value-center" id="totalPreventivos"></h2>
                                         </div>
 
                                     </div>
@@ -247,18 +247,13 @@
 
 
     <script>
-        const processosExemplo = [
-            { nome: "nginx", cpu: 32, ram: 18, data: "2025-11-16T19:40:00" },
-            { nome: "java", cpu: 22, ram: 21, data: "2025-11-16T19:41:00" },
-            { nome: "node", cpu: 12, ram: 9, data: "2025-11-16T19:39:00" },
-            { nome: "postgres", cpu: 9, ram: 12, data: "2025-11-16T19:30:00" },
-            { nome: "python", cpu: 7, ram: 4, data: "2025-11-16T19:33:00" },
-            { nome: "ssh", cpu: 3, ram: 2, data: "2025-11-16T19:20:00" }
-        ];
+
+        carregarInfoMaquina()
 
         function formatStatus(cpu) {
             if (cpu >= 20) return { text: "CRÍTICO", cls: "status-pill status-critical" };
             if (cpu >= 10) return { text: "PREVENTIVO", cls: "status-pill status-warning" };
+            if (cpu <= 0) return { text: "OCIOSO", cls: "status-pill status-ocioso" };
             return { text: "NORMAL", cls: "status-pill status-normal" };
         }
 
@@ -272,63 +267,124 @@
             return `${dia}/${mes}/${ano} ${h}:${m}`;
         }
 
+
+
+
+
         function renderRanking(data) {
             const tbody = document.getElementById("lista-processos");
             tbody.innerHTML = "";
 
             data.forEach(p => {
-                const status = formatStatus(p.cpu);
+                const cpu = Number(p.cpu).toFixed(1);
+                const ram = Number(p.ram).toFixed(1);
+                const status = formatStatus(cpu);
 
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-      <td>
-        <div style="font-weight:700">${p.nome}</div>
-      </td>
+        <td>
+            <div style="font-weight:700">${p.processo}</div>
+        </td>
 
-      <td>
-        <div class="cell-progress">
-          <div style="font-weight:600">${p.cpu}%</div>
-          <div class="progress"><div class="fill" style="width:${p.cpu}%"></div></div>
-        </div>
-      </td>
+        <td>
+            <div class="cell-progress">
+                <div style="font-weight:600">${cpu}%</div>
+                <div class="progress">
+                    <div class="fill" style="width:${cpu}%"></div>
+                </div>
+            </div>
+        </td>
 
-      <td>
-        <div class="cell-progress">
-          <div style="font-weight:600">${p.ram}%</div>
-          <div class="progress"><div class="fill" style="width:${p.ram}%; background: linear-gradient(90deg,#6dd3c6,#18B187)"></div></div>
-        </div>
-      </td>
+        <td>
+            <div class="cell-progress">
+                <div style="font-weight:600">${ram}%</div>
+                <div class="progress">
+                    <div class="fill" style="width:${ram}%; background: linear-gradient(90deg,#6dd3c6,#18B187)"></div>
+                </div>
+            </div>
+        </td>
 
-      <td><div class="${status.cls}">${status.text}</div></td>
+        <td>
+            <div class="${status.cls}">${status.text}</div>
+        </td>
 
-      <td class="data-cell">${formatarData(p.data)}</td>
-    `;
+        <td class="data-cell">${formatarData(p.data_registro)}</td>
+        `;
 
                 tbody.appendChild(tr);
             });
         }
 
 
-        renderRanking(processosExemplo);
-
-        document.getElementById('ranking-limit').addEventListener('change', () => {
-            const limit = Number(document.getElementById('ranking-limit').value);
-            renderRanking(processosExemplo.slice(0, limit));
-        });
-        document.getElementById('ranking-search').addEventListener('input', (e) => {
-            const q = e.target.value.toLowerCase().trim();
-            const limit = Number(document.getElementById('ranking-limit').value);
-            const filtrado = processosExemplo.filter(p => p.nome.toLowerCase().includes(q));
-            renderRanking(filtrado.slice(0, limit));
-        });
 
 
-        document.getElementById("recomm-date").textContent =
-            new Date().toLocaleString("pt-BR");
+        async function carregarInfoMaquina() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const hostName = params.get("id");
 
-        document.getElementById("metrics-date").textContent =
-            new Date().toLocaleString("pt-BR");
+                const resposta = await fetch("/medidas/puxarMaquinaProcessos", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ hostName })
+                });
 
+                const dados = await resposta.json();
+                const item = dados[0];
+
+                serverTitle.textContent = item.nomeMaquina;
+                const dt = new Date(item.dtUltimaCaptura);
+                serverSub.textContent = `Última Checagem: ${dt.toLocaleString()}`;
+
+
+                const respostaKpis = await fetch("/medidas/quantidadeAlertasProcessos", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ hostName })
+                });
+
+                const kpis = await respostaKpis.json();
+                const info = kpis[0];
+
+                totalAlertas.textContent = info.total_alertas_semana;
+                totalCriticos.textContent = info.total_criticos_semana;
+                totalPreventivos.textContent = info.total_preventivos_semana;
+
+            } catch (erro) {
+                console.error("Erro ao carregar informações:", erro);
+            }
+        }
+
+
+
+
+        async function carregarRanking() {
+            const params = new URLSearchParams(window.location.search);
+            const hostName = params.get("id");
+            const limite = document.getElementById("ranking-limit").value;
+
+            try {
+                const resposta = await fetch("/medidas/rankingProcessos", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ hostName, limite })
+                });
+
+                let lista = await resposta.json();
+                const busca = document.getElementById("ranking-search").value.toLowerCase();
+
+                if (busca != "") {
+                    lista = lista.filter(p =>
+                        p.processo.toLowerCase().includes(busca)
+                    );
+                }
+                renderRanking(lista);
+
+            } catch (e) {
+                console.error("Erro ao carregar ranking:", e);
+            }
+        }
+        
 
 
 
@@ -339,10 +395,10 @@
         const cpuChart = new Chart(ctxCpu, {
             type: 'line',
             data: {
-                labels: processosExemplo.map(p => formatarData(p.data).split(' ')[1]), // só hora:min
+                // labels: processosExemplo.map(p => formatarData(p.data).split(' ')[1]), // só hora:min
                 datasets: [{
                     label: 'Uso de CPU (%)',
-                    data: processosExemplo.map(p => p.cpu),
+                    // data: processosExemplo.map(p => p.cpu),
                     borderColor: '#0B795B',
                     backgroundColor: 'rgba(11, 121, 91, 0.1)',
                     fill: true,
@@ -369,29 +425,35 @@
         });
 
 
-        function updateCpuChart(data) {
-            const labelsCPU = data.map(p => formatarData(p.data).split(' ')[1]); // só hora:min
-            const dataCPU = data.map(p => p.cpu);
+        // function updateCpuChart(data) {
+        //     const labelsCPU = data.map(p => formatarData(p.data).split(' ')[1]); // só hora:min
+        //     const dataCPU = data.map(p => p.cpu);
 
-            cpuChart.data.labels = labelsCPU;
-            cpuChart.data.datasets[0].data = dataCPU;
-            cpuChart.update();
-        }
+        //     cpuChart.data.labels = labelsCPU;
+        //     cpuChart.data.datasets[0].data = dataCPU;
+        //     cpuChart.update();
+        // }
 
-        document.getElementById('ranking-limit').addEventListener('change', () => {
-            const limit = Number(document.getElementById('ranking-limit').value);
-            renderRanking(processosExemplo.slice(0, limit));
-        });
-        document.getElementById('ranking-search').addEventListener('input', (e) => {
-            const q = e.target.value.toLowerCase().trim();
-            const limit = Number(document.getElementById('ranking-limit').value);
-            const filtrado = processosExemplo.filter(p => p.nome.toLowerCase().includes(q));
-            renderRanking(filtrado.slice(0, limit));
-        });
+        // document.getElementById('ranking-limit').addEventListener('change', () => {
+        //     const limit = Number(document.getElementById('ranking-limit').value);
+        //     renderRanking(processosExemplo.slice(0, limit));
+        // });
+        // document.getElementById('ranking-search').addEventListener('input', (e) => {
+        //     const q = e.target.value.toLowerCase().trim();
+        //     const limit = Number(document.getElementById('ranking-limit').value);
+        //     const filtrado = processosExemplo.filter(p => p.nome.toLowerCase().includes(q));
+        //     renderRanking(filtrado.slice(0, limit));
+        // });
 
-        document.getElementById("recomm-date").textContent = new Date().toLocaleString("pt-BR");
-        document.getElementById("metrics-date").textContent = new Date().toLocaleString("pt-BR");
+        // document.getElementById("recomm-date").textContent = new Date().toLocaleString("pt-BR");
+        // document.getElementById("metrics-date").textContent = new Date().toLocaleString("pt-BR");
 
-        renderRanking(processosExemplo);
+        // renderRanking(processosExemplo);
+
+
+        document.getElementById("ranking-limit").addEventListener("change", carregarRanking);
+        document.getElementById("ranking-search").addEventListener("input", carregarRanking);
+        document.getElementById("ranking-limit").addEventListener("change", carregarRanking);
+        carregarRanking()
 
     </script>

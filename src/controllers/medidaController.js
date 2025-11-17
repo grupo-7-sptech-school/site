@@ -141,6 +141,67 @@ async function puxarMetricas(req, res) {
 }
 
 
+
+
+
+function puxarMaquinaProcessos(req, res) {
+
+    var hostName = req.body.hostName;
+
+    console.log(`Recuperando medidas em tempo real`);
+
+    medidaModel.puxarMaquinaProcessos(hostName).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar as ultimas medidas.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function quantidadeAlertasProcessos(req, res) {
+
+    var hostName = req.body.hostName;
+
+    console.log(`Recuperando medidas em tempo real`);
+
+    medidaModel.quantidadeAlertasProcessos(hostName).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar as ultimas medidas.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+function rankingProcessos(req, res) {
+
+    var hostName = req.body.hostName;
+    var limite = req.body.limite;
+
+    console.log(`Recuperando medidas em tempo real`);
+
+    medidaModel.rankingProcessos(hostName, limite).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar as ultimas medidas.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
 module.exports = {
     buscarUltimasMedidas,
     buscarMedidasEmTempoReal,
@@ -148,5 +209,8 @@ module.exports = {
     maiorProcessoCpu,
     maiorProcessoRam,
     alterarMetricas,
-    puxarMetricas
+    puxarMetricas,
+    puxarMaquinaProcessos,
+    quantidadeAlertasProcessos,
+    rankingProcessos
 }

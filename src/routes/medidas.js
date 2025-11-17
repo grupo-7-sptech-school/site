@@ -31,4 +31,16 @@ router.post("/puxarMetricas", function (req, res) {
     medidaController.puxarMetricas(req, res);
 })
 
+router.post("/puxarMaquinaProcessos", function (req, res) {
+    medidaController.puxarMaquinaProcessos(req, res);
+})
+
+router.post("/quantidadeAlertasProcessos", function (req, res) {
+    medidaController.quantidadeAlertasProcessos(req, res);
+})
+
+router.post("/rankingProcessos", function (req, res) {
+    medidaController.rankingProcessos(req, res);
+})
+
 module.exports = router;

@@ -65,6 +65,9 @@
                     <a href="dashboard-alto.html" class="btn-voltar">
                         Painel de controle - Servidor
                     </a>
+                    <a id="btnGerarRelatorio" onclick="redirecionar()" class="btn-gerar-relatorio">
+                            Ver processos
+                        </a>
                     <div class="btns-topbar">
                         <a id="btnGerarRelatorio" onclick="baixarPDF()" class="btn-gerar-relatorio">
                             Gerar relatorio
@@ -246,7 +249,8 @@
 <script>
 
     
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
     const modalMetricas = document.getElementById("modalMetricas");
     const btnAbrirMetricas = document.querySelector(".kpi-metricas button");
     const btnFecharMetricas = document.getElementById("fecharMetricas");
@@ -281,6 +285,13 @@
         if (e.target === modal) modal.classList.remove('active');
     });
 
+
+    function redirecionar () {
+    document.getElementById("btnGerarRelatorio") 
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+    window.location.href = `dashProcessos.html?id=${id}`;
+    }
 
 
     async function salvarMetricas() {
@@ -705,7 +716,7 @@ var labelsRam = labelsTempoReal();
 
     const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
     
-    var usoLivre = 100 - usoDisco;
+    // var usoLivre = 100 - usoDisco;
     // h1_usoDisco.innerHTML = usoDisco + "%"
     // h1_usoLivre.innerHTML = usoLivre + "%"
     
@@ -713,9 +724,9 @@ var labelsRam = labelsTempoReal();
     new Chart(ctxDisco, {
         type: 'bar',
         data: {
-            labels: [usoDisco + '%'],
+            // labels: [usoDisco + '%'],
             datasets: [{
-                data: [usoDisco],
+                // data: [usoDisco],
                 backgroundColor: 'transparent'
             }]
         },
