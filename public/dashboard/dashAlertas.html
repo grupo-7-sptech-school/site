@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <link rel="shortcut icon" href="../assets/icon/logo-branca.ico" type="image/x-icon">
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>SolarData | Gerenciamento de Alertas</title>
+
+  <link rel="stylesheet" href="./../css/dashboards.css">
+  <link rel="stylesheet" href="./../css/cabecalho3.css">
+  <link rel="stylesheet" href="./../css/modal.css">
+  <link rel="stylesheet" href="./../css/dashisa.css">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <script src="../js/sessao.js"></script>
+  <script src="./../js/alerta.js"></script>
+
+  <!-- CHART.JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.3"></script>
+
+</head>
+
+<body>
+
+  <div class="total-dash">
+    <div class="dashboard-bg">
+
+      <div class="dashboard-sidebar">
+        <div class="dashboard-logo"></div>
+        <div class="dashboard-sidebar-btns">
+          <a href="alertas.html" class="dashboard-sidebar-btn">
+            <div class="icon-alert"></div>
+            <h3>Alertas</h3>
+          </a>
+
+          <a href="contateste.html" class="dashboard-sidebar-btn">
+            <div class="icon-user"></div>
+            <h3>Conta</h3>
+          </a>
+
+          <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+            <div class="icon-dashboard"></div>
+            <h3>Painel de <br> Controle</h3>
+          </a>
+
+          <a href="suporte.html" class="dashboard-sidebar-btn">
+            <div class="icon-support"></div>
+            <h3>Suporte</h3>
+          </a>
+        </div>
+
+        <a href="/public/index.html" class="dashboard-logout">
+          <div class="icon-logout"></div>
+          <h3>Logout</h3>
+        </a>
+      </div>
+
+      <div class="dashboard-low-right-side">
+
+        <div class="dashboard-topbar">
+          <a href="dashboard-alto.html" class="btn-voltar">
+            Gerenciamento de Alertas
+          </a>
+
+          <div class="btns-topbar">
+            <div class="btn-padrao">
+              <button class="btn-notificacao"></button>
+              <a href="contateste.html" class="btn-conta">
+                <img id="fotoTopo" src="../assets/icon/icon-user.png" alt="Foto de perfil"
+                  style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+
+          <div class="kpi-container">
+
+            <div class="kpi-card">
+              <h3>Total de Alertas</h3>
+              <p class="kpi-value">128</p>
+              <span class="kpi-sub">+12 esta semana</span>
+            </div>
+
+            <div class="kpi-card">
+              <h3>Alertas Críticos</h3>
+              <p class="kpi-value">37</p>
+              <span class="kpi-sub">+3 hoje</span>
+            </div>
+
+            <div class="kpi-card">
+              <h3>Pré-Ociosidade</h3>
+              <p class="kpi-value">15</p>
+              <span class="kpi-sub">-5 este mês</span>
+            </div>
+
+            <div class="kpi-card">
+              <h3>Componente Mais Crítico</h3>
+              <p class="kpi-value">CPU</p>
+              <span class="kpi-sub">42 alertas</span>
+            </div>
+
+          </div>
+
+          <div class="periodo-container">
+            <label for="periodo">Período:</label>
+            <select id="periodo">
+              <option>Últimos 7 dias</option>
+              <option>Últimos 15 dias</option>
+              <option>Últimos 30 dias</option>
+            </select>
+          </div>
+
+          <div class="graficos-container">
+
+  <div class="grafico-card">
+    <h3>Tipos de Alerta</h3>
+    <canvas id="graficoTipos"></canvas>
+  </div>
+
+  <div class="grafico-card">
+    <h3>Alertas ao longo do período</h3>
+    <canvas id="graficoLinha"></canvas>
+  </div>
+
+  <div class="grafico-card full">
+    <h3>Alertas por Componentes</h3>
+    <canvas id="graficoComponentes"></canvas>
+  </div>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    new Chart(document.getElementById("graficoLinha"), {
+      type: "line",
+      data: {
+        labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+        datasets: [{
+          label: "Alertas",
+          data: [12, 18, 10, 22, 14, 8, 16],
+          borderColor: "#1abc9c",
+          fill: true,
+          tension: 0.3
+        }]
+      }
+    });
+
+    new Chart(document.getElementById("graficoTipos"), {
+      type: "doughnut",
+      data: {
+        labels: ["Crítico", "Preventivo"],
+        datasets: [{
+          data: [37, 58],
+          backgroundColor: ["#d9534f", "#ffff00"]
+        }]
+      }
+    });
+
+    new Chart(document.getElementById("graficoComponentes"), {
+  type: "bar",
+  data: {
+    labels: ["CPU", "RAM", "Disco"],
+    datasets: [{
+      label: "Qtd de Alertas",
+      data: [42, 31, 22],
+      backgroundColor: ["#3498db", "#D16D85", "#00C04B"]
+    }]
+  },
+  options: {
+    indexAxis: "y"
+  }
+});
+  </script>
+</body>
+</html>
