@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="shortcut icon" href="../assets/icon/logo-branca.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarData | Painel de controle</title>
+
+    <link rel="stylesheet" href="./../css/dashProcessos.css">
+    <link rel="stylesheet" href="./../css/cabecalho3.css">
+    <link rel="stylesheet" href="./../css/modal.css">
+
+    <script src="../js/sessao.js"></script>
+    <script src="./../js/alerta.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Poppins:wght@100..900&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
+
+    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+</head>
+
+<body onload="filtrarRelatorio();">
+
+    <div class="total-dash">
+
+        <div class="dashboard-bg">
+
+            <!-- Sidebar -->
+            <div class="dashboard-sidebar">
+
+                <div class="dashboard-logo"></div>
+
+                <div class="dashboard-sidebar-btns">
+                    <a href="alertas.html" class="dashboard-sidebar-btn">
+                        <div class="icon-alert"></div>
+                        <h3>Alertas</h3>
+                    </a>
+
+                    <a href="contateste.html" class="dashboard-sidebar-btn">
+                        <div class="icon-user"></div>
+                        <h3>Conta</h3>
+                    </a>
+
+                    <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+                        <div class="icon-dashboard"></div>
+                        <h3>Painel de <br>Controle</h3>
+                    </a>
+
+                    <a href="suporte.html" class="dashboard-sidebar-btn">
+                        <div class="icon-support"></div>
+                        <h3>Suporte</h3>
+                    </a>
+                </div>
+
+                <a href="../index.html" class="dashboard-logout">
+                    <div class="icon-logout"></div>
+                    <h3>Logout</h3>
+                </a>
+
+            </div>
+
+
+            <div class="dashboard-low-right-side">
+
+                <div class="dashboard-topbar">
+                    <a href="dashboard-alto.html" class="btn-voltar">
+                        Painel de controle - Servidor
+                    </a>
+
+                    <div class="btns-topbar">
+                        <div class="btn-padrao">
+                            <button class="btn-notificacao"></button>
+                            <a href="contateste.html" class="btn-conta"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpis-wrap">
+                    <div class="kpis">
+                        <div class="kpi">
+                            <select id="selectPeriodo" class="select-kpi">
+                                <option>Diário</option>
+                                <option>Semanal</option>
+                                <option>Mensal</option>
+                            </select>
+                        </div>
+
+                        <div class="kpi">
+                            <select id="selectComponente" class="select-kpi">
+                                <option>CPU</option>
+                                <option>RAM</option>
+                            </select>
+                        </div>
+
+                        <div class="kpi">
+                            <a id="btnGerarRelatorio" onclick="baixarPDF()" class="btn-gerar-relatorio">Ver previsão de
+                                uso</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="dashboard-charts">
+                    <div class="line-charts">
+                        <h3>Consumo de CPU</h3>
+                        <div class="grafico-cpu">
+                            <canvas id="graficoCpuCanvas"></canvas>
+                        </div>
+
+                        <h3>Ranking de processos</h3>
+                        <div class="ranking-card">
+                            <div class="ranking-controls">
+                                <input id="ranking-search" type="search" placeholder="Pesquisar processo..." />
+                                <select id="ranking-limit" title="Mostrar top">
+                                    <option value="5">Top 5</option>
+                                    <option value="10">Top 10</option>
+                                    <option value="15">Top 15</option>
+                                </select>
+                            </div>
+
+                            <div class="ranking-table-wrap">
+                                <table class="ranking-table" aria-label="Ranking de processos">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:38%">Processo</th>
+                                            <th style="width:14%">CPU</th>
+                                            <th style="width:14%">RAM</th>
+                                            <th style="width:14%">Status</th>
+                                            <th style="width:20%">Data</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lista-processos">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cup-charts">
+                        <div class="grafico-disco">
+                            <div class="server-card">
+                                <div class="server-info">
+
+                                    <h1 class="server-title">Máquina Prod -01</h1>
+                                    <p class="server-sub">Última checagem: seg., 17 de nov., 19:10</p>
+
+                                    <div class="server-grid">
+
+                                        <div class="item">
+                                            <span class="label">Variação do <br>consumo de <br> CPU dos<br>processos</span>
+                                            <div class="divider"></div>
+                                            <div class="value-big">
+                                                <strong>Estável</strong>
+                                                <h2>3%</h2>
+                                            </div>
+                                        </div>
+
+                                        <div class="item">
+                                            <span class="label">Quantidade total <br> de alertas diarios</span>
+                                            <div class="divider"></div>
+                                            <h2 class="value-center">4</h2>
+                                        </div>
+
+                                        <div class="item">
+                                            <span class="label">Processos<br>em estado<br>alerta crítico</span>
+                                            <div class="divider"></div>
+                                            <h2 class="value-center">3</h2>
+                                        </div>
+
+                                        <div class="item">
+                                            <span class="label">Processos em<br>estado de <br>alerta preventivo</span>
+                                            <div class="divider"></div>
+                                            <h2 class="value-center">1</h2>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="server-image">
+                                    <img src="https://img.freepik.com/vetores-premium/icone-de-rack-de-servidor-vetor-isometrico-web-nuvem-internet-rede_96318-68430.jpg?w=360"
+                                        alt="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="blocos-abaixo-disco">
+                            <div class="bloco-info">
+                                <div class="dashboard-card recomm-card">
+                                    <div class="dashboard-card-top">
+                                        <h3>Recomendações da IA</h3>
+                                        <span class="card-date"> Atualizado em: <span id="recomm-date"></span></span>
+                                    </div>
+
+                                    <div class="dashboard-card-content">
+                                        <ul class="recomm-list">
+                                            <li>• Aumentar a memória disponível para o processo <b>python.exe</b>, que
+                                                frequentemente ultrapassa 85%.</li>
+                                            <li>• Otimizar agendamento de tarefas...</li>
+                                            <li>• Reavaliar serviços em segundo plano...</li>
+                                            <li>• Implementar thresholds automáticos...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="metrics-card">
+                                <div>
+                                    <h3 class="metrics-title">Métricas do Servidor</h3>
+                                    <span class="metrics-date">Atualizado em: <span id="metrics-date"></span></span>
+
+                                    <div class="metrics-list">
+                                        <div class="metric-item">
+                                            Alerta PREVENTIVO: <strong>5%</strong>
+                                            <span>10%</span>
+                                        </div>
+
+                                        <div class="metric-item">
+                                            Alerta CRÍTICO: <strong>11%</strong>
+                                            <span> 100%</span>
+                                        </div>
+
+                                        <div class="metric-item">
+                                            Alerta OCIOSIDADE: <strong> Processo inativo</strong>
+                                            <span></span>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn-metricas" onclick="alterarMetricas()">Alterar Métricas</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+    <script>
+        const processosExemplo = [
+            { nome: "nginx", cpu: 32, ram: 18, data: "2025-11-16T19:40:00" },
+            { nome: "java", cpu: 22, ram: 21, data: "2025-11-16T19:41:00" },
+            { nome: "node", cpu: 12, ram: 9, data: "2025-11-16T19:39:00" },
+            { nome: "postgres", cpu: 9, ram: 12, data: "2025-11-16T19:30:00" },
+            { nome: "python", cpu: 7, ram: 4, data: "2025-11-16T19:33:00" },
+            { nome: "ssh", cpu: 3, ram: 2, data: "2025-11-16T19:20:00" }
+        ];
+
+        function formatStatus(cpu) {
+            if (cpu >= 20) return { text: "CRÍTICO", cls: "status-pill status-critical" };
+            if (cpu >= 10) return { text: "PREVENTIVO", cls: "status-pill status-warning" };
+            return { text: "NORMAL", cls: "status-pill status-normal" };
+        }
+
+        function formatarData(d) {
+            const dt = new Date(d);
+            const dia = String(dt.getDate()).padStart(2, "0");
+            const mes = String(dt.getMonth() + 1).padStart(2, "0");
+            const ano = dt.getFullYear();
+            const h = String(dt.getHours()).padStart(2, "0");
+            const m = String(dt.getMinutes()).padStart(2, "0");
+            return `${dia}/${mes}/${ano} ${h}:${m}`;
+        }
+
+        function renderRanking(data) {
+            const tbody = document.getElementById("lista-processos");
+            tbody.innerHTML = "";
+
+            data.forEach(p => {
+                const status = formatStatus(p.cpu);
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+      <td>
+        <div style="font-weight:700">${p.nome}</div>
+      </td>
+
+      <td>
+        <div class="cell-progress">
+          <div style="font-weight:600">${p.cpu}%</div>
+          <div class="progress"><div class="fill" style="width:${p.cpu}%"></div></div>
+        </div>
+      </td>
+
+      <td>
+        <div class="cell-progress">
+          <div style="font-weight:600">${p.ram}%</div>
+          <div class="progress"><div class="fill" style="width:${p.ram}%; background: linear-gradient(90deg,#6dd3c6,#18B187)"></div></div>
+        </div>
+      </td>
+
+      <td><div class="${status.cls}">${status.text}</div></td>
+
+      <td class="data-cell">${formatarData(p.data)}</td>
+    `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+
+        renderRanking(processosExemplo);
+
+        document.getElementById('ranking-limit').addEventListener('change', () => {
+            const limit = Number(document.getElementById('ranking-limit').value);
+            renderRanking(processosExemplo.slice(0, limit));
+        });
+        document.getElementById('ranking-search').addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase().trim();
+            const limit = Number(document.getElementById('ranking-limit').value);
+            const filtrado = processosExemplo.filter(p => p.nome.toLowerCase().includes(q));
+            renderRanking(filtrado.slice(0, limit));
+        });
+
+
+        document.getElementById("recomm-date").textContent =
+            new Date().toLocaleString("pt-BR");
+
+        document.getElementById("metrics-date").textContent =
+            new Date().toLocaleString("pt-BR");
+
+
+
+
+
+
+        const ctxCpu = document.getElementById('graficoCpuCanvas').getContext('2d');
+
+        const cpuChart = new Chart(ctxCpu, {
+            type: 'line',
+            data: {
+                labels: processosExemplo.map(p => formatarData(p.data).split(' ')[1]), // só hora:min
+                datasets: [{
+                    label: 'Uso de CPU (%)',
+                    data: processosExemplo.map(p => p.cpu),
+                    borderColor: '#0B795B',
+                    backgroundColor: 'rgba(11, 121, 91, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#0B795B'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { callback: v => v + '%' }
+                    }
+                }
+            }
+        });
+
+
+        function updateCpuChart(data) {
+            const labelsCPU = data.map(p => formatarData(p.data).split(' ')[1]); // só hora:min
+            const dataCPU = data.map(p => p.cpu);
+
+            cpuChart.data.labels = labelsCPU;
+            cpuChart.data.datasets[0].data = dataCPU;
+            cpuChart.update();
+        }
+
+        document.getElementById('ranking-limit').addEventListener('change', () => {
+            const limit = Number(document.getElementById('ranking-limit').value);
+            renderRanking(processosExemplo.slice(0, limit));
+        });
+        document.getElementById('ranking-search').addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase().trim();
+            const limit = Number(document.getElementById('ranking-limit').value);
+            const filtrado = processosExemplo.filter(p => p.nome.toLowerCase().includes(q));
+            renderRanking(filtrado.slice(0, limit));
+        });
+
+        document.getElementById("recomm-date").textContent = new Date().toLocaleString("pt-BR");
+        document.getElementById("metrics-date").textContent = new Date().toLocaleString("pt-BR");
+
+        renderRanking(processosExemplo);
+
+    </script>
