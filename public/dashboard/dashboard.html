@@ -297,7 +297,7 @@
     async function salvarMetricas() {
     const nomeComponente = document.getElementById("componenteSelect").value;
     const params = new URLSearchParams(window.location.search);
-    const hostName = params.get("id");
+    const idcomponente = params.get("id");
 
     const preventivoInicio = document.getElementById("preventivoInicio").value;
     const preventivoFim = document.getElementById("preventivoFim").value;
@@ -309,7 +309,7 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             nomeComponente,
-            hostName,
+            host,
             preventivoInicio,
             preventivoFim,
             criticoInicio,

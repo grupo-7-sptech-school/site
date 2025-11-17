@@ -1,9 +1,9 @@
 var graficoModel = require("../models/graficoModel");
 
 function dadosGrafico(req, res) {
-    var id = req.params.idComponente;
+    var hostName = req.body.host;
 
-    graficoModel.dadosGrafico(id, 10)
+    graficoModel.dadosGrafico(hostName, 10)
         .then(function (resultado) {
             res.json(resultado);
         })
