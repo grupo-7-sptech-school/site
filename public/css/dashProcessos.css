@@ -695,7 +695,6 @@ body {
     background: #e9f6f0;
 }
 
-/* Detalhes dentro da métrica */
 .metric-item span {
     font-size: 0.8rem;
     color: #555;
@@ -995,4 +994,150 @@ body {
   .server-image { align-self: center; margin: 0; }
   .server-image img { width: 200px; }
   .server-grid { grid-template-columns: 1fr 1fr; }
+}
+
+
+
+
+
+
+
+
+#modalMetricas {
+  position: fixed;
+  inset: 0;
+  display: none; 
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 10, 8, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  padding: 20px;
+}
+
+#modalMetricas .modal-content {
+  width: 420px;
+  max-width: calc(100% - 40px);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247, 251, 250, 0.98));
+  box-shadow: 0 18px 40px rgba(6, 24, 18, 0.35);
+  border: 1px solid rgba(11,121,91,0.06);
+  padding: 20px 22px;
+  box-sizing: border-box;
+  animation: modalPop .28s cubic-bezier(.2,.9,.3,1);
+  position: relative;
+  font-family: "Montserrat", sans-serif;
+}
+
+@keyframes modalPop {
+  from { transform: translateY(10px) scale(.995); opacity: 0; }
+  to   { transform: translateY(0) scale(1);    opacity: 1; }
+}
+
+#modalMetricas .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+#modalMetricas .modal-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #033126; 
+  font-weight: 700;
+}
+
+#modalMetricas .close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #666;
+  transition: all .18s;
+}
+#modalMetricas .close-btn:hover {
+  background: rgba(0,0,0,0.04);
+  color: #111;
+}
+
+#modalMetricas .modal-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.row label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: #334;
+  width: 46%;
+}
+.row input[type="number"] {
+  width: 52%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  outline: none;
+  font-size: 0.98rem;
+  text-align: center;
+  transition: box-shadow .15s, border-color .12s;
+}
+.row input[type="number"]:focus {
+  border-color: #0B795B;
+  box-shadow: 0 6px 18px rgba(11,121,91,0.08);
+}
+
+.hint {
+  font-size: 0.82rem;
+  color: #7a7a7a;
+  margin-top: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.btn-ghost {
+  background: #f0f0f0;
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .12s, background .12s;
+}
+.btn-ghost:hover { transform: translateY(-2px); background: #e6e6e6; }
+
+.btn-primary {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, #18B187 0%, #0B795B 100%);
+  box-shadow: 0 10px 24px rgba(11,121,91,0.18);
+  transition: transform .12s, box-shadow .12s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(11,121,91,0.22); }
+
+@media (max-width: 480px) {
+  #modalMetricas .modal-content { width: 100%; padding: 16px; border-radius: 12px; }
+  .row label { width: 45%; font-size: 0.88rem; }
+  .row input[type="number"] { width: 55%; padding: 8px; }
 }

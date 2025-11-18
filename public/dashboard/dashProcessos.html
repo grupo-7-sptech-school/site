@@ -217,43 +217,83 @@
 
                                     <div class="metrics-list">
                                         <div class="metric-item">
-                                            Alerta PREVENTIVO: <strong>5%</strong>
-                                            <span>10%</span>
+                                            Preventivo: <strong id="uiPreventivo">—</strong>
                                         </div>
 
                                         <div class="metric-item">
-                                            Alerta CRÍTICO: <strong>11%</strong>
-                                            <span> 100%</span>
+                                            Crítico: <strong id="uiCritico">—</strong>
                                         </div>
 
                                         <div class="metric-item">
-                                            Alerta OCIOSIDADE: <strong> Processo inativo</strong>
-                                            <span></span>
+                                            Ocioso: <strong id="uiOcioso">—</strong>
                                         </div>
                                     </div>
 
-                                    <button class="btn-metricas" onclick="alterarMetricas()">Alterar Métricas</button>
+                                    <!-- botão visível (fora do modal) -->
+                                    <button class="btn-metricas" id="btnAlterarMetricas"
+                                        onclick="alterarMetricas()">Alterar Métricas</button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
 
+
+    <div id="modalMetricas" style="display:none; align-items:center; justify-content:center;">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalMetricasTitle">
+            <div class="modal-header">
+                <h2 id="modalMetricasTitle">Alterar Métricas dos Processos</h2>
+                <button class="close-btn" aria-label="Fechar" onclick="fecharMetricas()">✕</button>
+            </div>
+
+            <form class="modal-form" onsubmit="salvarMetricas(); return false;">
+                <div class="row">
+                    <label for="inpPreventivo">Preventivo (%)</label>
+                    <input id="inpPreventivo" type="number" min="1" max="99" placeholder="ex: 70">
+                </div>
+
+                <div class="row">
+                    <label for="inpCritico">Crítico (%)</label>
+                    <input id="inpCritico" type="number" min="2" max="100" placeholder="ex: 90">
+                </div>
+
+                <div class="row">
+                    <label for="inpOcioso">Ocioso (<= %)</label>
+                            <input id="inpOcioso" type="number" min="0" max="50" placeholder="ex: 10">
+                </div>
+
+                <div class="hint">Dica: preventivo deve ser menor que crítico. Valores entre 0 e 100.</div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-ghost" onclick="fecharMetricas()">Cancelar</button>
+                    <button type="button" class="btn-primary" onclick="salvarMetricas()">Salvar alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
     <script>
 
-        carregarInfoMaquina()
+        mostrarMetricasUI()
+
+
 
         function formatStatus(cpu) {
-            if (cpu >= 20) return { text: "CRÍTICO", cls: "status-pill status-critical" };
-            if (cpu >= 10) return { text: "PREVENTIVO", cls: "status-pill status-warning" };
-            if (cpu <= 0) return { text: "OCIOSO", cls: "status-pill status-ocioso" };
+            const metricas = carregarMetricas();
+
+            if (cpu >= metricas.critico) {
+                return { text: "CRÍTICO", cls: "status-pill status-critical" };
+            }
+            if (cpu >= metricas.preventivo) {
+                return { text: "PREVENTIVO", cls: "status-pill status-warning" };
+            }
+            if (cpu <= metricas.ocioso) {
+                return { text: "OCIOSO", cls: "status-pill status-ocioso" };
+            }
             return { text: "NORMAL", cls: "status-pill status-normal" };
         }
 
@@ -276,39 +316,42 @@
             tbody.innerHTML = "";
 
             data.forEach(p => {
-                const cpu = Number(p.cpu).toFixed(1);
-                const ram = Number(p.ram).toFixed(1);
+
+                const cpu = Number(p.cpu);
+                const cpuFmt = cpu.toFixed(1);
+                const ram = Number(p.ram);
+                const ramFmt = ram.toFixed(1);
                 const status = formatStatus(cpu);
 
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-        <td>
-            <div style="font-weight:700">${p.processo}</div>
-        </td>
+            <td>
+                <div style="font-weight:700">${p.processo}</div>
+            </td>
 
-        <td>
-            <div class="cell-progress">
-                <div style="font-weight:600">${cpu}%</div>
-                <div class="progress">
-                    <div class="fill" style="width:${cpu}%"></div>
+            <td>
+                <div class="cell-progress">
+                    <div style="font-weight:600">${cpuFmt}%</div>
+                    <div class="progress">
+                        <div class="fill" style="width:${cpuFmt}%"></div>
+                    </div>
                 </div>
-            </div>
-        </td>
+            </td>
 
-        <td>
-            <div class="cell-progress">
-                <div style="font-weight:600">${ram}%</div>
-                <div class="progress">
-                    <div class="fill" style="width:${ram}%; background: linear-gradient(90deg,#6dd3c6,#18B187)"></div>
+            <td>
+                <div class="cell-progress">
+                    <div style="font-weight:600">${ramFmt}%</div>
+                    <div class="progress">
+                        <div class="fill" style="width:${ramFmt}%; background: linear-gradient(90deg,#6dd3c6,#18B187)"></div>
+                    </div>
                 </div>
-            </div>
-        </td>
+            </td>
 
-        <td>
-            <div class="${status.cls}">${status.text}</div>
-        </td>
+            <td>
+                <div class="${status.cls}">${status.text}</div>
+            </td>
 
-        <td class="data-cell">${formatarData(p.data_registro)}</td>
+            <td class="data-cell">${formatarData(p.data_registro)}</td>
         `;
 
                 tbody.appendChild(tr);
@@ -316,6 +359,7 @@
         }
 
 
+        carregarInfoMaquina()
 
 
         async function carregarInfoMaquina() {
@@ -332,7 +376,12 @@
                 const dados = await resposta.json();
                 const item = dados[0];
 
-                serverTitle.textContent = item.nomeMaquina;
+                if (!item) {
+                    console.warn("Nenhuma máquina encontrada.");
+                    return;
+                }
+
+                serverTitle.textContent = item.nomeMaquina + " - Visão Semanal" || "Máquina desconhecida";
                 const dt = new Date(item.dtUltimaCaptura);
                 serverSub.textContent = `Última Checagem: ${dt.toLocaleString()}`;
 
@@ -379,6 +428,8 @@
                     );
                 }
                 renderRanking(lista);
+
+                recalcularKpisSimples(lista);
 
             } catch (e) {
                 console.error("Erro ao carregar ranking:", e);
@@ -449,10 +500,10 @@
         const cpuChart = new Chart(ctxCpu, {
             type: 'line',
             data: {
-                // labels: processosExemplo.map(p => formatarData(p.data).split(' ')[1]), // só hora:min
+                // labels: 
                 datasets: [{
                     label: 'Uso de CPU (%)',
-                    // data: processosExemplo.map(p => p.cpu),
+                    // data: 
                     borderColor: '#0B795B',
                     backgroundColor: 'rgba(11, 121, 91, 0.1)',
                     fill: true,
@@ -483,16 +534,79 @@
 
 
 
-        document.getElementById("ranking-limit").addEventListener("change", carregarRanking);
-        document.getElementById("ranking-search").addEventListener("input", carregarRanking);
-        document.getElementById("ranking-limit").addEventListener("change", carregarRanking);
-        carregarRanking()
-        carregarGraficoCPU();
-
-
+        
+        
         setInterval(() => {
             carregarGraficoCPU();
             carregarRanking();
-            carregarInfoMaquina(); 
+            carregarInfoMaquina();
         }, 30000);
+        
+        
+        
+        function carregarMetricas() {
+            let metricas = JSON.parse(localStorage.getItem("metricasProcessos"));
+            
+            if (!metricas || typeof metricas.preventivo != "number") {
+                metricas = {
+                    preventivo: 10,
+                    critico: 20,
+                    ocioso: 0
+                };
+                localStorage.setItem("metricasProcessos", JSON.stringify(metricas));
+            }
+            
+            return metricas;
+        }
+        
+        function mostrarMetricasUI() {
+            const m = carregarMetricas();
+            document.getElementById("uiPreventivo").textContent = m.preventivo + "%";
+            document.getElementById("uiCritico").textContent = m.critico + "%";
+            document.getElementById("uiOcioso").textContent = m.ocioso + "%";
+        }
+        
+        
+        function alterarMetricas() {
+            const m = carregarMetricas();
+            
+            document.getElementById("inpPreventivo").value = m.preventivo;
+            document.getElementById("inpCritico").value = m.critico;
+            document.getElementById("inpOcioso").value = m.ocioso;
+            
+            document.getElementById("modalMetricas").style.display = "flex";
+        }
+        
+        
+        function fecharMetricas() {
+            document.getElementById("modalMetricas").style.display = "none";
+        }
+        
+        
+        function salvarMetricas() {
+            const preventivo = Number(inpPreventivo.value);
+            const critico = Number(inpCritico.value);
+        const ocioso = Number(inpOcioso.value);
+        
+        const metricas = { preventivo, critico, ocioso };
+        localStorage.setItem("metricasProcessos", JSON.stringify(metricas));
+        
+        mostrarMetricasUI();
+        
+        fecharMetricas();
+        
+        const url = new URL(window.location.href);
+        window.location.href = url.toString(); 
+    }
+    
+    
+    
+    
+    
+    document.getElementById("ranking-limit").addEventListener("change", carregarRanking);
+    document.getElementById("ranking-search").addEventListener("input", carregarRanking);
+    document.getElementById("ranking-limit").addEventListener("change", carregarRanking);
+    carregarRanking()
+    carregarGraficoCPU();
+    
     </script>
