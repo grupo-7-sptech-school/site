@@ -43,4 +43,8 @@ router.post("/rankingProcessos", function (req, res) {
     medidaController.rankingProcessos(req, res);
 })
 
+router.post("/graficoProcessos", function (req, res) {
+    medidaController.graficoProcessos(req, res);
+})
+
 module.exports = router;

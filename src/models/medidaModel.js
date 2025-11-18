@@ -227,8 +227,7 @@ function quantidadeAlertasProcessos(hostName) {
     FROM Alerta a
     JOIN Componente c ON a.fkComponente = c.idComponente
     JOIN Maquina m ON c.fkMaquina = m.hostName
-    WHERE m.hostName = '${hostName}'
-    AND a.dtHora >= DATE_SUB(NOW(), INTERVAL 7 DAY);`;
+    WHERE m.hostName = '${hostName}';`;
 
     return database.executar(instrucaoSql);
 }
@@ -260,6 +259,36 @@ function rankingProcessos(hostName, limite) {
     return database.executar(instrucaoSql);
 }
 
+function graficoProcessos(hostName) {
+    const instrucaoSql = `
+    WITH ultimos_registros AS (
+    SELECT 
+        idProcesso,      
+        dtRegistro,
+        cpuPorcentagem,
+        ROW_NUMBER() OVER (ORDER BY idProcesso DESC) AS pos
+    FROM Processo
+    WHERE fkMaquina = ${hostName}
+    ORDER BY idProcesso DESC
+    LIMIT 1000   
+),
+
+grupos AS (
+    SELECT 
+        CEIL(pos / 100) AS grupo,
+        SUM(cpuPorcentagem) AS total_cpu,
+        MAX(dtRegistro) AS dtRegistro
+    FROM ultimos_registros
+    GROUP BY grupo
+    ORDER BY grupo DESC
+    LIMIT 10
+)
+
+SELECT * FROM grupos ORDER BY dtRegistro;
+    `;
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     buscarUltimasMedidas,
     buscarMedidasEmTempoReal,
@@ -270,5 +299,6 @@ module.exports = {
     puxarMetricas,
     puxarMaquinaProcessos,
     quantidadeAlertasProcessos,
-    rankingProcessos
+    rankingProcessos,
+    graficoProcessos
 }
