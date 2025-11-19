@@ -259,6 +259,34 @@ function rankingProcessos(hostName, limite) {
     return database.executar(instrucaoSql);
 }
 
+
+function rankingProcessosRAM(hostName, limite) {
+
+    const instrucaoSql = `
+                 SELECT p1.nome AS processo,
+               p1.cpuPorcentagem AS cpu,
+               p1.ramPorcentagem AS ram,
+               CASE
+                   WHEN p1.ramPorcentagem >= 20 THEN 'CRÍTICO'
+                   WHEN p1.ramPorcentagem >= 10 THEN 'PREVENTIVO'
+                   ELSE 'NORMAL'
+               END AS status,
+               p1.dtRegistro AS data_registro
+        FROM Processo p1
+        INNER JOIN (
+            SELECT nome, MAX(idProcesso) AS maxId
+            FROM Processo
+            WHERE fkMaquina = ${hostName}
+            GROUP BY nome
+        ) p2 ON p1.nome = p2.nome AND p1.idProcesso = p2.maxId
+        WHERE p1.fkMaquina = ${hostName}
+        ORDER BY p1.ramPorcentagem DESC
+        LIMIT ${limite};
+    `;
+
+    return database.executar(instrucaoSql);
+}
+
 function graficoProcessos(hostName) {
     const instrucaoSql = `
     WITH ultimos_registros AS (
@@ -289,6 +317,37 @@ SELECT * FROM grupos ORDER BY dtRegistro;
     return database.executar(instrucaoSql);
 }
 
+
+function graficoProcessosRAM(hostName) {
+    const instrucaoSql = `
+    WITH ultimos_registros AS (
+    SELECT 
+        idProcesso,      
+        dtRegistro,
+        ramPorcentagem,
+        ROW_NUMBER() OVER (ORDER BY idProcesso DESC) AS pos
+    FROM Processo
+    WHERE fkMaquina = ${hostName}
+    ORDER BY idProcesso DESC
+    LIMIT 1000   
+),
+
+grupos AS (
+    SELECT 
+        CEIL(pos / 100) AS grupo,
+        SUM(IFNULL(ramPorcentagem, 0)) AS total_ram,
+        MAX(dtRegistro) AS dtRegistro
+    FROM ultimos_registros
+    GROUP BY grupo
+    ORDER BY grupo DESC
+    LIMIT 10
+)
+
+SELECT * FROM grupos ORDER BY dtRegistro;
+    `;
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     buscarUltimasMedidas,
     buscarMedidasEmTempoReal,
@@ -300,5 +359,7 @@ module.exports = {
     puxarMaquinaProcessos,
     quantidadeAlertasProcessos,
     rankingProcessos,
-    graficoProcessos
+    rankingProcessosRAM,
+    graficoProcessos,
+    graficoProcessosRAM,
 }

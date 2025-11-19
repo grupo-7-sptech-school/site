@@ -47,4 +47,16 @@ router.post("/graficoProcessos", function (req, res) {
     medidaController.graficoProcessos(req, res);
 })
 
+router.post("/graficoProcessosRAM", function (req, res) {
+    medidaController.graficoProcessosRAM(req, res);
+})
+
+router.post("/rankingProcessosRAM", function (req, res) {
+    medidaController.rankingProcessosRAM(req, res);
+})
+
+router.post("/recomendacoesIA", function (req, res) {
+    medidaController.recomendacoesIA(req, res);
+})
+
 module.exports = router;

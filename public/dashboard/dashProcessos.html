@@ -86,19 +86,11 @@
                 <div class="kpis-wrap">
                     <div class="kpis">
                         <div class="kpi">
-                            <select id="selectPeriodo" class="select-kpi">
-                                <option>Diário</option>
-                                <option>Semanal</option>
-                                <option>Mensal</option>
+                            <select id="selectComponente" class="select-kpi" onchange="trocarComponente()">
+                                <option value="CPU" selected>CPU</option>
+                                <option value="RAM">RAM</option>
                             </select>
-                        </div>
-
-                        <div class="kpi">
-                            <select id="selectComponente" class="select-kpi">
-                                <option>CPU</option>
-                                <option>RAM</option>
-                            </select>
-                        </div>
+                            </div>
 
                         <div class="kpi">
                             <a id="btnGerarRelatorio" onclick="baixarPDF()" class="btn-gerar-relatorio">Ver previsão de
@@ -200,11 +192,10 @@
 
                                     <div class="dashboard-card-content">
                                         <ul class="recomm-list">
-                                            <li>• Aumentar a memória disponível para o processo <b>python.exe</b>, que
-                                                frequentemente ultrapassa 85%.</li>
-                                            <li>• Otimizar agendamento de tarefas...</li>
-                                            <li>• Reavaliar serviços em segundo plano...</li>
-                                            <li>• Implementar thresholds automáticos...</li>
+                                            <li></li>
+                                            <li></li>
+                                            <li></li>
+                                            <li></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -229,7 +220,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- botão visível (fora do modal) -->
                                     <button class="btn-metricas" id="btnAlterarMetricas"
                                         onclick="alterarMetricas()">Alterar Métricas</button>
                                 </div>
@@ -278,24 +268,45 @@
 
     <script>
 
+    var tipoSelecionado = "CPU";
+
+        window.onload = () => {
+        const salvo = localStorage.getItem("componenteSelecionado") || "CPU";
+        document.getElementById("selectComponente").value = salvo;
+        tipoSelecionado = salvo; 
+        trocarComponente(); 
+    };
+
         mostrarMetricasUI()
 
 
 
-        function formatStatus(cpu) {
-            const metricas = carregarMetricas();
+        function formatStatus(valor) {
+        const metricas = carregarMetricas();
+        const tipo = localStorage.getItem("componenteSelecionado") || "CPU";
 
-            if (cpu >= metricas.critico) {
-                return { text: "CRÍTICO", cls: "status-pill status-critical" };
-            }
-            if (cpu >= metricas.preventivo) {
-                return { text: "PREVENTIVO", cls: "status-pill status-warning" };
-            }
-            if (cpu <= metricas.ocioso) {
-                return { text: "OCIOSO", cls: "status-pill status-ocioso" };
-            }
-            return { text: "NORMAL", cls: "status-pill status-normal" };
+        let m;
+
+        if (tipo == "CPU") {
+            m = metricas.cpu;
+        } else {
+            m = metricas.ram;
         }
+
+        if (valor >= m.critico) {
+            return { text: "CRÍTICO", cls: "status-pill status-critical" };
+        }
+
+        if (valor >= m.preventivo) {
+            return { text: "PREVENTIVO", cls: "status-pill status-warning" };
+        }
+
+        if (valor <= m.ocioso) {
+            return { text: "OCIOSO", cls: "status-pill status-ocioso" };
+        }
+
+        return { text: "NORMAL", cls: "status-pill status-normal" };
+    }
 
         function formatarData(d) {
             const dt = new Date(d);
@@ -311,55 +322,57 @@
 
 
 
-        function renderRanking(data) {
-            const tbody = document.getElementById("lista-processos");
-            tbody.innerHTML = "";
+        function renderRanking(data, tipo) {
+        const tbody = document.getElementById("lista-processos");
+        tbody.innerHTML = "";
 
-            data.forEach(p => {
+        data.forEach(p => {
 
-                const cpu = Number(p.cpu);
-                const cpuFmt = cpu.toFixed(1);
-                const ram = Number(p.ram);
-                const ramFmt = ram.toFixed(1);
-                const status = formatStatus(cpu);
+            const cpu = Number(p.cpu).toFixed(1);
+            const ram = Number(p.ram).toFixed(1);
 
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-            <td>
-                <div style="font-weight:700">${p.processo}</div>
-            </td>
+            let valorMonitorado = 0;
 
-            <td>
-                <div class="cell-progress">
-                    <div style="font-weight:600">${cpuFmt}%</div>
-                    <div class="progress">
-                        <div class="fill" style="width:${cpuFmt}%"></div>
+            if (tipo == "CPU") {
+                valorMonitorado = Number(p.cpu);
+            } else {
+                valorMonitorado = Number(p.ram);
+            }
+            const status = formatStatus(valorMonitorado);
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>
+                    <div style="font-weight:700">${p.processo}</div>
+                </td>
+
+                <td>
+                    <div class="cell-progress">
+                        <div style="font-weight:600">${cpu}%</div>
+                        <div class="progress">
+                            <div class="fill" style="width:${cpu}%"></div>
+                        </div>
                     </div>
-                </div>
-            </td>
+                </td>
 
-            <td>
-                <div class="cell-progress">
-                    <div style="font-weight:600">${ramFmt}%</div>
-                    <div class="progress">
-                        <div class="fill" style="width:${ramFmt}%; background: linear-gradient(90deg,#6dd3c6,#18B187)"></div>
+                <td>
+                    <div class="cell-progress">
+                        <div style="font-weight:600">${ram}%</div>
+                        <div class="progress">
+                            <div class="fill" style="width:${ram}%; background: linear-gradient(90deg,#6dd3c6,#18B187)"></div>
+                        </div>
                     </div>
-                </div>
-            </td>
+                </td>
 
-            <td>
-                <div class="${status.cls}">${status.text}</div>
-            </td>
+                <td>
+                    <div class="${status.cls}">${status.text}</div>
+                </td>
 
-            <td class="data-cell">${formatarData(p.data_registro)}</td>
-        `;
-
-                tbody.appendChild(tr);
-            });
-        }
-
-
-        carregarInfoMaquina()
+                <td class="data-cell">${formatarData(p.data_registro)}</td>
+            `;
+        tbody.appendChild(tr);
+    });
+}
 
 
         async function carregarInfoMaquina() {
@@ -399,6 +412,13 @@
                 totalCriticos.textContent = info.total_criticos_semana;
                 totalPreventivos.textContent = info.total_preventivos_semana;
 
+
+                window.alertasProcessos = {
+                    total: info.total_alertas_semana,
+                    criticos: info.total_criticos_semana,
+                    preventivos: info.total_preventivos_semana
+                };
+
             } catch (erro) {
                 console.error("Erro ao carregar informações:", erro);
             }
@@ -418,6 +438,7 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ hostName, limite })
                 });
+                
 
                 let lista = await resposta.json();
                 const busca = document.getElementById("ranking-search").value.toLowerCase();
@@ -428,13 +449,38 @@
                     );
                 }
                 renderRanking(lista);
+                window.listaProcessos = lista;
 
-                recalcularKpisSimples(lista);
 
             } catch (e) {
                 console.error("Erro ao carregar ranking:", e);
             }
         }
+
+
+        async function carregarRankingRAM() {
+        const params = new URLSearchParams(window.location.search);
+        const hostName = params.get("id");
+        const limite = document.getElementById("ranking-limit").value;
+
+        const resposta = await fetch("/medidas/rankingProcessosRAM", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ hostName, limite })
+        });
+
+        let lista = await resposta.json();
+
+        const busca = document.getElementById("ranking-search").value.toLowerCase();
+        if (busca != "") {
+            lista = lista.filter(p =>
+                p.processo.toLowerCase().includes(busca)
+            );
+        }
+
+        renderRanking(lista);
+        window.listaProcessos = lista;
+    }
 
 
 
@@ -459,154 +505,444 @@
         }
 
 
+        async function carregarGraficoRAM() {
+            const params = new URLSearchParams(window.location.search);
+            const hostName = params.get("id");
 
-
-        function atualizarGraficoCPU(lista) {
-
-            if (!lista || lista.length == 0) {
-                return;
-            }
-
-            const labels = [];
-            const valores = [];
-
-            for (let i = 0; i < lista.length; i++) {
-                const item = lista[i];
-
-                const hora = new Date(item.dtRegistro).toLocaleTimeString("pt-BR", {
-                    hour: "2-digit",
-                    minute: "2-digit"
+            try {
+                const resposta = await fetch("/medidas/graficoProcessosRAM", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ hostName })
                 });
 
-                labels.push(hora);
+                if (!resposta.ok) throw new Error(`Erro HTTP: ${resposta.status}`);
 
-                var valorCPU = (item.total_cpu) || 0;
-                if (valorCPU >= 100) {
-                    valorCPU = 99;
+                const dados = await resposta.json();
+                console.log("Dados RAM recebidos:", dados);
+
+                if (dados && dados.length > 0) {
+                    atualizarGraficoRAM(dados);
+                } else {
+                    console.warn("Nenhum dado RAM retornado");
                 }
-
-                valores.push(valorCPU);
+            } catch (erro) {
+                console.error("Erro ao carregar gráfico RAM:", erro);
             }
-
-            cpuChart.data.labels = labels;
-            cpuChart.data.datasets[0].data = valores;
-
-            cpuChart.update();
         }
 
 
-        const ctxCpu = document.getElementById('graficoCpuCanvas').getContext('2d');
+        let graficoAtual; 
 
-        const cpuChart = new Chart(ctxCpu, {
-            type: 'line',
-            data: {
-                // labels: 
-                datasets: [{
-                    label: 'Uso de CPU (%)',
-                    // data: 
-                    borderColor: '#0B795B',
-                    backgroundColor: 'rgba(11, 121, 91, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#0B795B'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: true }
-                },
-                scales: {
-                    x: { grid: { display: false } },
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: { callback: v => v + '%' }
+        async function carregarGrafico() {
+            const params = new URLSearchParams(window.location.search);
+            const hostName = params.get("id");
+
+            var url;
+            if (tipoSelecionado == "CPU") {
+                url = "/medidas/graficoProcessos";
+            } else {
+                url = "/medidas/graficoProcessosRAM";
+            }
+
+            try {
+                const resposta = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ hostName })
+                });
+
+                if (!resposta.ok) throw new Error("Erro HTTP: " + resposta.status);
+
+                const dados = await resposta.json();
+
+                var labels = [];
+                var valores = [];
+
+                for (var i = 0; i < dados.length; i++) {
+                    var item = dados[i];
+                    var horario = new Date(item.dtRegistro).toLocaleTimeString("pt-BR", {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    });
+                    labels.push(horario);
+
+                    if (tipoSelecionado == "CPU") {
+                        valores.push(Number(item.total_cpu || 0));
+                    } else {
+                        valores.push(Number(item.total_ram || 0) / 11);
                     }
                 }
-            }
-        });
 
-
-
-
-
-
-        
-        
-        setInterval(() => {
-            carregarGraficoCPU();
-            carregarRanking();
-            carregarInfoMaquina();
-        }, 30000);
-        
-        
-        
-        function carregarMetricas() {
-            let metricas = JSON.parse(localStorage.getItem("metricasProcessos"));
-            
-            if (!metricas || typeof metricas.preventivo != "number") {
-                metricas = {
-                    preventivo: 10,
-                    critico: 20,
-                    ocioso: 0
+                window.graficoDados = {
+                    labels: labels,
+                    valores: valores,
+                    tipo: tipoSelecionado
                 };
-                localStorage.setItem("metricasProcessos", JSON.stringify(metricas));
+
+                var ultimo = 0;
+                if (valores.length > 0) {
+                    ultimo = Number(valores[valores.length - 1]);
+                }
+                if (tipoSelecionado == "CPU") {
+                    window.cpuAtual = ultimo;
+                    window.ramAtual = window.ramAtual || 0; 
+                } else {
+                    window.ramAtual = ultimo;
+                    window.cpuAtual = window.cpuAtual || 0;
+                }
+
+                var ctx = document.getElementById('graficoCpuCanvas').getContext('2d');
+
+                if (graficoAtual) graficoAtual.destroy();
+
+                var labelDataset, corBorda, corFundo;
+                if (tipoSelecionado == "CPU") {
+                    labelDataset = "Uso de CPU (%)";
+                    corBorda = "#0B795B";
+                    corFundo = "rgba(11, 121, 91, 0.1)";
+                } else {
+                    labelDataset = "Uso de RAM (%)";
+                    corBorda = "#1f77b4";
+                    corFundo = "rgba(31, 119, 180, 0.1)";
+                }
+
+                graficoAtual = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: labelDataset,
+                            data: valores,
+                            borderColor: corBorda,
+                            backgroundColor: corFundo,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: corBorda
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true } },
+                        scales: {
+                            x: { grid: { display: false } },
+                            y: { beginAtZero: true, max: 100, ticks: { callback: function(v){ return v + "%"; } } }
+                        }
+                    }
+                });
+
+                if (window.listaProcessos && window.alertasProcessos) {
+                    recomendacoesIA();
+                } else {
+                    setTimeout(recomendacoesIA, 300);
+                }
+
+            } catch (erro) {
+                console.error("Erro ao carregar gráfico:", erro);
             }
-            
-            return metricas;
         }
-        
+
+
+
+        async function recomendacoesIA() {
+            try {
+                var cpuSeries = [];
+                var ramSeries = [];
+                var labels = [];
+
+                if (window.graficoDados !== undefined && window.graficoDados !== null) {
+                    labels = window.graficoDados.labels;
+                    if (window.graficoDados.tipo == "CPU") {
+                        for (var i = 0; i < window.graficoDados.valores.length; i++) {
+                            cpuSeries.push(window.graficoDados.valores[i]);
+                        }
+                    } else {
+                        for (var i = 0; i < window.graficoDados.valores.length; i++) {
+                            ramSeries.push(window.graficoDados.valores[i]);
+                        }
+                    }
+                }
+
+                var cpu = 0;
+                var ram = 0;
+
+                if (cpuSeries.length > 0) {
+                    cpu = Number(cpuSeries[cpuSeries.length - 1]);
+                } else if (window.cpuAtual !== undefined && window.cpuAtual !== null) {
+                    cpu = Number(window.cpuAtual);
+                }
+
+                if (ramSeries.length > 0) {
+                    ram = Number(ramSeries[ramSeries.length - 1]);
+                } else if (window.ramAtual !== undefined && window.ramAtual !== null) {
+                    ram = Number(window.ramAtual);
+                }
+
+                var disco = 0;
+                if (window.alertasProcessos && window.alertasProcessos.total !== undefined) {
+                    disco = Number(window.alertasProcessos.total);
+                }
+
+                var payload = {
+                    cpu: cpu,
+                    ram: ram,
+                    disco: disco,
+                    cpuSeries: cpuSeries,
+                    ramSeries: ramSeries,
+                    labels: labels
+                };
+
+                const resposta = await fetch("/medidas/recomendacoesIA", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await resposta.json();
+
+                var ul = document.querySelector(".recomm-list");
+                ul.innerHTML = "";
+
+                if (data.recomendacoes) {
+                    var linhas = data.recomendacoes.split("\n");
+                    for (var j = 0; j < linhas.length; j++) {
+                        var rec = linhas[j];
+                        if (rec !== "" && rec.charAt(0) == "-") {
+                            var texto = rec.substring(1); 
+                            var li = document.createElement("li");
+                            li.textContent = texto;
+                            ul.appendChild(li);
+                        }
+                    }
+                }
+
+                document.getElementById("recomm-date").textContent = new Date().toLocaleString();
+
+            } catch (erro) {
+                console.error("Erro ao gerar recomendações IA:", erro);
+            }
+        }
+
+
+        carregarInfoMaquina()
+
+
+
+        setInterval(() => {
+            carregarGrafico();
+            carregarInfoMaquina()
+            if (tipoSelecionado == "CPU") {
+                carregarRanking();
+                carregarInfoMaquina()
+            } 
+            else {
+                carregarRankingRAM(); 
+                carregarInfoMaquina()
+            }
+        }, 30000);
+
+
+    function carregarMetricas() {
+        var metricas = JSON.parse(localStorage.getItem("metricasProcessos"));
+
+        if (!metricas) {
+            metricas = {
+                cpu: { preventivo: 10, critico: 20, ocioso: 0 },
+                ram: { preventivo: 15, critico: 30, ocioso: 0 }
+            };
+        }
+
+        if (!metricas.cpu) metricas.cpu = { preventivo: 10, critico: 20, ocioso: 0 };
+        if (!metricas.ram) metricas.ram = { preventivo: 15, critico: 30, ocioso: 0 };
+
+        localStorage.setItem("metricasProcessos", JSON.stringify(metricas));
+        return metricas;
+    }
+
         function mostrarMetricasUI() {
-            const m = carregarMetricas();
-            document.getElementById("uiPreventivo").textContent = m.preventivo + "%";
-            document.getElementById("uiCritico").textContent = m.critico + "%";
-            document.getElementById("uiOcioso").textContent = m.ocioso + "%";
+        var metricas = carregarMetricas();
+        var tipo = localStorage.getItem("componenteSelecionado") || "CPU";
+
+        let m;
+
+        if (tipo == "CPU") {
+            m = metricas.cpu;
+        } else {
+            m = metricas.ram;
         }
-        
-        
+
+        uiPreventivo.textContent = m.preventivo + "%";
+        uiCritico.textContent = m.critico + "%";
+        uiOcioso.textContent = m.ocioso + "%";
+    }
+
+
         function alterarMetricas() {
-            const m = carregarMetricas();
-            
-            document.getElementById("inpPreventivo").value = m.preventivo;
-            document.getElementById("inpCritico").value = m.critico;
-            document.getElementById("inpOcioso").value = m.ocioso;
-            
-            document.getElementById("modalMetricas").style.display = "flex";
+        const metricas = carregarMetricas();
+        const tipo = localStorage.getItem("componenteSelecionado") || "CPU";
+
+        var m;
+
+        if (tipo == "CPU") {
+            m = metricas.cpu;
+        } else {
+            m = metricas.ram;
         }
-        
-        
+
+        inpPreventivo.value = m.preventivo;
+        inpCritico.value = m.critico;
+        inpOcioso.value = m.ocioso;
+
+        document.getElementById("modalMetricas").style.display = "flex";
+    }
+
         function fecharMetricas() {
             document.getElementById("modalMetricas").style.display = "none";
         }
-        
-        
+
+
         function salvarMetricas() {
-            const preventivo = Number(inpPreventivo.value);
-            const critico = Number(inpCritico.value);
+        const preventivo = Number(inpPreventivo.value);
+        const critico = Number(inpCritico.value);
         const ocioso = Number(inpOcioso.value);
-        
-        const metricas = { preventivo, critico, ocioso };
+
+        const metricas = carregarMetricas();
+        const tipo = localStorage.getItem("componenteSelecionado") || "CPU";
+
+        if (tipo == "CPU") {
+            metricas.cpu = { preventivo, critico, ocioso };
+        } else {
+            metricas.ram = { preventivo, critico, ocioso };
+        }
+
         localStorage.setItem("metricasProcessos", JSON.stringify(metricas));
-        
+
         mostrarMetricasUI();
-        
         fecharMetricas();
-        
+
         const url = new URL(window.location.href);
-        window.location.href = url.toString(); 
+        window.location.href = url.toString();
     }
-    
-    
-    
-    
-    
-    document.getElementById("ranking-limit").addEventListener("change", carregarRanking);
-    document.getElementById("ranking-search").addEventListener("input", carregarRanking);
-    document.getElementById("ranking-limit").addEventListener("change", carregarRanking);
-    carregarRanking()
-    carregarGraficoCPU();
-    
+
+
+
+
+    async function recomendacoesIA() {
+    try {
+        var cpuSeries = [];
+        var ramSeries = [];
+        var labels = [];
+
+        if (window.graficoDados !== undefined && window.graficoDados !== null) {
+            labels = window.graficoDados.labels;
+            if (window.graficoDados.tipo == "CPU") {
+
+                for (var i = 0; i < window.graficoDados.valores.length; i++) {
+                    cpuSeries.push(window.graficoDados.valores[i]);
+                }
+            } 
+            
+            else {
+                for (var i = 0; i < window.graficoDados.valores.length; i++) {
+                    ramSeries.push(window.graficoDados.valores[i]);
+                }
+            }
+        }
+
+        var cpu = 0;
+        var ram = 0;
+
+        if (cpuSeries.length > 0) {
+            cpu = Number(cpuSeries[cpuSeries.length - 1]);
+        } 
+        
+        else if (window.cpuAtual !== undefined && window.cpuAtual !== null) {
+            cpu = Number(window.cpuAtual);
+        }
+
+        if (ramSeries.length > 0) {
+            ram = Number(ramSeries[ramSeries.length - 1]);
+        } 
+        
+        else if (window.ramAtual !== undefined && window.ramAtual !== null) {
+            ram = Number(window.ramAtual);
+        }
+
+        var disco = 0;
+        if (window.alertasProcessos && window.alertasProcessos.total !== undefined) {
+            disco = Number(window.alertasProcessos.total);
+        }
+
+        var payload = {
+            cpu: cpu,
+            ram: ram,
+            disco: disco,
+            cpuSeries: cpuSeries,
+            ramSeries: ramSeries,
+            labels: labels
+        };
+
+        const resposta = await fetch("/medidas/recomendacoesIA", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await resposta.json();
+
+        var ul = document.querySelector(".recomm-list");
+        ul.innerHTML = "";
+
+        if (data.recomendacoes) {
+            var linhas = data.recomendacoes.split("\n");
+            for (var j = 0; j < linhas.length; j++) {
+                var rec = linhas[j];
+                if (rec !== "" && rec.charAt(0) == "-") {
+                    var texto = rec.substring(1);
+                    var li = document.createElement("li");
+                    li.textContent = texto;
+                    ul.appendChild(li);
+                }
+            }
+        }
+
+        document.getElementById("recomm-date").textContent = new Date().toLocaleString();
+
+    } catch (erro) {
+        console.error("Erro ao gerar recomendações IA:", erro);
+    }
+}
+
+
+
+        document.getElementById("ranking-limit").addEventListener("change", () => trocarComponente());
+        document.getElementById("ranking-search").addEventListener("input", () => trocarComponente());
+
+    function trocarComponente() {
+    const selecionado = document.getElementById("selectComponente").value;
+    tipoSelecionado = selecionado;
+    localStorage.setItem("componenteSelecionado", selecionado);
+
+    carregarGrafico(); 
+
+    if (selecionado == "CPU") carregarRanking();
+    else carregarRankingRAM();
+}
+
+
+
+        function tentarRecomendacoes() {
+    if (window.cpuAtual != undefined &&
+        window.alertasProcessos != undefined &&
+        window.listaProcessos != undefined) {
+
+    } else {
+        setTimeout(recomendacoesIA, 300);
+    }
+}
+
+    tentarRecomendacoes();
+
     </script>

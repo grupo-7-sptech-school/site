@@ -1,4 +1,10 @@
+require("dotenv").config();
+const Groq = require("groq-sdk");
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
 var medidaModel = require("../models/medidaModel");
+
+
 
 function buscarUltimasMedidas(req, res) {
 
@@ -203,6 +209,27 @@ function rankingProcessos(req, res) {
 }
 
 
+function rankingProcessosRAM(req, res) {
+
+    var hostName = req.body.hostName;
+    var limite = req.body.limite;
+
+    console.log(`Recuperando medidas em tempo real`);
+
+    medidaModel.rankingProcessosRAM(hostName, limite).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar as ultimas medidas.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+
 function graficoProcessos(req, res) {
 
     var hostName = req.body.hostName;
@@ -222,6 +249,62 @@ function graficoProcessos(req, res) {
     });
 }
 
+function graficoProcessosRAM(req, res) {
+
+    var hostName = req.body.hostName;
+
+    console.log(`Recuperando medidas em tempo real`);
+
+    medidaModel.graficoProcessosRAM(hostName).then(function (resultado) {
+        if (resultado.length > 0) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(204).send("Nenhum resultado encontrado!")
+        }
+    }).catch(function (erro) {
+        console.log(erro);
+        console.log("Houve um erro ao buscar as ultimas medidas.", erro.sqlMessage);
+        res.status(500).json(erro.sqlMessage);
+    });
+}
+
+
+async function recomendacoesIA(req, res) {
+    try {
+        const { cpu, ram, disco } = req.body; 
+
+        const prompt = `
+            Você é um especialista em monitoramento de servidores e otimização de infraestrutura.
+            Analise os valores recebidos e gere recomendações técnicas específicas, SEM sugestões genéricas, (não fale se o uso 
+            de algo estiver 0 por cento ou perto) DE EXTREMA IMPORTANCIA NÃO FALAR SE ESTIVER 0 POR CENTO DE USO...
+            CPU: {${cpu}}%
+            RAM: {${ram}}%
+            Disco: {${disco}}%
+            Formato:
+            - Recomendação 1
+            - Recomendação 2
+            - Recomendação 3
+            - Recomendação 4
+        `;
+
+        const chatResponse = await groq.chat.completions.create({
+            model: "llama-3.1-8b-instant",
+            messages: [
+                { role: "system", content: "Você é um assistente técnico de otimização de hardware." },
+                { role: "user", content: prompt }
+            ],
+            temperature: 0.3,
+        });
+
+        const texto = chatResponse.choices[0].message.content;
+        res.status(200).json({ recomendacoes: texto });
+
+    } catch (err) {
+        console.error("Erro IA:", err);
+        res.status(500).json({ erro: "Falha ao gerar recomendações" });
+    }
+}
+
 
 module.exports = {
     buscarUltimasMedidas,
@@ -234,5 +317,8 @@ module.exports = {
     puxarMaquinaProcessos,
     quantidadeAlertasProcessos,
     rankingProcessos,
-    graficoProcessos
+    graficoProcessos,
+    graficoProcessosRAM,
+    rankingProcessosRAM,
+    recomendacoesIA
 }
