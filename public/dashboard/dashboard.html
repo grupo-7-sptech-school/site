@@ -868,12 +868,8 @@ var labelsRam = labelsTempoReal();
                 usoDisco = dadosDiscoServidor[0].valor;
                 usoLivre = 100 - usoDisco;
 
-                var hDisco = document.getElementById("h1_usoDisco");
-                var hLivre = document.getElementById("h1_usoLivre");
-
-                if (hDisco) hDisco.innerHTML = usoDisco + "%";
-                if (hLivre) hLivre.innerHTML = usoLivre + "%";
-
+                h1_usoDisco.innerHTML = usoDisco
+                h1_usoLivre.innerHTML = usoLivre
                 if (graficoDisco) {
                     graficoDisco.data.datasets[0].data = [usoDisco];
                     graficoDisco.update();
@@ -886,7 +882,7 @@ var labelsRam = labelsTempoReal();
 setInterval(atualizarGraficos, 30000);
 
 // Atualiza ao carregar página
-atualizarGraficos();
+body.onload(atualizarGraficos());
 
 
 

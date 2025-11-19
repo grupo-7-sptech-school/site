@@ -12,7 +12,7 @@ function dadosGrafico(hostName, limite) {
         AND m.hostName = ${hostName}
         ORDER BY idRegistro DESC
         LIMIT ${limite};
-    `;
+     `
 
     console.log("Executando SQL:\n" + instrucao);
     return database.executar(instrucao);
