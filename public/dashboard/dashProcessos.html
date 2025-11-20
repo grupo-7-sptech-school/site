@@ -146,14 +146,15 @@
                                     <div class="server-grid">
 
                                         <div class="item">
-                                            <span class="label">Variação do <br>consumo de <br> CPU
-                                                dos<br>processos</span>
+                                            <span class="label">Variação do <br>consumo de <br> recursos <br>processos</span>
                                             <div class="divider"></div>
+
                                             <div class="value-big">
-                                                <strong>Estável</strong>
-                                                <h2>3%</h2>
+                                                <strong id="statusVariacaoCpu">Estável</strong>
+                                                <h2 id="valorVariacaoCpu">0%</h2>
                                             </div>
                                         </div>
+
 
                                         <div class="item">
                                             <span class="label">Quantidade total <br> de alertas</span>
@@ -268,6 +269,9 @@
 
     <script>
 
+    var ultimaLeituraCpu = null;
+    var ultimaLeituraRam = null;
+
     var tipoSelecionado = "CPU";
 
         window.onload = () => {
@@ -375,49 +379,176 @@
 }
 
 
-        async function carregarInfoMaquina() {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                const hostName = params.get("id");
 
-                const resposta = await fetch("/medidas/puxarMaquinaProcessos", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ hostName })
-                });
 
-                const dados = await resposta.json();
-                const item = dados[0];
+        function atualizarVariacaoCpu(cpuAtual) {
 
-                if (!item) {
-                    console.warn("Nenhuma máquina encontrada.");
-                    return;
+        if (ultimaLeituraCpu != null) {
+
+            let variacao = cpuAtual - ultimaLeituraCpu;
+
+            let textoStatus = "";
+            if (variacao > 0) {
+                textoStatus = "Aumentou";
+            } else if (variacao < 0) {
+                textoStatus = "Diminuiu";
+            } else {
+                textoStatus = "Estável";
+            }
+
+            document.getElementById("statusVariacaoCpu").textContent = textoStatus;
+            document.getElementById("valorVariacaoCpu").textContent = `${Math.abs(variacao).toFixed(1)}%`;
+        }
+
+        ultimaLeituraCpu = cpuAtual;
+    }
+
+
+    function atualizarVariacaoRam(ramAtual) {
+
+        if (ultimaLeituraRam != null) {
+
+            let variacao = ramAtual - ultimaLeituraRam;
+
+            let textoStatus = "";
+            if (variacao > 0) {
+                textoStatus = "Aumentou";
+            } else if (variacao < 0) {
+                textoStatus = "Diminuiu";
+            } else {
+                textoStatus = "Estável";
+            }
+
+            document.getElementById("statusVariacaoCpu").textContent = textoStatus;
+            document.getElementById("valorVariacaoCpu").textContent = `${Math.abs(variacao).toFixed(1)}%`;
+        }
+
+        ultimaLeituraRam = ramAtual;
+    }
+
+
+
+
+      async function carregarInfoMaquina() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const hostName = params.get("id");
+
+        const resposta = await fetch("/medidas/puxarMaquinaProcessos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ hostName })
+        });
+
+        const dados = await resposta.json();
+        const primeiro = dados[0];
+
+        if (!primeiro) {
+            console.warn("Nenhuma máquina encontrada.");
+            return;
+        }
+
+        let nome = primeiro.nomeMaquina;
+        if (!nome) {
+            nome = "Máquina desconhecida";
+        }
+        serverTitle.textContent = nome + " - Visão Semanal";
+
+        const dt = new Date(primeiro.dtUltimaCaptura);
+        serverSub.textContent = "Última Checagem: " + dt.toLocaleString();
+
+        const respostaKpis = await fetch("/medidas/quantidadeAlertasProcessos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ hostName })
+        });
+
+        const kpis = await respostaKpis.json();
+        const info = kpis[0];
+
+        if (info) {
+            totalAlertas.textContent = info.total_alertas_semana;
+            totalCriticos.textContent = info.total_criticos_semana;
+            totalPreventivos.textContent = info.total_preventivos_semana;
+        } else {
+            totalAlertas.textContent = "—";
+            totalCriticos.textContent = "—";
+            totalPreventivos.textContent = "—";
+        }
+
+        var url = "";
+        if (tipoSelecionado == "CPU") {
+            url = "/medidas/graficoProcessos";
+        } else {
+            url = "/medidas/graficoProcessosRAM";
+        }
+
+        const respGraf = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ hostName })
+        });
+
+        const dadosGraf = await respGraf.json();
+
+        const labels = [];
+        const valores = [];
+
+        let i = 0;
+        while (i < dadosGraf.length) {
+            const registro = dadosGraf[i];
+            const dataObj = new Date(registro.dtRegistro);
+            const horario = dataObj.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+            labels.push(horario);
+
+            if (tipoSelecionado === "CPU") {
+                valores.push(Number(registro.total_cpu));
+            } else {
+                valores.push(Number(registro.total_ram) / 11);
+            }
+            i++;
+        }
+
+        window.graficoDados = {
+            labels: labels,
+            valores: valores,
+            tipo: tipoSelecionado
+        };
+
+        let ultimo = 0;
+        if (valores.length > 0) {
+            ultimo = Number(valores[valores.length - 1]);
+        }
+
+        let variacao = 0;
+
+        if (valores.length >= 2) {
+            const penultimo = Number(valores[valores.length - 2]);
+            const ultimo = Number(valores[valores.length - 1]);
+
+            variacao = ultimo - penultimo;
+
+            let textoStatus = "";
+            if (variacao > 1) {
+                textoStatus = "Aumentou";
+            } else if (variacao < -1) {
+                textoStatus = "Diminuiu";
+            } else {
+                textoStatus = "Estável";
+            }
+
+            document.getElementById("statusVariacaoCpu").textContent = textoStatus;
+            document.getElementById("valorVariacaoCpu").textContent = `${Math.abs(variacao).toFixed(1)}%`;
+        }
+
+                if (info) {
+                    window.alertasProcessos = {
+                        total: info.total_alertas_semana,
+                        criticos: info.total_criticos_semana,
+                        preventivos: info.total_preventivos_semana
+                    };
                 }
-
-                serverTitle.textContent = item.nomeMaquina + " - Visão Semanal" || "Máquina desconhecida";
-                const dt = new Date(item.dtUltimaCaptura);
-                serverSub.textContent = `Última Checagem: ${dt.toLocaleString()}`;
-
-
-                const respostaKpis = await fetch("/medidas/quantidadeAlertasProcessos", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ hostName })
-                });
-
-                const kpis = await respostaKpis.json();
-                const info = kpis[0];
-
-                totalAlertas.textContent = info.total_alertas_semana;
-                totalCriticos.textContent = info.total_criticos_semana;
-                totalPreventivos.textContent = info.total_preventivos_semana;
-
-
-                window.alertasProcessos = {
-                    total: info.total_alertas_semana,
-                    criticos: info.total_criticos_semana,
-                    preventivos: info.total_preventivos_semana
-                };
 
             } catch (erro) {
                 console.error("Erro ao carregar informações:", erro);
@@ -652,8 +783,9 @@
                 var ramSeries = [];
                 var labels = [];
 
-                if (window.graficoDados !== undefined && window.graficoDados !== null) {
+                if (window.graficoDados != undefined && window.graficoDados != null) {
                     labels = window.graficoDados.labels;
+                    
                     if (window.graficoDados.tipo == "CPU") {
                         for (var i = 0; i < window.graficoDados.valores.length; i++) {
                             cpuSeries.push(window.graficoDados.valores[i]);
@@ -920,16 +1052,18 @@
         document.getElementById("ranking-limit").addEventListener("change", () => trocarComponente());
         document.getElementById("ranking-search").addEventListener("input", () => trocarComponente());
 
-    function trocarComponente() {
-    const selecionado = document.getElementById("selectComponente").value;
-    tipoSelecionado = selecionado;
-    localStorage.setItem("componenteSelecionado", selecionado);
+            
+        function trocarComponente() {
+        const selecionado = document.getElementById("selectComponente").value;
+        tipoSelecionado = selecionado;
+        localStorage.setItem("componenteSelecionado", selecionado);
 
-    carregarGrafico(); 
+        carregarGrafico(); 
+        carregarInfoMaquina();
 
-    if (selecionado == "CPU") carregarRanking();
-    else carregarRankingRAM();
-}
+        if (selecionado == "CPU") carregarRanking();
+        else carregarRankingRAM();
+    }
 
 
 
