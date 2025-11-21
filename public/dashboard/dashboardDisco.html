@@ -65,9 +65,7 @@
                     <a href="dashboard-alto.html" class="btn-voltar">
                         Painel de controle - Servidor
                     </a>
-                    <a id="btnGerarRelatorio" onclick="redirecionar()" class="btn-gerar-relatorio">
-                            Ver processos
-                        </a>
+
                     <div class="btns-topbar">
                         <a id="btnGerarRelatorio" onclick="baixarPDF()" class="btn-gerar-relatorio">
                             Gerar relatorio
@@ -150,119 +148,32 @@
                         <h3>Aplicativo com mais leitura</h3>
                         <h2 id="statusRam" style="color:rgb(96, 89, 89)"> </h2>
                     </div>
-                    <div class="kpi-metricas">
-                        <h3>Limites de Alerta <a style="color: red;">Crítico</a> Atuais</h3>
-                        <div class="metricas-valores">
-                            <div class="metrica-item">
-                                <span class="metrica-valor" id="valorCPU"></span>
-                                <span class="metrica-label">CPU prev</span>
-                            </div>
-                            <div class="metrica-item">
-                                <span class="metrica-valor" id="valorRAM"></span>
-                                <span class="metrica-label">RAM prev</span>
-                            </div>
-                            <div class="metrica-item">
-                                <span class="metrica-valor" id="valorDisco"></span>
-                                <span class="metrica-label">Disco prev</span>
-                            </div>
-                            <div class="metrica-item">
-                                <span class="metrica-valor" id="valorCPU2"></span>
-                                <span class="metrica-label">CPU <br> crit</span>
-                            </div>
-                            <div class="metrica-item">
-                                <span class="metrica-valor" id="valorRAM2"></span>
-                                <span class="metrica-label">RAM crit</span>
-                            </div>
-                            <div class="metrica-item">
-                                <span class="metrica-valor" id="valorDisco2"></span>
-                                <span class="metrica-label">Disco crit</span>
-                            </div>
-                        </div>
-                        <button>Alterar Métricas</button>
-                    </div>
-                </div>
-                <div id="modalNotificacoes">
-                    <div class="modal-content">
-                        <div id="alertasContainer"></div>
-                        <button id="btnFecharModal">Fechar</button>
-                    </div>
-                </div>
+                     <div class="kpi">
+                         <h3>Status de normalidade</h3>
+                         
+                 </div>
+                 <div id="modalNotificacoes">
+                     <div class="modal-content">
+                         <div id="alertasContainer"></div>
+                         <button id="btnFecharModal">Fechar</button>
+                     </div>
+                 </div>
             </div>
         </div>
     </div>
     </div>
-    <!-- MODAL ALTERAR MÉTRICAS -->
-    <div class="form-metricas">
-        <div id="modalMetricas" class="modal-metricas">
-            <div class="modal-metricas-content">
-                <span class="close" onclick="fecharmodalMetricas">&times;</span>
-                <h2>Alterar métricas</h2>
-
-                <div class="config-container">
-                    <label for="componenteSelect">Componente:</label>
-                    <select id="componenteSelect" onchange="atualizarMetricasSelecionadas()">
-                        <option value="cpu">CPU</option>
-                        <option value="ram">RAM</option>
-                        <option value="disco">Disco</option>
-                    </select>
-
-                    <div class="metricas-section">
-                        <h3 id="prevent">Alerta Preventivo</h3>
-                        <div class="input-group">
-                            <label>De (%)</label>
-                            <input type="number" id="preventivoInicio" min="0" max="100" value="70">
-                        </div>
-                        <div class="input-group">
-                            <label>Até (%)</label>
-                            <input type="number" id="preventivoFim" min="0" max="100" value="85">
-                        </div>
-                    </div>
-
-                    <div class="metricas-section">
-                        <h3 id="critico">Alerta Crítico</h3>
-                        <div class="input-group">
-                            <label>De (%)</label>
-                            <input type="number" id="criticoInicio" min="0" max="100" value="86">
-                        </div>
-                        <div class="input-group">
-                            <label>Até (%)</label>
-                            <input type="number" id="criticoFim" min="0" max="100" value="100">
-                        </div>
-
-                    </div>
-                    <div class="botoes-modal">
-                        <button onclick="salvarMetricas()" class="btn-salvar">Salvar</button>
-                        <button id="fecharMetricas" class="btn-cancelar">Cancelar</button>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
+ 
 
 
 </body>
 <script>
 
-    
+    var usoDisco = 0;
+    var usoLivre = 0;
+
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
-    const modalMetricas = document.getElementById("modalMetricas");
-    const btnAbrirMetricas = document.querySelector(".kpi-metricas button");
-    const btnFecharMetricas = document.getElementById("fecharMetricas");
-    const btnSalvarMetricas = document.getElementById("salvarMetricas");
-
-    btnAbrirMetricas.addEventListener("click", () => {
-        modalMetricas.classList.add("active");
-    });
-
-    btnFecharMetricas.addEventListener("click", () => {
-        modalMetricas.classList.remove("active");
-    });
-
-    modalMetricas.addEventListener("click", (e) => {
-        if (e.target === modalMetricas) modalMetricas.classList.remove("active");
-    });
+    
 
 
     const btnNotificacao = document.querySelector('.btn-notificacao');
@@ -289,78 +200,6 @@
     window.location.href = `dashProcessos.html?id=${id}`;
     }
 
-
-    async function salvarMetricas() {
-    const nomeComponente = document.getElementById("componenteSelect").value;
-    const params = new URLSearchParams(window.location.search);
-    const idcomponente = params.get("id");
-
-    const preventivoInicio = document.getElementById("preventivoInicio").value;
-    const preventivoFim = document.getElementById("preventivoFim").value;
-    const criticoInicio = document.getElementById("criticoInicio").value;
-    const criticoFim = document.getElementById("criticoFim").value;
-
-    const resp = await fetch("/medidas/alterarMetricas", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            nomeComponente,
-            host,
-            preventivoInicio,
-            preventivoFim,
-            criticoInicio,
-            criticoFim
-        })
-    });
-
-    if (!resp.ok) {
-        console.error("Erro ao salvar métricas");
-        return;
-    }
-
-    window.location.reload();
-}
-
-
-
-async function puxarMetricas() {
-     const hostName = new URLSearchParams(window.location.search).get("id");
-    const componentes = ["cpu", "ram", "disco"];
-
-    for (const componente of componentes) {
-        const body = { hostName, nomeComponente: componente };
-
-        try {
-            const resp = await fetch("/medidas/puxarMetricas", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
-
-            if (!resp.ok) continue;
-
-            const dados = await resp.json();
-
-            if (componente == "cpu") {
-                document.getElementById("valorCPU").textContent = dados.preventivoInicio + "%";
-                document.getElementById("valorCPU2").textContent = dados.criticoInicio+ "%";
-            }
-
-            if (componente == "ram") {
-                document.getElementById("valorRAM").textContent = dados.preventivoInicio + "%";
-                document.getElementById("valorRAM2").textContent = dados.criticoInicio + "%";
-            }
-
-            if (componente == "disco") {
-                document.getElementById("valorDisco").textContent = dados.preventivoInicio + "%";
-                document.getElementById("valorDisco2").textContent = dados.criticoInicio + "%";
-            }
-
-        } catch (e) {
-            alert("quero dormir por favor meu deus funciona")
-        }
-    }
-}
 
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -526,7 +365,7 @@ var labelsRam = labelsTempoReal();
         data: {
             labels: labelsCpu,
             datasets: [{
-                label: 'Uso CPU (%)',
+                label: 'Leitura de Disco(%)',
                 data: dadosCpu,
                 borderColor: '#4bc0c0',
                 backgroundColor: 'rgba(75, 192, 192, 0.6)',
@@ -547,7 +386,7 @@ var labelsRam = labelsTempoReal();
                     max: 100,
                     title: {
                         display: true,
-                        text: 'Uso de CPU(%)'
+                        text: 'Leitura de Disco(%)'
                     },
                     ticks: {
                         callback: function (value) { return value + '%'; }
@@ -687,7 +526,7 @@ var labelsRam = labelsTempoReal();
     // h1_usoLivre.innerHTML = usoLivre + "%"
     
 
-    new Chart(ctxDisco, {
+   var graficoDisco = new Chart(ctxDisco, {
         type: 'bar',
         data: {
             // labels: [usoDisco + '%'],
@@ -716,6 +555,7 @@ var labelsRam = labelsTempoReal();
             id: 'liquidoDisco',
             beforeDatasetsDraw(graficoDisco) {
                 const ctx = graficoDisco.ctx;
+                ctx.save(); 
                 const area = graficoDisco.chartArea;
                 const meta = graficoDisco.getDatasetMeta(0);
                 const barra = meta.data[0];
@@ -785,7 +625,7 @@ var labelsRam = labelsTempoReal();
     function atualizarGraficos() {
 
     // CPU
-    fetch("/grafico/dadosGrafico/1")
+   fetch(`/grafico/dadosGrafico/1/${id}`)
     .then(r => r.json())
     .then(dados => {
         var valores = [];
@@ -803,7 +643,8 @@ var labelsRam = labelsTempoReal();
 
 
     // RAM
-    fetch("/grafico/dadosGrafico/2")
+fetch(`/grafico/dadosGrafico/2/${id}`)
+
         .then(function (respostaRam) {
             return respostaRam.json();
         })
@@ -824,7 +665,7 @@ var labelsRam = labelsTempoReal();
         });
 
     // DISCO
-    fetch("/grafico/dadosGrafico/3")
+fetch(`/grafico/dadosGrafico/3/${id}`)
         .then(function (respostaDisco) {
             return respostaDisco.json();
         })
@@ -848,7 +689,8 @@ var labelsRam = labelsTempoReal();
 setInterval(atualizarGraficos, 30000);
 
 // Atualiza ao carregar página
-body.onload(atualizarGraficos());
+window.onload = atualizarGraficos;
+
 
 
 

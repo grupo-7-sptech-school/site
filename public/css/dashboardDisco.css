@@ -239,8 +239,10 @@ body {
   width: 18vw;
   height: 15vh;
   border-radius: 25px;
+  border-left-style: solid;
   
-  
+  border-color: #18B187;
+  border-width: 5px;
 }
 
 .kpi1 {

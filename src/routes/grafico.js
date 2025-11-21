@@ -3,9 +3,10 @@ var router = express.Router();
 
 var graficoController = require("../controllers/graficoController");
 
-router.get("/dadosGrafico/:idComponente/:hostName", (req, res) => {
+router.get("/dadosGrafico/:idComponente/:hostName", function (req, res) {
     graficoController.dadosGrafico(req, res);
 });
+
 
 
 module.exports = router;

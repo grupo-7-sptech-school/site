@@ -12,5 +12,4 @@ function dadosGrafico(req, res) {
         });
 }
 
-
 module.exports = { dadosGrafico };

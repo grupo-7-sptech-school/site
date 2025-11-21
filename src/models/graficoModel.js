@@ -14,8 +14,8 @@ function dadosGrafico(idComponente, hostName, limite) {
         LIMIT ${limite};
     `;
 
+    console.log("Executando SQL:\n" + instrucao);
     return database.executar(instrucao);
 }
-
 
 module.exports = { dadosGrafico };
