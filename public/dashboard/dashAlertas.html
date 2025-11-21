@@ -118,12 +118,6 @@
           </div>
 
           <div class="graficos-container">
-
-  <div class="grafico-card">
-    <h3>Tipos de Alerta</h3>
-    <canvas id="graficoTipos"></canvas>
-  </div>
-
   <div class="grafico-card">
     <h3>Alertas ao longo do período</h3>
     <canvas id="graficoLinha"></canvas>
@@ -152,18 +146,13 @@
           fill: true,
           tension: 0.3
         }]
-      }
-    });
-
-    new Chart(document.getElementById("graficoTipos"), {
-      type: "doughnut",
-      data: {
-        labels: ["Crítico", "Preventivo"],
-        datasets: [{
-          data: [37, 58],
-          backgroundColor: ["#d9534f", "#ffff00"]
-        }]
-      }
+      },
+      options: {
+    plugins:{
+    legend: {
+      display: false
+    }},
+  }
     });
 
     new Chart(document.getElementById("graficoComponentes"), {
@@ -171,15 +160,19 @@
   data: {
     labels: ["CPU", "RAM", "Disco"],
     datasets: [{
-      label: "Qtd de Alertas",
+      label: "Quantidade de Alertas",
       data: [42, 31, 22],
       backgroundColor: ["#3498db", "#D16D85", "#00C04B"]
     }]
-  },
+  },    
   options: {
+    plugins:{
+    legend: {
+      display: false
+    }},
     indexAxis: "y"
   }
-});
+}); 
 </script>
 </body>
 </html>
