@@ -19,6 +19,7 @@ var usuarioRouter = require("./src/routes/usuarios");
 var medidasRouter = require("./src/routes/medidas");
 var graficoRouter = require("./src/routes/grafico.js");
 const upsRoutes = require('./src/routes/upsRoutes');
+var sustentabilidadeRoutes = require("./src/routes/sustentabilidadeRoutes");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -30,7 +31,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/medidas", medidasRouter);
-app.use("/grafico", graficoRouter)
+app.use("/grafico", graficoRouter);
+app.use("/sustentabilidade", sustentabilidadeRoutes);
 
 
 //console.log('Registrando rotas UPS...');
