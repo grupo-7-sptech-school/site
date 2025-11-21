@@ -819,7 +819,7 @@ var labelsRam = labelsTempoReal();
     function atualizarGraficos() {
 
     // CPU
-    fetch("/grafico/dadosGrafico/1")
+    fetch(`/grafico/dadosGrafico/1/${id}`)
     .then(r => r.json())
     .then(dados => {
         var valores = [];
@@ -837,7 +837,7 @@ var labelsRam = labelsTempoReal();
 
 
     // RAM
-    fetch("/grafico/dadosGrafico/2")
+    fetch(`/grafico/dadosGrafico/2/${id}`)
         .then(function (respostaRam) {
             return respostaRam.json();
         })
@@ -858,7 +858,7 @@ var labelsRam = labelsTempoReal();
         });
 
     // DISCO
-    fetch("/grafico/dadosGrafico/3")
+    fetch(`/grafico/dadosGrafico/1/${id}`)
         .then(function (respostaDisco) {
             return respostaDisco.json();
         })
