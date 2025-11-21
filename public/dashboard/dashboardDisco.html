@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="shortcut icon" href="../assets/icon/logo-branca.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolarData | Painel de controle</title>
+
+
+    <link rel="stylesheet" href="./../css/dashboardDisco.css">
+    <link rel="stylesheet" href="./../css/cabecalho3.css">
+    <link rel="stylesheet" href="./../css/modal.css">
+    <script src="../js/sessao.js"></script>
+    <script src="./../js/alerta.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;disco1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- scripts do Chart.js - 2022-1 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
+
+    <!--FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+</head>
+
+<!-- <body onload=" atualizarFeed()"> -->
+
+<body onload="filtrarRelatorio();">
+    <!-- Cabeçalho -->
+    <div class="total-dash">
+        <div class="dashboard-bg">
+            <div class="dashboard-sidebar">
+                <div class="dashboard-logo"></div>
+                <div class="dashboard-sidebar-btns">
+                    <a href="alertas.html" class="dashboard-sidebar-btn">
+                        <div class="icon-alert"></div>
+                        <h3>Alertas</h3>
+                    </a>
+                    <a href="contateste.html" class="dashboard-sidebar-btn">
+                        <div class="icon-user"></div>
+                        <h3>Conta</h3>
+                    </a>
+                    <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+                        <div class="icon-dashboard"></div>
+                        <h3>Painel de <br> Controle</h3>
+                    </a>
+                    <a href="suporte.html" class="dashboard-sidebar-btn">
+                        <div class="icon-support"></div>
+                        <h3>Suporte</h3>
+                    </a>
+                </div>
+                <a href=".././index.html" class="dashboard-logout">
+                    <div class="icon-logout"></div>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+            <!-- Cabeçalho topo -->
+            <div class="dashboard-low-right-side">
+                <div class="dashboard-topbar">
+                    <a href="dashboard-alto.html" class="btn-voltar">
+                        Painel de controle - Servidor
+                    </a>
+                    <a id="btnGerarRelatorio" onclick="redirecionar()" class="btn-gerar-relatorio">
+                            Ver processos
+                        </a>
+                    <div class="btns-topbar">
+                        <a id="btnGerarRelatorio" onclick="baixarPDF()" class="btn-gerar-relatorio">
+                            Gerar relatorio
+                        </a>
+                        <div class="btn-padrao">
+                            <button class="btn-notificacao">
+                            </button>
+                            <a href="contateste.html" class="btn-conta">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fim Cabeçalho -->
+                
+                <div class="dashboard-charts">
+                    <div class="line-charts">
+                        <h3>Leitura de Disco</h3>
+                        <div class="grafico-cpu">
+                            <canvas id="graficoCpuCanvas"></canvas>
+                        </div>
+                        <h2>Escrita de Disco</h2>
+                        <div class="grafico-ram">
+                            <canvas id="graficoRamCanvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="cup-charts">
+                        <h3>Armazenamento de Disco</h3>
+                        <div class="grafico-disco">
+                            <div class="copo">
+
+                                <canvas id="graficoDiscoCanvas"></canvas>
+
+                                <div class="elipse-meio" id="elipseMeio"></div>
+
+                            </div>
+                            <div class="uso-livre-disco">
+                                <h2>
+                                    <div style="background-color: #939393;
+                        border-radius: 90px;
+                        height: 2vh;
+                        width: 1vw;"></div><br>Armazenamento <br> Livre
+                                    <h1 id="h1_usoLivre">
+
+                                    </h1>
+                                    <h2>
+                                        <div style="background-color: rgb(192, 31, 31);
+                            border-radius: 90px;
+                            height: 2vh;
+                            width: 1vw;"></div>Alerta crítico
+                                        <h1 id="h1_alertaCritico" style="color: rgb(200, 31, 31); "">
+                                            85%
+                                        </h1>
+                                    </h2>
+                                </h2>
+                                <h2>
+                                    <div style=" background-color: #18B187; border-radius: 90px; height: 2vh; width:
+                                            1vw; "></div><br>Armazenamento <br> utilizado
+                                    <h1 id=" h1_usoDisco">
+
+                                        </h1>
+                                    </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kpis">
+                    <div class="kpi">
+                        <div class="kpi-upper">
+                            <h3>Aplicativo que mais consome armazenamento</h3>
+                        </div>
+                        <div id="consumoComp" class="kpi1">
+
+                        </div>
+                    </div>
+                    <div class="kpi">
+                        <h3>Aplicativo com mais escrita</h3>
+                        <h2 id="statusUps" style="color:rgb(96, 89, 89)"></h2>
+                    </div>
+                    <div class="kpi">
+                        <h3>Aplicativo com mais leitura</h3>
+                        <h2 id="statusRam" style="color:rgb(96, 89, 89)"> </h2>
+                    </div>
+                    <div class="kpi-metricas">
+                        <h3>Limites de Alerta <a style="color: red;">Crítico</a> Atuais</h3>
+                        <div class="metricas-valores">
+                            <div class="metrica-item">
+                                <span class="metrica-valor" id="valorCPU"></span>
+                                <span class="metrica-label">CPU prev</span>
+                            </div>
+                            <div class="metrica-item">
+                                <span class="metrica-valor" id="valorRAM"></span>
+                                <span class="metrica-label">RAM prev</span>
+                            </div>
+                            <div class="metrica-item">
+                                <span class="metrica-valor" id="valorDisco"></span>
+                                <span class="metrica-label">Disco prev</span>
+                            </div>
+                            <div class="metrica-item">
+                                <span class="metrica-valor" id="valorCPU2"></span>
+                                <span class="metrica-label">CPU <br> crit</span>
+                            </div>
+                            <div class="metrica-item">
+                                <span class="metrica-valor" id="valorRAM2"></span>
+                                <span class="metrica-label">RAM crit</span>
+                            </div>
+                            <div class="metrica-item">
+                                <span class="metrica-valor" id="valorDisco2"></span>
+                                <span class="metrica-label">Disco crit</span>
+                            </div>
+                        </div>
+                        <button>Alterar Métricas</button>
+                    </div>
+                </div>
+                <div id="modalNotificacoes">
+                    <div class="modal-content">
+                        <div id="alertasContainer"></div>
+                        <button id="btnFecharModal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- MODAL ALTERAR MÉTRICAS -->
+    <div class="form-metricas">
+        <div id="modalMetricas" class="modal-metricas">
+            <div class="modal-metricas-content">
+                <span class="close" onclick="fecharmodalMetricas">&times;</span>
+                <h2>Alterar métricas</h2>
+
+                <div class="config-container">
+                    <label for="componenteSelect">Componente:</label>
+                    <select id="componenteSelect" onchange="atualizarMetricasSelecionadas()">
+                        <option value="cpu">CPU</option>
+                        <option value="ram">RAM</option>
+                        <option value="disco">Disco</option>
+                    </select>
+
+                    <div class="metricas-section">
+                        <h3 id="prevent">Alerta Preventivo</h3>
+                        <div class="input-group">
+                            <label>De (%)</label>
+                            <input type="number" id="preventivoInicio" min="0" max="100" value="70">
+                        </div>
+                        <div class="input-group">
+                            <label>Até (%)</label>
+                            <input type="number" id="preventivoFim" min="0" max="100" value="85">
+                        </div>
+                    </div>
+
+                    <div class="metricas-section">
+                        <h3 id="critico">Alerta Crítico</h3>
+                        <div class="input-group">
+                            <label>De (%)</label>
+                            <input type="number" id="criticoInicio" min="0" max="100" value="86">
+                        </div>
+                        <div class="input-group">
+                            <label>Até (%)</label>
+                            <input type="number" id="criticoFim" min="0" max="100" value="100">
+                        </div>
+
+                    </div>
+                    <div class="botoes-modal">
+                        <button onclick="salvarMetricas()" class="btn-salvar">Salvar</button>
+                        <button id="fecharMetricas" class="btn-cancelar">Cancelar</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+</body>
+<script>
+
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+    const modalMetricas = document.getElementById("modalMetricas");
+    const btnAbrirMetricas = document.querySelector(".kpi-metricas button");
+    const btnFecharMetricas = document.getElementById("fecharMetricas");
+    const btnSalvarMetricas = document.getElementById("salvarMetricas");
+
+    btnAbrirMetricas.addEventListener("click", () => {
+        modalMetricas.classList.add("active");
+    });
+
+    btnFecharMetricas.addEventListener("click", () => {
+        modalMetricas.classList.remove("active");
+    });
+
+    modalMetricas.addEventListener("click", (e) => {
+        if (e.target === modalMetricas) modalMetricas.classList.remove("active");
+    });
+
+
+    const btnNotificacao = document.querySelector('.btn-notificacao');
+    const modal = document.getElementById('modalNotificacoes');
+    const btnFecharModal = document.getElementById('btnFecharModal');
+    const alertasContainer = document.getElementById('alertasContainer');
+
+    btnNotificacao.addEventListener('click', () => {
+        modal.classList.add('active');
+        carregarAlertas();
+    });
+
+    btnFecharModal.addEventListener('click', () => modal.classList.remove('active'));
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+
+
+    function redirecionar () {
+    document.getElementById("btnGerarRelatorio") 
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+    window.location.href = `dashProcessos.html?id=${id}`;
+    }
+
+
+    async function salvarMetricas() {
+    const nomeComponente = document.getElementById("componenteSelect").value;
+    const params = new URLSearchParams(window.location.search);
+    const idcomponente = params.get("id");
+
+    const preventivoInicio = document.getElementById("preventivoInicio").value;
+    const preventivoFim = document.getElementById("preventivoFim").value;
+    const criticoInicio = document.getElementById("criticoInicio").value;
+    const criticoFim = document.getElementById("criticoFim").value;
+
+    const resp = await fetch("/medidas/alterarMetricas", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            nomeComponente,
+            host,
+            preventivoInicio,
+            preventivoFim,
+            criticoInicio,
+            criticoFim
+        })
+    });
+
+    if (!resp.ok) {
+        console.error("Erro ao salvar métricas");
+        return;
+    }
+
+    window.location.reload();
+}
+
+
+
+async function puxarMetricas() {
+     const hostName = new URLSearchParams(window.location.search).get("id");
+    const componentes = ["cpu", "ram", "disco"];
+
+    for (const componente of componentes) {
+        const body = { hostName, nomeComponente: componente };
+
+        try {
+            const resp = await fetch("/medidas/puxarMetricas", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+
+            if (!resp.ok) continue;
+
+            const dados = await resp.json();
+
+            if (componente == "cpu") {
+                document.getElementById("valorCPU").textContent = dados.preventivoInicio + "%";
+                document.getElementById("valorCPU2").textContent = dados.criticoInicio+ "%";
+            }
+
+            if (componente == "ram") {
+                document.getElementById("valorRAM").textContent = dados.preventivoInicio + "%";
+                document.getElementById("valorRAM2").textContent = dados.criticoInicio + "%";
+            }
+
+            if (componente == "disco") {
+                document.getElementById("valorDisco").textContent = dados.preventivoInicio + "%";
+                document.getElementById("valorDisco2").textContent = dados.criticoInicio + "%";
+            }
+
+        } catch (e) {
+            alert("quero dormir por favor meu deus funciona")
+        }
+    }
+}
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const fkTipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
+
+        const btnGerarRelatorio = document.getElementById("btnGerarRelatorio");
+        const btnNotificacao = document.querySelector('.btn-notificacao');
+        const modal = document.getElementById('modalNotificacoes');
+        const btnFecharModal = document.getElementById('btnFecharModal');
+        const alertasContainer = document.getElementById('alertasContainer');
+
+
+        if (Number(fkTipoUsuario) !== 1) {
+            if (btnGerarRelatorio) {
+                btnGerarRelatorio.style.display = "none";
+            }
+        }
+
+
+        if (!btnNotificacao || !modal || !btnFecharModal || !alertasContainer) {
+            console.error("Elementos de alerta/maquinas não encontrados:", {
+                btnNotificacao, modal, btnFecharModal, alertasContainer
+            });
+            return;
+        }
+
+        function formatarData(iso) {
+            if (!iso) return "—";
+            const d = new Date(iso);
+            if (isNaN(d)) return "—";
+            return d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+        }
+
+        async function carregarAlertas() {
+            alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
+
+            try {
+                const resposta = await fetch("/usuarios/puxarAlerta");
+                if (!resposta.ok) throw new Error("Erro ao buscar alertas do servidor.");
+
+                const alertas = await resposta.json();
+                alertasContainer.innerHTML = "";
+
+                if (alertas.length == 0) {
+                    alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta encontrado.</p>";
+                    return;
+                }
+
+                alertas.forEach(alerta => {
+                    let tipoClasse = "";
+                    switch (alerta.estado) {
+                        case "CRITICO":
+                            tipoClasse = "danger";
+                            break;
+                        case "ALERTA":
+                            tipoClasse = "warning";
+                            break;
+                        case "NORMAL":
+                            tipoClasse = "success";
+                            break;
+                        default:
+                            tipoClasse = "success";
+                    }
+
+                    const dataFormatada = new Date(alerta.dtHora).toLocaleString("pt-BR");
+
+
+                    const div = document.createElement("div");
+                    div.className = `alerta-item ${tipoClasse}`;
+                    div.innerHTML = `
+              <strong>Identificador da máquina:</strong> <small>${alerta.identificador || "Desconhecida"}</small><br>
+              <strong>${alerta.componenteNome || "Componente"}:</strong> ${alerta.captura || "Sem dados."}<br>
+              <strong>Estado:</strong> <small>${alerta.estado || "DESCONHECIDO"}</small><br>
+              <small>${new Date(alerta.dtHora).toLocaleString("pt-BR")}</small>
+          `;
+
+                    alertasContainer.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar alertas:", error);
+                alertasContainer.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
+            }
+        }
+
+
+        btnNotificacao.addEventListener("click", () => {
+            console.log("Clicou no botão de notificação");
+            modal.classList.add("active");
+            carregarAlertas();
+        });
+        btnFecharModal.addEventListener("click", () => modal.classList.remove("active"));
+        modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("active"); });
+
+        console.log("carregarMaquinas() executado — máquinas mockadas exibidas.");
+    });
+
+
+
+
+
+
+
+
+
+
+    async function baixarPDF() {
+        try {
+            console.log("Iniciando download do PDF...");
+
+
+            alert("Gerando PDF... Isso pode levar alguns segundos.");
+
+            const response = await fetch('/relatorio/pdf');
+
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_solardata_${new Date().toISOString().split('T')[0]}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            console.log('PDF baixado com sucesso!');
+
+            // Feedback visual 
+            alert("PDF baixado com sucesso");
+
+        } catch (error) {
+            console.error('Erro ao baixar PDF:', error);
+            alert('Erro ao baixar PDF: ' + error.message);
+        }
+    }
+
+    
+function labelsTempoReal() {
+    var labels = [];
+    for (var i = 0; i < 10; i++) {
+        labels.push(i + " min");
+    }
+    return labels;
+}
+
+var dadosCpu = [];
+var dadosRam = [];
+var labelsCpu = labelsTempoReal();
+var labelsRam = labelsTempoReal();
+
+
+    
+
+
+    // Gráfico CPU
+    var ctxCpu = document.getElementById('graficoCpuCanvas').getContext('2d');
+    var graficoCpu = new Chart(ctxCpu, {
+        type: 'line',
+        data: {
+            labels: labelsCpu,
+            datasets: [{
+                label: 'Uso CPU (%)',
+                data: dadosCpu,
+                borderColor: '#4bc0c0',
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderWidth: 2,
+                pointRadius: 1.5,
+                tension: 0.2,
+                fill: true
+            }]
+        },
+        options: {
+            animation: false,
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Uso de CPU(%)'
+                    },
+                    ticks: {
+                        callback: function (value) { return value + '%'; }
+
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tempo (últimos 10 min)'
+                    },
+                    ticks: {
+
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            },
+            plugins: {
+                annotation: {
+                    annotations: {
+                        limiteCPU: {
+                            type: 'line',
+                            yMin: 80,
+                            yMax: 80,
+                            borderColor: 'rgb(200, 31, 31)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                display: true,
+                                content: 'Anormalidade (80%)',
+                                position: 'start',
+                                backgroundColor: 'white',
+                                color: 'rgb(200, 31, 31)'
+                            }
+                        },
+
+
+
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+     
+    
+    var mostrarLabel = false;
+    //Gráfico RAM
+    var ctxRam = document.getElementById('graficoRamCanvas').getContext('2d');
+    var graficoRam = new Chart(ctxRam, {
+        type: 'line',
+        data: {
+            labels: labelsRam,
+            datasets: [{
+                label: 'Uso RAM (%)',
+                data: dadosRam,
+                borderColor: 'rgba(255, 150, 200, 0.6)',
+                backgroundColor: 'rgba(255, 150, 200, 0.6)',
+                borderWidth: 2,
+                pointRadius: 1.5,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            animation: false,
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    title: {
+                        display: true,
+                        text: 'Uso de RAM(%)'
+                    },
+                    ticks: {
+                        callback: function (value) { return value + '%'; }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tempo (últimos 10 min)',
+
+                    },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            },
+            plugins: {
+                annotation: {
+                    annotations: {
+                        limiteRAM: {
+                            type: 'line',
+                            yMin: 75,
+                            yMax: 75,
+                            borderColor: 'rgb(200, 31, 31)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            label: {
+                                display: true,
+                                content: 'Anormalidade (75%)',
+                                position: 'start',
+                                backgroundColor: 'white',
+                                color: 'rgb(200, 31, 31)'
+                            }
+                        }
+
+
+
+
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    
+
+    const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
+    
+    // var usoLivre = 100 - usoDisco;
+    // h1_usoDisco.innerHTML = usoDisco + "%"
+    // h1_usoLivre.innerHTML = usoLivre + "%"
+    
+
+    new Chart(ctxDisco, {
+        type: 'bar',
+        data: {
+            // labels: [usoDisco + '%'],
+            datasets: [{
+                // data: [usoDisco],
+                backgroundColor: 'transparent'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true }
+            },
+            scales: {
+                x: { display: false },
+                y: { display: false, min: 0, max: 100 }
+            },
+            animation: {
+                duration: 800,
+                easing: 'easeInOutQuad'
+            }
+        },
+        plugins: [{
+            id: 'liquidoDisco',
+            beforeDatasetsDraw(graficoDisco) {
+                const ctx = graficoDisco.ctx;
+                const area = graficoDisco.chartArea;
+                const meta = graficoDisco.getDatasetMeta(0);
+                const barra = meta.data[0];
+
+                const margemVertical = area.height * 0.025;
+
+                const areaUtil = {
+                    left: area.left,
+                    right: area.right,
+                    top: area.top + margemVertical,
+                    bottom: area.bottom - margemVertical
+                };
+
+                const yTopo = barra.y;
+                const yBase = areaUtil.bottom;
+
+                const yTopoAjustado = Math.max(yTopo, areaUtil.top + 7);
+
+                ctx.beginPath();
+                ctx.ellipse(
+                    (areaUtil.left + areaUtil.right) / 2,
+                    yTopoAjustado,
+                    (areaUtil.right - areaUtil.left) / 2,
+                    18,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
+
+                const gradienteHorizontal = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
+                gradienteHorizontal.addColorStop(0, '#25a683');
+                gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
+                gradienteHorizontal.addColorStop(0.85, '#25a683');
+
+                ctx.fillStyle = gradienteHorizontal;
+
+
+                const alturaPreenchimento = yBase - yTopoAjustado;
+                if (alturaPreenchimento > 0) {
+                    ctx.fillRect(areaUtil.left, yTopoAjustado, areaUtil.right - areaUtil.left, alturaPreenchimento);
+                }
+
+                ctx.beginPath();
+                ctx.ellipse(
+                    (areaUtil.left + areaUtil.right) / 2,
+                    yTopoAjustado,
+                    (areaUtil.right - areaUtil.left) / 2,
+                    18,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
+
+                const gradienteEscuro = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
+                gradienteEscuro.addColorStop(0, '#1d8066');
+                gradienteEscuro.addColorStop(0.33, '#18a47d');
+                gradienteEscuro.addColorStop(0.85, '#1d8066');
+
+                ctx.fillStyle = gradienteEscuro;
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }]
+    });
+
+    function atualizarGraficos() {
+
+    // CPU
+    fetch("/grafico/dadosGrafico/1")
+    .then(r => r.json())
+    .then(dados => {
+        var valores = [];
+        var labels = [];
+
+        for (var i = dados.length - 1; i >= 0; i--) {
+            valores.push(dados[i].valor);
+            labels.push(dados[i].momento_grafico);
+        }
+
+        graficoCpu.data.labels = labels;
+        graficoCpu.data.datasets[0].data = valores;
+        graficoCpu.update();
+    });
+
+
+    // RAM
+    fetch("/grafico/dadosGrafico/2")
+        .then(function (respostaRam) {
+            return respostaRam.json();
+        })
+        .then(function (dadosRamServidor) {
+            if (dadosRamServidor.length > 0) {
+                var valores = [];
+                var labels = [];
+
+                for (var i = dadosRamServidor.length - 1; i >= 0; i--) {
+                    valores.push(dadosRamServidor[i].valor);
+                    labels.push(dadosRamServidor[i].momento_grafico);
+                }
+
+                graficoRam.data.labels = labels;
+                graficoRam.data.datasets[0].data = valores;
+                graficoRam.update("none");
+            }
+        });
+
+    // DISCO
+    fetch("/grafico/dadosGrafico/3")
+        .then(function (respostaDisco) {
+            return respostaDisco.json();
+        })
+        .then(function (dadosDiscoServidor) {
+            if (dadosDiscoServidor.length > 0) {
+
+                usoDisco = dadosDiscoServidor[0].valor;
+                usoLivre = 100 - usoDisco;
+
+                h1_usoDisco.innerHTML = usoDisco
+                h1_usoLivre.innerHTML = usoLivre
+                if (graficoDisco) {
+                    graficoDisco.data.datasets[0].data = [usoDisco];
+                    graficoDisco.update();
+                }
+            }
+        });
+}
+
+// Atualiza sozinho a cada 30s
+setInterval(atualizarGraficos, 30000);
+
+// Atualiza ao carregar página
+body.onload(atualizarGraficos());
+
+
+
+    alertaPorComponente();
+    setInterval(alertaPorComponente, 15000);
+
+    const select = document.getElementById("selectKPI");
+    select.addEventListener("change", alertaPorComponente);
+
+    async function alertaPorComponente() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const host = params.get("id");
+
+            const consumoComp = document.getElementById("consumoComp");
+
+            const resposta = await fetch("/medidas/alertaPorComponente", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ host }),
+            });
+
+            const alertas = await resposta.json();
+            var totalCPU = 0
+            var totalRAM = 0
+            var totalDISCO = 0;
+
+            for (let i = 0; i < alertas.length; i++) {
+                var nome = (alertas[i].componente || "").toUpperCase();
+                if (nome.includes("CPU")) {
+                    totalCPU++;
+                }
+                else if (nome.includes("RAM")) {
+                    totalRAM++;
+                }
+                else if (nome.includes("DISCO")) {
+                    totalDISCO++;
+                }
+            }
+            let total = 0;
+            if (select.value == "alertaCPU") {
+                total = totalCPU;
+            }
+            else if (select.value == "alertaRAM") {
+                total = totalRAM;
+            }
+            else if (select.value == "alertaDisco") {
+                total = totalDISCO;
+            }
+
+            consumoComp.innerHTML = `<h2>${total}</h2>`;
+        } catch (erro) {
+            console.error("Erro:", erro);
+            consumoComp.innerHTML = "<h2>0</h2>";
+        }
+    }
+
+
+
+
+
+
+
+    maiorProcessoCpu();
+    setInterval(maiorProcessoCpu, 15000);
+
+    async function maiorProcessoCpu() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const host = params.get("id");
+
+            const statusUps = document.getElementById("statusUps");
+
+            const resposta = await fetch("/medidas/maiorProcessoCpu", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ host }),
+            });
+
+            const alertas = await resposta.json();
+
+            statusUps.innerHTML = `<h2>${alertas[0].nome}</h2>`;
+        } catch (erro) {
+            console.error("Erro:", erro);
+            statusUps.innerHTML = "<h2>0</h2>";
+        }
+    }
+
+
+    function filtrarRelatorio() {
+        const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
+        btnGerarRelatorio = document.getElementById("btnGerarRelatorio");
+        const dropdownContainer = document.querySelector(".btn-relatorio-container");
+
+        console.log("TESTE1");
+    }
+
+
+
+
+
+
+
+    maiorProcessoRam();
+    setInterval(maiorProcessoRam, 15000);
+
+    async function maiorProcessoRam() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const host = params.get("id");
+
+            const statusRAM = document.getElementById("statusRam");
+
+            const resposta = await fetch("/medidas/maiorProcessoRam", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ host }),
+            });
+
+            const alertas = await resposta.json();
+
+            statusRAM.innerHTML = `<h2>${alertas[0].nome}</h2>`;
+        } catch (erro) {
+            console.error("Erro:", erro);
+            statusRAM.innerHTML = "<h2>0</h2>";
+        }
+    }
+
+
+    function filtrarRelatorio() {
+        const fktipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
+        btnGerarRelatorio = document.getElementById("btnGerarRelatorio");
+        const dropdownContainer = document.querySelector(".btn-relatorio-container");
+
+        console.log("TESTE1");
+    }
+
+
+
+    async function gerarResposta() { // assincrona pra pegar junto com os processos e não dar ruim se é que me entende...
+        try {
+            console.log("Gerando análise detalhada...");
+            const response = await fetch('/analisar-processos');
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.status}`);
+            }
+            const data = await response.json();
+            console.log("Análise recebida:", data);
+            if (data.success) {
+                const mensagem = `${data.analise}`;
+                console.log(mensagem);
+
+                try {
+                    retornoJson = data.analise
+                    console.log(retornoJson)
+                } catch {
+                    console.log("Erro ao converter para JSON")
+                }
+
+            } else {
+                alert(`Erro: ${data.message || data.error}`);
+            }
+        } catch (error) {
+            alert('Erro ao gerar análise: ' + error.message);
+        }
+    }
+
+</script>

@@ -1,16 +1,16 @@
 var graficoModel = require("../models/graficoModel");
 
 function dadosGrafico(req, res) {
-    var hostName = req.body.host;
+    var idComponente = req.params.idComponente;
+    var hostName = req.params.hostName;
 
-    graficoModel.dadosGrafico(hostName, 10)
-        .then(function (resultado) {
-            res.json(resultado);
-        })
-        .catch(function (erro) {
-            console.log("ERRO no gráfico", erro);
-            res.status(500).json(erro);
+    graficoModel.dadosGrafico(idComponente, hostName, 10)
+        .then(r => res.json(r))
+        .catch(e => {
+            console.log("ERRO no gráfico", e);
+            res.status(500).json(e);
         });
 }
+
 
 module.exports = { dadosGrafico };

@@ -1,21 +1,21 @@
 var database = require("../database/config");
 
-function dadosGrafico(hostName, limite) {
-
+function dadosGrafico(idComponente, hostName, limite) {
     var instrucao = `
         SELECT 
-            captura AS valor,
-            DATE_FORMAT(dtRegistro, '%H:%i:%s') AS momento_grafico
-        FROM registro
+            r.captura AS valor,
+            DATE_FORMAT(r.dtRegistro, '%H:%i:%s') AS momento_grafico
+        FROM Registro r
+        JOIN Componente c ON r.fkComponente = c.idComponente
         JOIN Maquina m ON c.fkMaquina = m.hostName
-        WHERE fkComponente = ${idComponente}
+        WHERE c.idComponente = ${idComponente}
         AND m.hostName = ${hostName}
-        ORDER BY idRegistro DESC
+        ORDER BY r.idRegistro DESC
         LIMIT ${limite};
-     `
+    `;
 
-    console.log("Executando SQL:\n" + instrucao);
     return database.executar(instrucao);
 }
+
 
 module.exports = { dadosGrafico };
