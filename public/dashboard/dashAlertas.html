@@ -83,30 +83,48 @@
 
         <div class="dashboard-content">
           <div class="kpi-container">
-            <div class="kpi-card">
-              <h3>Total de Alertas</h3>
-              <p class="kpi-value">128</p>
-              <span class="kpi-sub">+12 esta semana</span>
-            </div>
+  
+  <div class="kpi-card">
+    <h3>Total de Alertas
+  <span class="info-tooltip">ℹ
+    <span class="info-text">Este indicador exibe a quantidade total de todos alertas emitidos pela máquina durante o período selecionado.</span>
+  </span>
+</h3>
+    <p class="kpi-value">128</p>
+    <span class="kpi-sub">+12 esta semana</span>
+  </div>
 
-            <div class="kpi-card">
-              <h3>Alertas Críticos</h3>
-              <p class="kpi-value">37</p>
-              <span class="kpi-sub">+3 hoje</span>
-            </div>
+  <div class="kpi-card critico">
+    <h3>Alertas Críticos
+      <span class="info-tooltip">ℹ
+        <span class="info-text">Este indicador exibe a quantidade total de alertas críticos gerados durante o período selecionado.</span>
+      </span>
+    </h3>
+    <p class="kpi-value">37</p>
+    <span class="kpi-sub">+3 hoje</span>
+  </div>
 
-            <div class="kpi-card">
-              <h3>Pré-Ociosidade</h3>
-              <p class="kpi-value">15</p>
-              <span class="kpi-sub">-5 este mês</span>
-            </div>
+  <div class="kpi-card">
+    <h3>Pré-Ociosidade
+      <span class="info-tooltip">ℹ
+        <span class="info-text">Este indicador exibe a quantidade de alertas gerados antes da máquina entrar em estado de ociosidade durante o período selecionado.</span>
+      </span>
+    </h3>
+    <p class="kpi-value">15</p>
+    <span class="kpi-sub">-5 este mês</span>
+  </div>
 
-            <div class="kpi-card">
-              <h3>Componente Mais Crítico</h3>
-              <p class="kpi-value">CPU</p>
-              <span class="kpi-sub">42 alertas</span>
-            </div>
-          </div>
+  <div class="kpi-card">
+    <h3>Componente Mais Crítico 
+      <span class="info-tooltip">ℹ
+        <span class="info-text"> Este indicador exibe o componente com maior número de alertas durante o período selecionado.</span>
+      </span>
+    </h3>
+    <p class="kpi-value">CPU</p>
+    <span class="kpi-sub">42 alertas</span>
+  </div>
+
+</div>
 
           <div class="periodo-container">
             <label for="periodo">Período:</label>
@@ -115,15 +133,24 @@
               <option>Últimos 15 dias</option>
               <option>Últimos 30 dias</option>
             </select>
+                   <span class="info-tooltip">ℹ
+        <span class="info-text"> Nesta área, você pode selecionar o período desejado para realizar a análise.</span>
+      </span>
           </div>
 
           <div class="graficos-container">
   <div class="grafico-card">
-    <h3>Alertas ao longo do período</h3>
+           <span class="info-tooltip">ℹ
+        <span class="info-text"> Neste gráfico, é exibido a variação da quantidade total de alertas durante o período selecionado.</span>
+      </span>
+    <h3>Alertas ao longo do período</h3> 
     <canvas id="graficoLinha"></canvas>
   </div>
 
   <div class="grafico-card full">
+          <span class="info-tooltip">ℹ
+        <span class="info-text"> Neste gráfico, é exibido a quantidade total de alertas, dividido por componente em que esse alerta foi gerado, durante o período selecionado.</span>
+      </span>
     <h3>Alertas por Componentes</h3>
     <canvas id="graficoComponentes"></canvas>
   </div>
