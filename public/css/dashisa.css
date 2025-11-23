@@ -37,8 +37,34 @@
   color: #777;
 }
 
+.graficos-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.grafico-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+}
+
+.titulo-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.titulo-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .info-tooltip {
-  position:fixed;
+  position: relative;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -46,10 +72,9 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1px solid #c8baba;
+  border: 1px solid #88dc7f;
   font-size: 12px;
-  color: #9a8e8e;
-  margin-left: 6px;
+  color: #84b96c;
 }
 
 .info-tooltip .info-text {
@@ -63,9 +88,10 @@
   font-size: 12px;
   position: absolute;
   z-index: 10;
-  top: 22px;
-  left: -20px;
-  transition: .2s;
+  top: 50%;
+  left: 28px;
+  transform: translateY(-50%);
+  transition: 0.2s ease;
 }
 
 .info-tooltip:hover .info-text {
@@ -73,24 +99,59 @@
   opacity: 1;
 }
 
-.periodo-container {
-  margin: 10px 0 20px;
+.filtro-componente {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 2px solid #199745;  
+  background-color: #E9F8EF;
+  color: #0f7135;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.graficos-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
+.filtro-componente:hover {
+  background-color: #d6f5e2;
 }
 
-.grafico-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 18px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+.filtro-componente:focus {
+  outline: none;
+  border-color: #159a45;
+}
+
+.periodo {
+  padding: 2px 10px;
+  border-radius: 6px;
+  border: 2px solid #199745;  
+  background-color: #E9F8EF;
+  color: #0f7135;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.periodo:hover {
+  background-color: #d6f5e2;
+}
+
+.periodo:focus {
+  outline: none;
+  border-color: #159a45;
 }
 
 .grafico-card canvas {
   width: 100% !important;
-  height: 240px !important; 
+  height: 200px !important;
+}
+
+.grafico-pizza canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 230px;
+}
+
+.grafico-linhas canvas,
+.grafico-barras canvas {
+  width: 106% !important;
+  height: auto !important;
+  max-height: 230px;
+  
 }

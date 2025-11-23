@@ -82,12 +82,26 @@
         </div>
 
         <div class="dashboard-content">
-          <div class="kpi-container">
-  
+
+ <br> <div class="periodo-container">
+            <label for="periodo">Período:</label>
+          <select class="periodo">
+          <option value="hoje">Hoje</option>
+          <option value="semana">Últimos 7 dias</option>
+          <option value="2semanas">Últimos 15 dias</option>
+          <option value="mes">Neste mês</option>
+        </select>
+                   <span class="info-tooltip">ℹ
+        <span class="info-text"><b>Nesta área, você pode selecionar o período desejado para realizar a análise.</b></span>
+      </span>
+          </div> <br>
+
+  <div class="kpi-container">
   <div class="kpi-card">
     <h3>Total de Alertas
   <span class="info-tooltip">ℹ
-    <span class="info-text">Este indicador exibe a quantidade total de todos alertas emitidos pela máquina durante o período selecionado.</span>
+    <span class="info-text">Este indicador exibe a quantidade total de todos alertas emitidos pela máquina durante o
+       período selecionado.</span>
   </span>
 </h3>
     <p class="kpi-value">128</p>
@@ -97,7 +111,8 @@
   <div class="kpi-card critico">
     <h3>Alertas Críticos
       <span class="info-tooltip">ℹ
-        <span class="info-text">Este indicador exibe a quantidade total de alertas críticos gerados durante o período selecionado.</span>
+        <span class="info-text">Este indicador exibe a quantidade total de alertas críticos gerados pela máquina durante 
+          o período selecionado.</span>
       </span>
     </h3>
     <p class="kpi-value">37</p>
@@ -105,9 +120,10 @@
   </div>
 
   <div class="kpi-card">
-    <h3>Pré-Ociosidade
+    <h3>Limites de Ociosidade
       <span class="info-tooltip">ℹ
-        <span class="info-text">Este indicador exibe a quantidade de alertas gerados antes da máquina entrar em estado de ociosidade durante o período selecionado.</span>
+        <span class="info-text">Este indicador exibe a quantidade de alertas gerados no limite de ociosidade durante
+           o período selecionado.</span>
       </span>
     </h3>
     <p class="kpi-value">15</p>
@@ -123,45 +139,68 @@
     <p class="kpi-value">CPU</p>
     <span class="kpi-sub">42 alertas</span>
   </div>
-
+  
 </div>
-
-          <div class="periodo-container">
-            <label for="periodo">Período:</label>
-            <select id="periodo">
-              <option>Últimos 7 dias</option>
-              <option>Últimos 15 dias</option>
-              <option>Últimos 30 dias</option>
-            </select>
-                   <span class="info-tooltip">ℹ
-        <span class="info-text"> Nesta área, você pode selecionar o período desejado para realizar a análise.</span>
-      </span>
-          </div>
-
-          <div class="graficos-container">
-  <div class="grafico-card">
-           <span class="info-tooltip">ℹ
-        <span class="info-text"> Neste gráfico, é exibido a variação da quantidade total de alertas durante o período selecionado.</span>
-      </span>
-    <h3>Alertas ao longo do período</h3> 
+         <div class="graficos-container">
+  <div class="grafico-card grafico-linhas">
+    <div class="titulo-area">
+      <h3>Alertas ao longo do período</h3>
+      <div class="titulo-actions">
+        <span class="info-tooltip">ℹ
+          <span class="info-text">
+            <b>Neste gráfico, é exibida a variação da quantidade de alertas durante o período selecionado,
+               de todos os componentes ou do componente selecionado.</b>
+          </span>
+        </span>
+        <select class="filtro-componente">
+          <option value="todos">Todos os Componentes</option>
+          <option value="cpu">CPU</option>
+          <option value="ram">Memória RAM</option>
+          <option value="disco">Disco</option>
+        </select>
+      </div>
+    </div>
     <canvas id="graficoLinha"></canvas>
   </div>
 
-  <div class="grafico-card full">
-          <span class="info-tooltip">ℹ
-        <span class="info-text"> Neste gráfico, é exibido a quantidade total de alertas, dividido por componente em que esse alerta foi gerado, durante o período selecionado.</span>
-      </span>
-    <h3>Alertas por Componentes</h3>
-    <canvas id="graficoComponentes"></canvas>
-  </div>
-</div>
-        </div>
+  <div class="grafico-card grafico-barras">
+    <div class="titulo-area">
+      <h3>Alertas por Componentes</h3>
+      <div class="titulo-actions">
+        <span class="info-tooltip">ℹ
+          <span class="info-text">
+            <b>Neste gráfico, é exibida a distribuição da quantidade de alertas por componente.</b>
+          </span>
+        </span>
       </div>
     </div>
+    <br> <br>
+    <canvas id="graficoComponentes"></canvas>
   </div>
 
-  <script>
+  <div class="grafico-card grafico-pizza">
+    <div class="titulo-area">
+      <h3>Tipos de Alerta</h3>
+      <div class="titulo-actions">
+        <span class="info-tooltip">ℹ
+          <span class="info-text">
+            <b>Neste gráfico, é exibido um comparativo entre alertas críticos e preventivos.</b>
+          </span>
+        </span>
+        <select class="filtro-componente">
+          <option value="todos">Todos os Componentes</option>
+          <option value="cpu">CPU</option>
+          <option value="ram">Memória RAM</option>
+          <option value="disco">Disco</option>
+        </select>
+      </div>
+    </div>
+    <canvas id="graficoTipos"></canvas>
+  </div>
 
+</div>
+
+  <script>
     new Chart(document.getElementById("graficoLinha"), {
       type: "line",
       data: {
@@ -169,6 +208,7 @@
         datasets: [{
           label: "Alertas",
           data: [12, 18, 10, 22, 14, 8, 16],
+          borderWidth: 3,
           borderColor: "#1abc9c",
           fill: true,
           tension: 0.3
@@ -199,7 +239,19 @@
     }},
     indexAxis: "y"
   }
-}); 
+});
+
+ new Chart(document.getElementById("graficoTipos"), {
+      type: "pie",
+      data: {
+        labels: ["Crítico", "Preventivo"],
+        datasets: [{
+          data: [37, 58],
+          backgroundColor: ["#d9534f", "#FFC04D"]
+        }]
+      },
+      
+    });
 </script>
 </body>
 </html>
