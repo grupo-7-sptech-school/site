@@ -185,6 +185,80 @@
             z-index: 999;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+
+        .info-icon-kpi {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 18px;
+            height: 18px;
+            background: #455363;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+            z-index: 10;
+        }
+
+        .info-icon-kpi:hover {
+            background: #2f3031;
+            transform: scale(1.1);
+        }
+
+        .kpi-tooltip {
+            display: none;
+            position: absolute;
+            top: 35px;
+            right: 0;
+            background: #333;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            width: 220px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-family: "Montserrat", sans-serif;
+            line-height: 1.4;
+        }
+
+        .kpi-tooltip.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .kpi-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: 10px;
+            width: 10px;
+            height: 10px;
+            background: #333;
+            transform: rotate(45deg);
+        }
+
+        .kpi-card-ups {
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -232,18 +306,33 @@
 
                 <div class="kpis-ups">
                     <div class="kpi-card-ups">
+                        <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                        <div class="kpi-tooltip">
+                            <strong>Quantidade de UPS</strong><br>
+                            Número total de sistemas UPS monitorados atualmente no seu datacenter.
+                        </div>
                         Qtd. UPS
                         <span>854</span>
                         <small>+6,5% em relação ao último mês</small>
                     </div>
 
                     <div class="kpi-card-ups">
+                        <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                        <div class="kpi-tooltip">
+                            <strong>Power Usage Effectiveness (PUE)</strong><br>
+                            Mede a eficiência energética do datacenter. Quanto mais próximo de 1.0, mais eficiente.
+                        </div>
                         P.U.E
                         <span>1.2</span>
                         <small>-0,03% em relação ao último dia</small>
                     </div>
 
                     <div class="kpi-card-ups">
+                        <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                        <div class="kpi-tooltip">
+                            <strong>Energia Disponível</strong><br>
+                            Capacidade restante de energia nas UPSs para suportar operações durante falta de energia.
+                        </div>
                         Energia disponível
                         <span>60%</span>
                         <small>-0,2% em relação ao último dia</small>
@@ -286,8 +375,9 @@
             </div>
         </div>
     </div>
-
-    <script>
+</body>
+</html>
+<script>
         class UPSDashboard {
             constructor() {
                 this.baseURL = '/api/ups';
@@ -651,9 +741,9 @@
             }
 
             abrirModalIncluirUPS() {
-    console.log('Abrindo modal de inclusão UPS');
-    
-    const modalHTML = `
+                console.log('Abrindo modal de inclusão UPS');
+
+                const modalHTML = `
         <div class="modal-overlay" style="
             position: fixed;
             top: 0;
@@ -878,11 +968,11 @@
             </div>
         </div>
     `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    
-    this.configurarModalIncluirUPS();
-}
+
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+                this.configurarModalIncluirUPS();
+            }
 
             configurarModalIncluirUPS() {
                 const form = document.getElementById('formIncluirUPS');
@@ -893,7 +983,7 @@
                 if (capacidadeVA && capacidadeWatts) {
                     capacidadeVA.addEventListener('input', function () {
                         if (this.value && !capacidadeWatts.value) {
-                            capacidadeWatts.value = Math.round(this.value * 0.8); // 80% do VA
+                            capacidadeWatts.value = Math.round(this.value * 0.8);
                         }
                     });
                 }
@@ -928,9 +1018,8 @@
 
                             if (resultado.sucesso) {
                                 this.mostrarAlerta('UPS cadastrada com sucesso!', 'success');
-                                this.carregarDados(); // Atualiza os dados
+                                this.carregarDados();
 
-                                // Fechar modal após 1 segundo
                                 setTimeout(() => {
                                     const modal = document.querySelector('.modal-overlay');
                                     if (modal) modal.remove();
@@ -941,7 +1030,7 @@
                             }
 
                         } catch (error) {
-                            console.error('❌ Erro ao cadastrar UPS:', error);
+                            console.error('Erro ao cadastrar UPS:', error);
                             this.mostrarMensagemErro('Erro de conexão com o servidor');
                         }
                     });
@@ -1029,7 +1118,25 @@
         };
         status - normal
         console.log('UPS Dashboard Framework carregado');
-    </script>
-</body>
 
-</html>
+        function toggleKpiTooltip(icon) {
+            const tooltip = icon.nextElementSibling;
+            const isShowing = tooltip.classList.contains('show');
+
+            document.querySelectorAll('.kpi-tooltip.show').forEach(t => {
+                t.classList.remove('show');
+            });
+
+            if (!isShowing) {
+                tooltip.classList.add('show');
+            }
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!event.target.classList.contains('info-icon-kpi')) {
+                document.querySelectorAll('.kpi-tooltip.show').forEach(tooltip => {
+                    tooltip.classList.remove('show');
+                });
+            }
+        });
+</script>
