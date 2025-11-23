@@ -631,68 +631,91 @@ var labelsRam = labelsTempoReal();
         }]
     });
 
-    function atualizarGraficos() {
+   function atualizarGraficos() {
+    const host = id;
 
-    // CPU
-   fetch(`/grafico/dadosGrafico/1/${id}`)
-    .then(r => r.json())
-    .then(dados => {
-        var valores = [];
-        var labels = [];
-
-        for (var i = dados.length - 1; i >= 0; i--) {
-            valores.push(dados[i].valor);
-            labels.push(dados[i].momento_grafico);
-        }
-
-        graficoCpu.data.labels = labels;
-        graficoCpu.data.datasets[0].data = valores;
-        graficoCpu.update();
-    });
-
-
-    // RAM
-fetch(`/grafico/dadosGrafico/2/${id}`)
-
-        .then(function (respostaRam) {
-            return respostaRam.json();
-        })
-        .then(function (dadosRamServidor) {
-            if (dadosRamServidor.length > 0) {
-                var valores = [];
-                var labels = [];
-
-                for (var i = dadosRamServidor.length - 1; i >= 0; i--) {
-                    valores.push(dadosRamServidor[i].valor);
-                    labels.push(dadosRamServidor[i].momento_grafico);
-                }
-
-                graficoRam.data.labels = labels;
-                graficoRam.data.datasets[0].data = valores;
-                graficoRam.update("none");
+    // Leitura de Disco (%)
+    fetch(`/grafico/leituraDisco/${host}`)
+        .then(resposta => resposta.json())
+        .then(resposta => {
+            var valores = [];
+            var labels = [];
+            for (var i = resposta.length - 1; i >= 0; i--) {
+                valores.push(resposta[i].valor);
+                labels.push(resposta[i].momento_grafico);
             }
-        });
-
-    // DISCO
-fetch(`/grafico/dadosGrafico/3/${id}`)
-        .then(function (respostaDisco) {
-            return respostaDisco.json();
+            graficoCpu.data.labels = labels;
+            graficoCpu.data.datasets[0].data = valores;
+            graficoCpu.update();
         })
-        .then(function (dadosDiscoServidor) {
-            if (dadosDiscoServidor.length > 0) {
+        .catch(error => console.error("fetch de Leitura de Disco:", error));
 
-                usoDisco = dadosDiscoServidor[0].valor;
+    // Escrita de Disco (%)
+    fetch(`/grafico/escritaDisco/${host}`)
+        .then(resposta => resposta.json())
+        .then(resposta => {
+            var valores = [];
+            var labels = [];
+            for (var i = resposta.length - 1; i >= 0; i--) {
+                valores.push(resposta[i].valor);
+                labels.push(resposta[i].momento_grafico);
+            }
+            graficoRam.data.labels = labels;
+            graficoRam.data.datasets[0].data = valores;
+            graficoRam.update();
+        })
+        .catch(error => console.error("fetch de Escrita de Disco:", error));
+
+    // Uso total de Disco (%)
+    fetch(`/grafico/dadosGrafico/3/${host}`)
+        .then(resposta => resposta.json())
+        .then(resposta => {
+            if (resposta.length > 0) {
+                usoDisco = resposta[0].valor;
                 usoLivre = 100 - usoDisco;
-
-                h1_usoDisco.innerHTML = usoDisco
-                h1_usoLivre.innerHTML = usoLivre
-                if (graficoDisco) {
-                    graficoDisco.data.datasets[0].data = [usoDisco];
-                    graficoDisco.update();
-                }
+                h1_usoDisco.innerHTML = usoDisco + "%";
+                h1_usoLivre.innerHTML = usoLivre + "%";
+                graficoDisco.data.datasets[0].data = [usoDisco];
+                graficoDisco.update();
             }
-        });
+        })
+        .catch(error => console.error("fetch de uso de Disco:", error));
+
+    // Aplicativo com mais escrita
+    fetch(`/grafico/maisEscrita/${host}`)
+        .then(resposta => resposta.json())
+        .then(resposta => {
+            if (resposta.length > 0) {
+                statusUps.innerHTML = resposta[0].procMaisEscrita;
+            }
+        })
+        .catch(error => console.error("fetch de aplicativo com mais escrita:", error));
+
+    // Aplicativo com mais leitura
+    fetch(`/grafico/maisLeitura/${host}`)
+        .then(resposta => resposta.json())
+        .then(resposta => {
+            if (resposta.length > 0) {
+                statusRam.innerHTML = resposta[0].procMaisLeitura;
+            }
+        })
+        .catch(error => console.error("fetch de aplicativo com mais leitura:", error));
+
+    // Top 3 aplicativos
+    fetch(`/grafico/top3/${host}`)
+        .then(resposta => resposta.json())
+        .then(resposta => {
+            if (resposta.length > 0) {
+                top1.innerHTML = `1. ${resposta[0].top1} (${resposta[0].top1Valor}%)`;
+                top2.innerHTML = `2. ${resposta[0].top2} (${resposta[0].top2Valor}%)`;
+                top3.innerHTML = `3. ${resposta[0].top3} (${resposta[0].top3Valor}%)`;
+            }
+        })
+        .catch(error => console.error("fetch de Top 3 aplicativos:", error));
 }
+
+
+
 
 // Atualiza sozinho a cada 30s
 setInterval(atualizarGraficos, 30000);

@@ -5,11 +5,67 @@ function dadosGrafico(req, res) {
     var hostName = req.params.hostName;
 
     graficoModel.dadosGrafico(idComponente, hostName, 10)
-        .then(r => res.json(r))
-        .catch(e => {
-            console.log("ERRO no gráfico", e);
-            res.status(500).json(e);
+        .then(resposta => res.json(resposta))
+        .catch(error => {
+            res.status(500).json(error);
         });
 }
 
-module.exports = { dadosGrafico };
+function leituraDisco(req, res) {
+    var hostName = req.params.hostName;
+
+    graficoModel.leituraDisco(hostName)
+        .then(resposta => res.json(resposta))
+        .catch(error => {
+            res.status(500).json(error);
+        });
+}
+
+function escritaDisco(req, res) {
+    var hostName = req.params.hostName;
+
+    graficoModel.escritaDisco(hostName)
+        .then(resposta => res.json(resposta))
+        .catch(error => {
+            res.status(500).json(error);
+        });
+}
+
+function top3(req, res) {
+    var hostName = req.params.hostName;
+
+    graficoModel.top3(hostName)
+        .then(resposta => res.json(resposta))
+        .catch(error => {
+            res.status(500).json(error);
+        });
+}
+
+function maisLeitura(req, res) {
+    var hostName = req.params.hostName;
+
+    graficoModel.maisLeitura(hostName)
+        .then(resposta => res.json(resposta))
+        .catch(error => {
+            res.status(500).json(error);
+        });
+}
+
+function maisEscrita(req, res) {
+    var hostName = req.params.hostName;
+
+    graficoModel.maisEscrita(hostName)
+        .then(resposta => res.json(resposta))
+        .catch(error => {
+            res.status(500).json(error);
+        });
+}
+
+module.exports = { 
+    dadosGrafico,
+    leituraDisco,
+    escritaDisco,
+    top3,
+    maisLeitura,
+    maisEscrita
+};
