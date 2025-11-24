@@ -84,15 +84,15 @@ function maisEscrita(hostName) {
 }
 
 async function getRamUltimos7Dias(idMaquina) {
-  var instrucaoSql = `
+    var instrucaoSql = `
     SELECT 
         DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H:00:00') AS hora,
         ROUND(AVG(r.captura), 2) AS ramPercent
     FROM Registro r
     JOIN Componente c 
         ON r.fkComponente = c.idComponente
-    WHERE r.fkComponente = 2
-      AND c.fkMaquina = ${idMaquina}
+    WHERE c.fkMaquina = ${idMaquina} -- Filtra pela máquina específica
+      AND c.nome LIKE 'RAM%'        -- Filtra pelo nome do componente (RAM)
       AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
     GROUP BY hora
     ORDER BY hora ASC;
@@ -101,16 +101,17 @@ async function getRamUltimos7Dias(idMaquina) {
 }
 
 async function alertasSemana(idMaquina) {
-    var instrucao = `
-        SELECT COUNT(*) AS total
-        FROM Alerta
-        WHERE fkComponente = 2
-          AND dtHora >= NOW() - INTERVAL 7 DAY
-          AND fkRegistro IN (
-              SELECT idRegistro FROM Registro WHERE fkComponente = 2
-          );
-    `;
-    return database.executar(instrucao);
+  var instrucaoSql = `
+    SELECT 
+        COUNT(a.idAlerta) AS total -- Contamos o total de alertas
+    FROM Alerta a
+    JOIN Componente c ON a.fkComponente = c.idComponente
+    WHERE c.fkMaquina = ${idMaquina}
+      AND c.nome LIKE 'RAM%' -- Apenas alertas de RAM
+      AND a.estado = 'CRITICO' -- Apenas alertas críticos
+      AND a.dtHora >= NOW() - INTERVAL 7 DAY;
+  `;
+  return database.executar(instrucaoSql);
 }
 
 

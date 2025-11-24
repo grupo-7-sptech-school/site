@@ -52,14 +52,15 @@ async function carregarRam7dias() {
 
         document.getElementById("kpiMedia").innerText = media.toFixed(1) + "%";
         document.getElementById("kpiPico").innerText = maior.toFixed(1) + "%";
-        document.getElementById("kpiCritico").innerText = horasCriticas + "h";
+        document.getElementById("kpiHorasCriticas").innerText = horasCriticas + "h";
     } else {
         document.getElementById("kpiMedia").innerText = "--";
         document.getElementById("kpiPico").innerText = "--";
-        document.getElementById("kpiCritico").innerText = "--";
+        document.getElementById("kpiHorasCriticas").innerText = "--";
     }
 
     montarGrafico(labels, valores, coresPontos, tamanhosPontos, 90);
+    carregarAlertasSemana(id);
 }
 
 function montarGrafico(labels, valores, coresPontos, tamanhosPontos, limiteCritico) {
