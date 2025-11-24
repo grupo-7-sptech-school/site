@@ -61,11 +61,23 @@ function maisEscrita(req, res) {
         });
 }
 
+async function ramUltimos7Dias(req, res) {
+    var idMaquina = req.params.idMaquina;
+
+    graficoModel.getRamUltimos7Dias(idMaquina)
+        .then(resposta => res.json(resposta))
+        .catch(error => {
+            res.status(500).json(error);
+        });
+
+}
+
 module.exports = { 
     dadosGrafico,
     leituraDisco,
     escritaDisco,
     top3,
     maisLeitura,
-    maisEscrita
+    maisEscrita,
+    ramUltimos7Dias
 };

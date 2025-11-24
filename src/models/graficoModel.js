@@ -83,6 +83,23 @@ function maisEscrita(hostName) {
     return database.executar(instrucao);
 }
 
+async function ramUltimos7Dias(idMaquina) {
+  var instrucaoSql = `
+    SELECT 
+        DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H:00:00') AS hora,
+        ROUND(AVG(r.captura), 2) AS ramPercent
+    FROM Registro r
+    JOIN Componente c ON r.fkComponente = c.idComponente
+    WHERE r.fkComponente = 2
+      AND c.fkMaquina = ${idMaquina}
+      AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
+    GROUP BY DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H')
+    ORDER BY hora ASC;
+  `;
+  return database.executar(instrucaoSql);
+}
+
+
 
 module.exports = {
     dadosGrafico,
@@ -90,5 +107,6 @@ module.exports = {
     escritaDisco,
     top3,
     maisLeitura,
-    maisEscrita
+    maisEscrita,
+    ramUltimos7Dias
 };

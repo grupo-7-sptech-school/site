@@ -27,4 +27,8 @@ router.get("/disco/maisEscrita/:hostName", function (req, res) {
     graficoController.maisEscrita(req, res);
 });
 
+router.get("/ram-7dias/:idMaquina", function (req, res) {
+    graficoController.getRamUltimos7Dias(req, res);
+});
+
 module.exports = router;
