@@ -66,8 +66,10 @@
                         Painel de controle - Servidor
                     </a>
                     <a id="btnGerarRelatorio" onclick="redirecionar()" class="btn-gerar-relatorio">
-                            Ver processos
-                        </a>
+                        Ver processos
+                    </a>
+                    <a href="dashborardRAM.html" class="btn-gerar-relatorio">
+                        Ver RAM
                     <div class="btns-topbar">
                         <a id="btnGerarRelatorio" onclick="baixarPDF()" class="btn-gerar-relatorio">
                             Gerar relatorio
@@ -248,7 +250,7 @@
 </body>
 <script>
 
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     const modalMetricas = document.getElementById("modalMetricas");
@@ -286,85 +288,85 @@
     });
 
 
-    function redirecionar () {
-    document.getElementById("btnGerarRelatorio") 
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-    window.location.href = `dashProcessos.html?id=${id}`;
+    function redirecionar() {
+        document.getElementById("btnGerarRelatorio")
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+        window.location.href = `dashProcessos.html?id=${id}`;
     }
 
 
     async function salvarMetricas() {
-    const nomeComponente = document.getElementById("componenteSelect").value;
-    const params = new URLSearchParams(window.location.search);
-    const idcomponente = params.get("id");
+        const nomeComponente = document.getElementById("componenteSelect").value;
+        const params = new URLSearchParams(window.location.search);
+        const idcomponente = params.get("id");
 
-    const preventivoInicio = document.getElementById("preventivoInicio").value;
-    const preventivoFim = document.getElementById("preventivoFim").value;
-    const criticoInicio = document.getElementById("criticoInicio").value;
-    const criticoFim = document.getElementById("criticoFim").value;
+        const preventivoInicio = document.getElementById("preventivoInicio").value;
+        const preventivoFim = document.getElementById("preventivoFim").value;
+        const criticoInicio = document.getElementById("criticoInicio").value;
+        const criticoFim = document.getElementById("criticoFim").value;
 
-    const resp = await fetch("/medidas/alterarMetricas", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            nomeComponente,
-            host,
-            preventivoInicio,
-            preventivoFim,
-            criticoInicio,
-            criticoFim
-        })
-    });
+        const resp = await fetch("/medidas/alterarMetricas", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                nomeComponente,
+                host,
+                preventivoInicio,
+                preventivoFim,
+                criticoInicio,
+                criticoFim
+            })
+        });
 
-    if (!resp.ok) {
-        console.error("Erro ao salvar métricas");
-        return;
+        if (!resp.ok) {
+            console.error("Erro ao salvar métricas");
+            return;
+        }
+
+        window.location.reload();
     }
 
-    window.location.reload();
-}
 
 
+    async function puxarMetricas() {
+        const hostName = new URLSearchParams(window.location.search).get("id");
+        const componentes = ["cpu", "ram", "disco"];
 
-async function puxarMetricas() {
-     const hostName = new URLSearchParams(window.location.search).get("id");
-    const componentes = ["cpu", "ram", "disco"];
+        for (const componente of componentes) {
+            const body = { hostName, nomeComponente: componente };
 
-    for (const componente of componentes) {
-        const body = { hostName, nomeComponente: componente };
+            try {
+                const resp = await fetch("/medidas/puxarMetricas", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
 
-        try {
-            const resp = await fetch("/medidas/puxarMetricas", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
+                if (!resp.ok) continue;
 
-            if (!resp.ok) continue;
+                const dados = await resp.json();
 
-            const dados = await resp.json();
+                if (componente == "cpu") {
+                    document.getElementById("valorCPU").textContent = dados.preventivoInicio + "%";
+                    document.getElementById("valorCPU2").textContent = dados.criticoInicio + "%";
+                }
 
-            if (componente == "cpu") {
-                document.getElementById("valorCPU").textContent = dados.preventivoInicio + "%";
-                document.getElementById("valorCPU2").textContent = dados.criticoInicio+ "%";
+                if (componente == "ram") {
+                    document.getElementById("valorRAM").textContent = dados.preventivoInicio + "%";
+                    document.getElementById("valorRAM2").textContent = dados.criticoInicio + "%";
+                }
+
+                if (componente == "disco") {
+                    document.getElementById("valorDisco").textContent = dados.preventivoInicio + "%";
+                    document.getElementById("valorDisco2").textContent = dados.criticoInicio + "%";
+                }
+
+            } catch (e) {
+                alert("quero dormir por favor meu deus funciona")
             }
-
-            if (componente == "ram") {
-                document.getElementById("valorRAM").textContent = dados.preventivoInicio + "%";
-                document.getElementById("valorRAM2").textContent = dados.criticoInicio + "%";
-            }
-
-            if (componente == "disco") {
-                document.getElementById("valorDisco").textContent = dados.preventivoInicio + "%";
-                document.getElementById("valorDisco2").textContent = dados.criticoInicio + "%";
-            }
-
-        } catch (e) {
-            alert("quero dormir por favor meu deus funciona")
         }
     }
-}
 
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -505,22 +507,22 @@ async function puxarMetricas() {
         }
     }
 
-    
-function labelsTempoReal() {
-    var labels = [];
-    for (var i = 0; i < 10; i++) {
-        labels.push(i + " min");
+
+    function labelsTempoReal() {
+        var labels = [];
+        for (var i = 0; i < 10; i++) {
+            labels.push(i + " min");
+        }
+        return labels;
     }
-    return labels;
-}
 
-var dadosCpu = [];
-var dadosRam = [];
-var labelsCpu = labelsTempoReal();
-var labelsRam = labelsTempoReal();
+    var dadosCpu = [];
+    var dadosRam = [];
+    var labelsCpu = labelsTempoReal();
+    var labelsRam = labelsTempoReal();
 
 
-    
+
 
 
     // Gráfico CPU
@@ -616,8 +618,8 @@ var labelsRam = labelsTempoReal();
         }
     });
 
-     
-    
+
+
     var mostrarLabel = false;
     //Gráfico RAM
     var ctxRam = document.getElementById('graficoRamCanvas').getContext('2d');
@@ -666,7 +668,7 @@ var labelsRam = labelsTempoReal();
                     }
                 }
             },
-            plugins: {  
+            plugins: {
                 annotation: {
                     annotations: {
                         limiteRAM: {
@@ -712,14 +714,14 @@ var labelsRam = labelsTempoReal();
         }
     });
 
-    
+
 
     const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
-    
+
     // var usoLivre = 100 - usoDisco;
     // h1_usoDisco.innerHTML = usoDisco + "%"
     // h1_usoLivre.innerHTML = usoLivre + "%"
-    
+
 
     new Chart(ctxDisco, {
         type: 'bar',
@@ -818,71 +820,71 @@ var labelsRam = labelsTempoReal();
 
     function atualizarGraficos() {
 
-    // CPU
-    fetch(`/grafico/dadosGrafico/1/${id}`)
-    .then(r => r.json())
-    .then(dados => {
-        var valores = [];
-        var labels = [];
-
-        for (var i = dados.length - 1; i >= 0; i--) {
-            valores.push(dados[i].valor);
-            labels.push(dados[i].momento_grafico);
-        }
-
-        graficoCpu.data.labels = labels;
-        graficoCpu.data.datasets[0].data = valores;
-        graficoCpu.update();
-    });
-
-
-    // RAM
-    fetch(`/grafico/dadosGrafico/2/${id}`)
-        .then(function (respostaRam) {
-            return respostaRam.json();
-        })
-        .then(function (dadosRamServidor) {
-            if (dadosRamServidor.length > 0) {
+        // CPU
+        fetch(`/grafico/dadosGrafico/1/${id}`)
+            .then(r => r.json())
+            .then(dados => {
                 var valores = [];
                 var labels = [];
 
-                for (var i = dadosRamServidor.length - 1; i >= 0; i--) {
-                    valores.push(dadosRamServidor[i].valor);
-                    labels.push(dadosRamServidor[i].momento_grafico);
+                for (var i = dados.length - 1; i >= 0; i--) {
+                    valores.push(dados[i].valor);
+                    labels.push(dados[i].momento_grafico);
                 }
 
-                graficoRam.data.labels = labels;
-                graficoRam.data.datasets[0].data = valores;
-                graficoRam.update("none");
-            }
-        });
+                graficoCpu.data.labels = labels;
+                graficoCpu.data.datasets[0].data = valores;
+                graficoCpu.update();
+            });
 
-    // DISCO
-    fetch(`/grafico/dadosGrafico/1/${id}`)
-        .then(function (respostaDisco) {
-            return respostaDisco.json();
-        })
-        .then(function (dadosDiscoServidor) {
-            if (dadosDiscoServidor.length > 0) {
 
-                usoDisco = dadosDiscoServidor[0].valor;
-                usoLivre = 100 - usoDisco;
+        // RAM
+        fetch(`/grafico/dadosGrafico/2/${id}`)
+            .then(function (respostaRam) {
+                return respostaRam.json();
+            })
+            .then(function (dadosRamServidor) {
+                if (dadosRamServidor.length > 0) {
+                    var valores = [];
+                    var labels = [];
 
-                h1_usoDisco.innerHTML = usoDisco
-                h1_usoLivre.innerHTML = usoLivre
-                if (graficoDisco) {
-                    graficoDisco.data.datasets[0].data = [usoDisco];
-                    graficoDisco.update();
+                    for (var i = dadosRamServidor.length - 1; i >= 0; i--) {
+                        valores.push(dadosRamServidor[i].valor);
+                        labels.push(dadosRamServidor[i].momento_grafico);
+                    }
+
+                    graficoRam.data.labels = labels;
+                    graficoRam.data.datasets[0].data = valores;
+                    graficoRam.update("none");
                 }
-            }
-        });
-}
+            });
 
-// Atualiza sozinho a cada 30s
-setInterval(atualizarGraficos, 30000);
+        // DISCO
+        fetch(`/grafico/dadosGrafico/1/${id}`)
+            .then(function (respostaDisco) {
+                return respostaDisco.json();
+            })
+            .then(function (dadosDiscoServidor) {
+                if (dadosDiscoServidor.length > 0) {
 
-// Atualiza ao carregar página
-body.onload(atualizarGraficos());
+                    usoDisco = dadosDiscoServidor[0].valor;
+                    usoLivre = 100 - usoDisco;
+
+                    h1_usoDisco.innerHTML = usoDisco
+                    h1_usoLivre.innerHTML = usoLivre
+                    if (graficoDisco) {
+                        graficoDisco.data.datasets[0].data = [usoDisco];
+                        graficoDisco.update();
+                    }
+                }
+            });
+    }
+
+    // Atualiza sozinho a cada 30s
+    setInterval(atualizarGraficos, 30000);
+
+    // Atualiza ao carregar página
+    body.onload(atualizarGraficos());
 
 
 

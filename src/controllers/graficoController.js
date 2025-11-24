@@ -72,6 +72,15 @@ async function ramUltimos7Dias(req, res) {
 
 }
 
+function alertasSemana(req, res) {
+    var id = req.params.idMaquina;
+
+    graficoModel.alertasSemana(id)
+        .then(r => res.json(r[0]))
+        .catch(e => res.status(500).json(e));
+}
+
+
 module.exports = { 
     dadosGrafico,
     leituraDisco,
@@ -79,5 +88,6 @@ module.exports = {
     top3,
     maisLeitura,
     maisEscrita,
-    ramUltimos7Dias
+    ramUltimos7Dias,
+    alertasSemana
 };

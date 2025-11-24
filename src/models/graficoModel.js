@@ -83,20 +83,34 @@ function maisEscrita(hostName) {
     return database.executar(instrucao);
 }
 
-async function ramUltimos7Dias(idMaquina) {
+async function getRamUltimos7Dias(idMaquina) {
   var instrucaoSql = `
     SELECT 
         DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H:00:00') AS hora,
         ROUND(AVG(r.captura), 2) AS ramPercent
     FROM Registro r
-    JOIN Componente c ON r.fkComponente = c.idComponente
+    JOIN Componente c 
+        ON r.fkComponente = c.idComponente
     WHERE r.fkComponente = 2
       AND c.fkMaquina = ${idMaquina}
       AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
-    GROUP BY DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H')
+    GROUP BY hora
     ORDER BY hora ASC;
   `;
   return database.executar(instrucaoSql);
+}
+
+async function alertasSemana(idMaquina) {
+    var instrucao = `
+        SELECT COUNT(*) AS total
+        FROM Alerta
+        WHERE fkComponente = 2
+          AND dtHora >= NOW() - INTERVAL 7 DAY
+          AND fkRegistro IN (
+              SELECT idRegistro FROM Registro WHERE fkComponente = 2
+          );
+    `;
+    return database.executar(instrucao);
 }
 
 
@@ -108,5 +122,6 @@ module.exports = {
     top3,
     maisLeitura,
     maisEscrita,
-    ramUltimos7Dias
+    getRamUltimos7Dias,
+    alertasSemana
 };

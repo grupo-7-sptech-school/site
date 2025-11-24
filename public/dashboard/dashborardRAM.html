@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./../css/dashboards.css">
+    <link rel="stylesheet" href="./../css/cabecalho3.css">
+    <link rel="stylesheet" href="./../css/modal.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
+
+    <style>
+        .kpis-ram {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding-right: 3vw;
+            padding-left: 3vw;
+            width: 78vw;
+            height: 20vh;
+            align-items: center;
+            padding-top: 2vh;
+            padding-bottom: 2vh;
+            flex-shrink: 0;
+        }
+
+        .kpi-card-ram {
+            background-color: white;
+            width: 18vw;
+            height: 14vh;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: "montserrat", sans-serif;
+            padding: 1.5vh 1vw;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .kpi-card-ram:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-card-ram span {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: #18B187;
+            margin: 8px 0;
+        }
+
+        .kpi-card-ram small {
+            color: #8a8a8a;
+            font-weight: 400;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .info-icon-kpi {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 18px;
+            height: 18px;
+            background: #455363;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: Arial, sans-serif;
+            z-index: 10;
+        }
+
+        .info-icon-kpi:hover {
+            background: #2f3031;
+            transform: scale(1.1);
+        }
+
+        .kpi-tooltip {
+            display: none;
+            position: absolute;
+            top: 35px;
+            right: 0;
+            background: #333;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            width: 220px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-family: "Montserrat", sans-serif;
+            line-height: 1.4;
+        }
+
+        .kpi-tooltip.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body onload="carregarRam7dias()">
+
+    <div class="total-dash">
+        <div class="dashboard-bg">
+
+            <!-- Sidebar -->
+            <div class="dashboard-sidebar">
+                <div class="dashboard-logo"></div>
+                <div class="dashboard-sidebar-btns">
+                    <a href="alertas.html" class="dashboard-sidebar-btn">
+                        <div class="icon-alert"></div>
+                        <h3>Alertas</h3>
+                    </a>
+                    <a href="contateste.html" class="dashboard-sidebar-btn">
+                        <div class="icon-user"></div>
+                        <h3>Conta</h3>
+                    </a>
+                    <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
+                        <div class="icon-dashboard"></div>
+                        <h3>Painel de <br> Controle</h3>
+                    </a>
+                    <a href="suporte.html" class="dashboard-sidebar-btn">
+                        <div class="icon-support"></div>
+                        <h3>Suporte</h3>
+                    </a>
+                </div>
+                <a href=".././index.html" class="dashboard-logout">
+                    <div class="icon-logout"></div>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+
+            <div class="dashboard-low-right-side">
+
+                <div class="dashboard-topbar">
+                    <h2>Consumo de RAM — Últimos 7 dias</h2>
+                    <div class="btns-topbar">
+                        <div class="btn-padrao">
+                            <button class="btn-notificacao"></button>
+                            <a href="contateste.html" class="btn-conta"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- *** NOVAS KPIS *** -->
+                <div class="kpis-ram">
+
+                    <div class="kpi-card-ram">
+                        <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                        <div class="kpi-tooltip">
+                            <strong>Média de uso de RAM</strong><br>
+                            Média de utilização (%) ao longo dos últimos 7 dias.
+                        </div>
+                        Média semanal
+                        <span id="kpiMedia">0%</span>
+                        <small>Calculado automaticamente</small>
+                    </div>
+
+                    <div class="kpi-card-ram">
+                        <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                        <div class="kpi-tooltip">
+                            <strong>Pico máximo</strong><br>
+                            Maior valor registrado no período.
+                        </div>
+                        Pico
+                        <span id="kpiPico">0%</span>
+                        <small>Maior uso detectado</small>
+                    </div>
+
+                    <div class="kpi-card-ram">
+                        <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                        <div class="kpi-tooltip">
+                            <strong>Horas em alerta crítico</strong><br>
+                            Quantidade de horas que excederam 80% de uso.
+                        </div>
+                        Horas críticas
+                        <span id="kpiCritico">0h</span>
+                        <small>Baseado em limite de 80%</small>
+                    </div>
+
+                    <div class="kpi-card-ram">
+                        <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                        <div class="kpi-tooltip">
+                            <strong>Total de alertaa críticos na semana</strong><br>
+                            Quantidade de vezes em que excederam 90% de uso.
+                        </div>
+                        Alertas críticos
+                        <span id="kpiCritico">--</span>
+                        <small>Baseado em limite de 80%</small>
+                    </div>
+                    
+                </div>
+
+                <!-- GRÁFICO -->
+                <div class="dashboard-charts">
+                    <div class="line-charts">
+                        <h3>Histórico da RAM (7 dias)</h3>
+                        <div class="grafico-ram" style="height: 400px;">
+                            <canvas id="graficoRam7dias"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/dashram.js"></script>
+
+    <script>
+        function toggleKpiTooltip(icon) {
+            const tooltip = icon.nextElementSibling;
+            tooltip.classList.toggle("show");
+        }
+    </script>
+
+</body>
+
+</html>
