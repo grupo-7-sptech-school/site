@@ -68,6 +68,9 @@
                     <a id="btnGerarRelatorio" onclick="redirecionar()" class="btn-gerar-relatorio">
                         Ver processos
                     </a>
+                    <a id="btn-pag-alertas" onclick="red()" class="btn-pag-alertas">
+                            Gerenciar alertas
+                        </a>
                     <a href="dashborardRAM.html" class="btn-gerar-relatorio">
                         Ver RAM
                     <div class="btns-topbar">
@@ -293,6 +296,13 @@
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get("id");
         window.location.href = `dashProcessos.html?id=${id}`;
+    }
+
+    function red () {
+    document.getElementById("btn-pag-alertas") 
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+    window.location.href = `dashAlertas.html?id=${id}`;
     }
 
 

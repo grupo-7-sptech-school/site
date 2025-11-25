@@ -20,6 +20,7 @@ var medidasRouter = require("./src/routes/medidas");
 var graficoRouter = require("./src/routes/grafico.js");
 const upsRoutes = require('./src/routes/upsRoutes');
 var sustentabilidadeRoutes = require("./src/routes/sustentabilidadeRoutes");
+const alertaRouter = require("./src/routes/alerta");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -33,6 +34,7 @@ app.use("/usuarios", usuarioRouter);
 app.use("/medidas", medidasRouter);
 app.use("/grafico", graficoRouter);
 app.use("/sustentabilidade", sustentabilidadeRoutes);
+app.use("/alertas", alertaRouter);
 
 
 //console.log('Registrando rotas UPS...');

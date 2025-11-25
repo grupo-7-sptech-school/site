@@ -104,8 +104,8 @@
        período selecionado.</span>
   </span>
 </h3>
-    <p class="kpi-value">128</p>
-    <span class="kpi-sub">+12 esta semana</span>
+    <p class="kpi-value"></p>
+<span class="kpi-sub"></span>
   </div>
 
   <div class="kpi-card critico">
@@ -115,8 +115,9 @@
           o período selecionado.</span>
       </span>
     </h3>
-    <p class="kpi-value">37</p>
-    <span class="kpi-sub">+3 hoje</span>
+    <p class="kpi-value"></p>
+<span class="kpi-sub"></span>
+
   </div>
 
   <div class="kpi-card">
@@ -126,8 +127,9 @@
            o período selecionado.</span>
       </span>
     </h3>
-    <p class="kpi-value">15</p>
-    <span class="kpi-sub">-5 este mês</span>
+    <p class="kpi-value"></p>
+<span class="kpi-sub"></span>
+
   </div>
 
   <div class="kpi-card">
@@ -136,8 +138,8 @@
         <span class="info-text"> Este indicador exibe o componente com maior número de alertas durante o período selecionado.</span>
       </span>
     </h3>
-    <p class="kpi-value">CPU</p>
-    <span class="kpi-sub">42 alertas</span>
+    <p class="kpi-value"></p>
+<span class="kpi-sub"></span>
   </div>
 
 </div>
@@ -201,57 +203,171 @@
 </div>
 
   <script>
-    new Chart(document.getElementById("graficoLinha"), {
-      type: "line",
-      data: {
-        labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
-        datasets: [{
-          label: "Alertas",
-          data: [12, 18, 10, 22, 14, 8, 16],
-          borderWidth: 3,
-          borderColor: "#1abc9c",
-          fill: true,
-          tension: 0.3
-        }]
-      },
-      options: {
-    plugins:{
-    legend: {
-      display: false
-    }},
-  }
+
+  let hostName = sessionStorage.HOSTNAME_USUARIO || 1598329989;
+
+  const selectPeriodo = document.querySelector(".periodo");
+  const selectComponenteLinha = document.querySelectorAll(".filtro-componente")[0];
+  const selectComponentePizza = document.querySelectorAll(".filtro-componente")[1];
+
+
+    function traduzirPeriodo(p) {
+      switch (p) {
+        case "hoje": return "1 DAY";
+        case "semana": return "7 DAY";
+        case "2semanas": return "15 DAY";
+        case "mes": return "30 DAY";
+        default: return "1 DAY";
+    }
+}
+
+// KPIs
+    async function carregarKPIs() {
+      const periodo = traduzirPeriodo(selectPeriodo.value);
+
+     const resposta = await fetch("/alertas/kpis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hostName: hostName, periodo })
     });
 
-    new Chart(document.getElementById("graficoComponentes"), {
-  type: "bar",
-  data: {
-    labels: ["CPU", "RAM", "Disco"],
-    datasets: [{
-      label: "Quantidade de Alertas",
-      data: [42, 31, 22],
-      backgroundColor: ["#3498db", "#D16D85", "#00C04B"]
-    }]
-  },    
-  options: {
-    plugins:{
-    legend: {
-      display: false
-    }},
-    indexAxis: "y"
-  }
+    if (!resposta.ok) return console.log("Erro ao carregar KPIs");
+
+    const dados = await resposta.json();
+
+    document.querySelector(".kpi-card:nth-child(1) .kpi-value").innerText = dados.totalAlertas;
+    document.querySelector(".kpi-card:nth-child(2) .kpi-value").innerText = dados.criticos;
+    document.querySelector(".kpi-card:nth-child(3) .kpi-value").innerText = dados.ociosidade;
+    document.querySelector(".kpi-card:nth-child(4) .kpi-value").innerText = dados.componente;
+}
+
+// gráfico Linhas
+let graficoLinha = new Chart(document.getElementById("graficoLinha"), {
+    type: "line",
+    data: {
+        labels: [],
+        datasets: [{
+            label: "Alertas",
+            data: [],
+            borderWidth: 3,
+            borderColor: "#1abc9c",
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+  async function carregarGraficoLinha() {
+    let componente = selectComponenteLinha.value;
+    componente = componente === "todos" ? null : componente.toUpperCase();
+
+    const resposta = await fetch("/alertas/graficoLinha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ hostName: hostName, periodo, componente })
+    });
+
+    if (!resposta.ok) return console.log("Erro no gráfico de linha");
+
+    const dados = await resposta.json();
+
+    const labels = dados.map(r => r.momento);
+    const valores = dados.map(r => r.total);
+
+    graficoLinha.data.labels = labels;
+    graficoLinha.data.datasets[0].data = valores;
+    graficoLinha.update();
+
+
+}
+
+// gráfico Componentes
+let graficoComponentes = new Chart(document.getElementById("graficoComponentes"), {
+    type: "bar",
+    data: {
+        labels: [],
+        datasets: [{
+            label: "Quantidade de Alertas",
+            data: [],
+            backgroundColor: ["#3498db", "#D16D85", "#00C04B"]
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { display: false }
+        },
+        indexAxis: "y"
+    }
 });
 
- new Chart(document.getElementById("graficoTipos"), {
-      type: "pie",
-      data: {
+  async function carregarGraficoComponentes() {
+    const periodo = traduzirPeriodo(selectPeriodo.value);
+
+    const resposta = await fetch("/alertas/graficoComponentes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ hostName: hostName, periodo })
+    });
+
+    if (!resposta.ok) return console.log("Erro no gráfico de barras");
+
+    const dados = await resposta.json();
+
+    graficoComponentes.data.labels = dados.map(d => d.componente);
+    graficoComponentes.data.datasets[0].data = dados.map(d => d.total);
+    graficoComponentes.update();
+}
+
+// gráfico Tipos
+let graficoTipos = new Chart(document.getElementById("graficoTipos"), {
+    type: "pie",
+    data: {
         labels: ["Crítico", "Preventivo"],
         datasets: [{
-          data: [37, 58],
-          backgroundColor: ["#d9534f", "#FFC04D"]
+            data: [0, 0],
+            backgroundColor: ["#d9534f", "#FFC04D"]
         }]
-      },
-      
+    }
+});
+
+  async function carregarGraficoTipos() {
+    const periodo = traduzirPeriodo(selectPeriodo.value);
+    let componente = selectComponentePizza.value;
+    componente = componente === "todos" ? null : componente.toUpperCase();
+
+    const resposta = await fetch("/alertas/graficoTipos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ hostName: hostName, periodo, componente })
     });
+
+    if (!resposta.ok) return console.log("Erro no gráfico de pizza");
+
+    const dados = await resposta.json();
+
+    const criticos = dados.find(d => d.estado === "CRITICO")?.total || 0;
+    const preventivos = dados.find(d => d.estado === "ALERTA")?.total || 0;
+
+    graficoTipos.data.datasets[0].data = [criticos, preventivos];
+    graficoTipos.update();
+}
+
+function atualizarTudo() {
+    carregarKPIs();
+    carregarGraficoLinha();
+    carregarGraficoComponentes();
+    carregarGraficoTipos();
+}
+
+selectPeriodo.addEventListener("change", atualizarTudo);
+selectComponenteLinha.addEventListener("change", carregarGraficoLinha);
+selectComponentePizza.addEventListener("change", carregarGraficoTipos);
+
+atualizarTudo();
 </script>
 </body>
 </html>

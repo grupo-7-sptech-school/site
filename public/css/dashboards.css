@@ -97,6 +97,24 @@ body {
   scale: 1.1;
 }
 
+.btn-pag-alertas {
+  width: 9vw;
+  height: 5vh;
+  background-color: white;
+  border-radius: 10px;
+  text-align: center;
+  align-content: center;
+  text-decoration: none;
+  color: white;
+  background-color: #0B795B;
+}
+
+.btn-pag-alertas:hover {
+  transition: scale 0.3s ease-in-out;
+  scale: 1.1;
+  background-color: #06503d;
+}
+
 .btn-gerar-relatorio {
   width: 9vw;
   height: 5vh;
