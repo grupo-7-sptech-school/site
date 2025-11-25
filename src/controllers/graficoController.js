@@ -61,7 +61,7 @@ function maisEscrita(req, res) {
         });
 }
 
-async function ramUltimos7Dias(req, res) {
+function ramUltimos7Dias(req, res) {
     var idMaquina = req.params.idMaquina;
 
     graficoModel.getRamUltimos7Dias(idMaquina)
@@ -80,6 +80,16 @@ function alertasSemana(req, res) {
         .catch(e => res.status(500).json(e));
 }
 
+function top3MaquinasRAM(req, res) {
+    var id = req.params.idMaquina;
+
+    graficoModel.top3MaquinasRAM(id)
+        .then(r => res.json(r[0]))
+        .catch(e => res.status(500).json(e));
+}
+
+
+
 
 module.exports = { 
     dadosGrafico,
@@ -89,5 +99,6 @@ module.exports = {
     maisLeitura,
     maisEscrita,
     ramUltimos7Dias,
-    alertasSemana
+    alertasSemana,
+    top3MaquinasRAM
 };

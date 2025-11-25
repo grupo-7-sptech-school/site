@@ -21,7 +21,7 @@ async function carregarRam7dias() {
     var coresPontos = [];
     var tamanhosPontos = [];
 
-    var limiteCritico = 90; 
+    var limiteCritico = 90;
 
     var soma = 0;
     var maior = 0;
@@ -62,6 +62,52 @@ async function carregarRam7dias() {
     montarGrafico(labels, valores, coresPontos, tamanhosPontos, 90);
     carregarAlertasSemana(id);
 }
+
+function carregarGraficoPizzaRAM() {
+    fetch('/api/top-ram-machines')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            var nomes = [];
+            var consumos = [];
+
+            for (var i = 0; i < data.length; i++) {
+                nomes.push(data[i].nome);
+                consumos.push(data[i].consumo);
+            }
+
+            var ctx = document.getElementById('graficoPizzaRAM').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: nomes,
+                    datasets: [{
+                        data: consumos,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Top 3 Máquinas por Consumo de RAM'
+                        }
+                    }
+                }
+            });
+        })
+        .catch(function (error) {
+            console.error('Erro ao carregar gráfico de pizza:', error);
+        });
+}
+
 
 function montarGrafico(labels, valores, coresPontos, tamanhosPontos, limiteCritico) {
     const ctx = document.getElementById('graficoRam7dias').getContext('2d');

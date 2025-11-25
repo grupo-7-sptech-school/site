@@ -122,7 +122,7 @@
     </style>
 </head>
 
-<body onload="carregarRam7dias()">
+<body onload="carregarRam7dias(); carregarGraficoPizzaRAM()">
 
     <div class="total-dash">
         <div class="dashboard-bg">
@@ -212,7 +212,7 @@
                         <span id="kpiAlertasSemana">--</span>
                         <small>Baseado em limite de 80%</small>
                     </div>
-                    
+
                 </div>
 
                 <!-- GRÁFICO -->
@@ -221,7 +221,14 @@
                         <h3>Histórico da RAM (7 dias)</h3>
                         <div class="grafico-ram" style="height: 400px;">
                             <canvas id="graficoRam7dias"></canvas>
-
+                        </div>
+                    </div>
+                    <div class="dashboard-charts">
+                        <div class="pie-charts">
+                            <h3>Top 3 Máquinas por Consumo de RAM</h3>
+                            <div class="grafico-pizza" style="height: 400px;">
+                                <canvas id="graficoPizzaRAM"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
