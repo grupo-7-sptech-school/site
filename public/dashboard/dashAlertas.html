@@ -262,6 +262,7 @@ let graficoLinha = new Chart(document.getElementById("graficoLinha"), {
     }
 });
   async function carregarGraficoLinha() {
+    const periodo = traduzirPeriodo(selectPeriodo.value);
     let componente = selectComponenteLinha.value;
     componente = componente === "todos" ? null : componente.toUpperCase();
 
@@ -281,8 +282,6 @@ let graficoLinha = new Chart(document.getElementById("graficoLinha"), {
     graficoLinha.data.labels = labels;
     graficoLinha.data.datasets[0].data = valores;
     graficoLinha.update();
-
-
 }
 
 // gráfico Componentes
