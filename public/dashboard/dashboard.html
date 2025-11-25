@@ -873,7 +873,7 @@
             });
 
         // DISCO
-        fetch(`/grafico/dadosGrafico/1/${id}`)
+        fetch(`/grafico/dadosGrafico/3/${id}`)
             .then(function (respostaDisco) {
                 return respostaDisco.json();
             })
@@ -893,7 +893,7 @@
             });
     }
 
-    // Atualiza sozinho a cada 30s
+    // Atualiza a cada 30s
     setInterval(atualizarGraficos, 30000);
 
     // Atualiza ao carregar página
