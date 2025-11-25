@@ -248,7 +248,7 @@ body {
   width: 78vw;
   height: 20vh;
   align-items: center;
-  padding-top: 1vh;
+  margin-top: -1.7vh;
   padding-bottom: 3vh;
 }
 
@@ -257,7 +257,9 @@ body {
   width: 18vw;
   height: 15vh;
   border-radius: 25px;
-  
+   border-left-style: solid;
+  border-color: #18B187;
+  border-width: 5px;
   
 }
 
@@ -280,6 +282,7 @@ body {
   justify-content: space-between;
   padding-left: 3vw;
   padding-right: 3vw;
+  margin-top: -1.5vh;
 }
 
 .grafico-cpu {
@@ -290,6 +293,9 @@ body {
   background-color: white;
   border-radius: 25px;
   padding: 1%;
+   border-left-style: solid;
+  border-color: #18B187;
+  border-width: 5px;
 }
 
 
@@ -310,6 +316,9 @@ body {
   background-color: white;
   border-radius: 25px;
   padding: 1%;
+   border-left-style: solid;
+  border-color: #18B187;
+  border-width: 5px;
 }
 
 .grafico-disco {
@@ -320,7 +329,42 @@ body {
   background-color: white;
   justify-content: space-evenly;
   align-items: center;
+   border-left-style: solid;
+  border-color: #18B187;
+  border-width: 5px;
 
+}
+
+.painel-disco-btn{
+  position: absolute;
+  align-self: flex-start;
+  margin-right: -17vw;
+  margin-top: 2vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #18B187;
+  font-size: 1rem;
+  font-weight: bolder;
+  text-decoration: none;
+  transition: scale 0.3s ease-in-out;
+  
+}
+
+.painel-disco-btn:hover{
+  color: #158869;
+  scale: 1.1;
+}
+.magnifier{
+  background-image: url(../assets/icon/magnifier.svg);
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+  background-size: 60%;
+  width: 3vw;
+  height: 5vh;
+  align-self: flex-start;
+  
 }
 
 .uso-livre-disco h2 {
@@ -356,6 +400,7 @@ body {
   padding-top: 0vh;
   font-family: "montserrat", sans-serif;
   color: #0B795B;
+  
 }
 
 .line-charts h2{
@@ -375,7 +420,7 @@ body {
 }
 
 .cup-charts {
-  height: 100%;
+  height: 99%;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -383,6 +428,7 @@ body {
   align-items: start;
   font-size: 0.9rem;
   font-family: "montserrat", sans-serif;
+  margin-top: -1.6vh;
 }
 
 .cup-charts h3{
