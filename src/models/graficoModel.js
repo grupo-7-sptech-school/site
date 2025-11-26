@@ -84,7 +84,7 @@ function maisEscrita(hostName) {
 }
 
 function getRamUltimos7Dias(hostName) {
-    const instrucao = `
+    var instrucao = `
         SELECT 
             DATE_FORMAT(r.dtRegistro, '%d/%m %H:00') AS hora,
             ROUND(AVG(r.captura), 2) AS ramPercent
@@ -102,7 +102,7 @@ function getRamUltimos7Dias(hostName) {
 
 
 async function alertasSemana(hostName) {
-    const instrucaoSql = `
+    var instrucao = `
          SELECT 
             COUNT(a.idAlerta) AS total
         FROM Alerta a
@@ -111,12 +111,12 @@ async function alertasSemana(hostName) {
           AND a.estado = 'CRITICO'
           AND a.dtHora >= NOW() - INTERVAL 7 DAY;
     `;
-    return database.executar(instrucaoSql);
+    return database.executar(instrucao);
 }
 
 
 function top3EmpresasRAM() {
-    const sql = `
+    var instrucao = `
         SELECT 
             e.idEmpresa,
             e.nomeFantasia AS empresa,
@@ -134,7 +134,7 @@ function top3EmpresasRAM() {
         ORDER BY consumoMedio DESC
         LIMIT 3;
     `;
-    return database.executar(sql);
+    return database.executar(instrucao);
 }
 
 

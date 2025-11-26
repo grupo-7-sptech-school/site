@@ -1,3 +1,4 @@
+const { error } = require("pdf-lib");
 var usuarioModel = require("../models/usuarioModel");
 const nodemailer = require('nodemailer');
 
@@ -375,7 +376,8 @@ function puxarAlerta(req, res) {
 
 function infoUsuario(req, res) {
 
-    idUsuario = req.body.idUsuario
+  var idUsuario = req.body.idUsuario;
+  if (!idUsuario) return res.status(400).json({error : "ID ausente"});
 
     usuarioModel.infoUsuario(idUsuario)
         .then(resultado => {
@@ -441,19 +443,15 @@ async function atualizarFoto(req, res) {
     try {
         const idUsuario = req.body.idUsuario;
 
-        if (!req.file) {
-            return res.status(400).json({ erro: "Nenhum arquivo enviado." });
+        if (!req.file || !req.body.idUsuario) {
+            return res.status(400).json({ erro: "Arquivo ou usuario ausente." });
         }
         const nomeArquivo = req.file.filename
 
         const urlFoto = `/uploads/${nomeArquivo}`;
+        await usuarioModel.atualizarFoto(idUsuario, urlFoto);
 
-        const resultado = await usuarioModel.atualizarFoto(idUsuario, urlFoto);
-
-        res.status(200).json({
-            mensagem: "Foto atualizada com sucesso!",
-            fotoUrl: urlFoto
-        });
+        res.status(200).json({fotoUrl: urlFoto});
     } catch (erro) {
         console.error(erro);
         res.status(500).json({ erro: "Erro ao atualizar foto do usuário" });

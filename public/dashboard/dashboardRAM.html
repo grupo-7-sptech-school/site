@@ -11,19 +11,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
 
     <style>
-        /* --- ESTRUTURA GERAL DOS GRÁFICOS --- */
         .dashboard-charts {
             display: flex;
             flex-direction: row;
-            /* Garante que fiquem lado a lado */
             justify-content: space-between;
             gap: 20px;
             margin-top: 20px;
             width: 100%;
-            /* align-items: stretch; Faz os dois cards terem a mesma altura */
+            align-items: stretch; 
         }
 
-        /* Estilo base para os Cards (Linha e Pizza) */
         .line-charts,
         .pie-charts {
             background-color: white;
@@ -33,42 +30,32 @@
             display: flex;
             flex-direction: column;
         }
-
-        /* --- CARD ESQUERDO (LINHA) --- */
+        
         .line-charts {
             flex: 2;
-            /* Ocupa 66% do espaço */
             min-width: 0;
-            /* Impede que o chartjs estoure o container */
         }
 
-        /* --- CARD DIREITO (PIZZA) --- */
         .pie-charts {
             flex: 1;
-            /* Ocupa 33% do espaço */
             align-items: center;
-            /* Centraliza o gráfico horizontalmente */
             justify-content: flex-start;
         }
 
-        /* Container específico do canvas da pizza para controlar tamanho */
         .grafico-pizza {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 300px;
-            /* Altura fixa para garantir a bolinha redonda */
             position: relative;
         }
 
-        /* Ajuste do Canvas dentro da div */
         .grafico-pizza canvas {
             max-height: 100% !important;
             max-width: 100% !important;
         }
 
-        /* --- KPIS (ESTILO MANTIDO) --- */
         .kpis-ram {
             width: 100%;
             padding: 2vh 0;

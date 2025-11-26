@@ -100,7 +100,8 @@ function infoUsuario(idUsuario) {
     var instrucaoSql = `SELECT 
     u.nome AS Nome,
     e.nomeFantasia AS Empresa,
-    u.email AS Email
+    u.email AS Email,
+    u.fotoPerfil AS fotoPerfil
     FROM Usuario u
     JOIN Empresa e ON u.fkEmpresa = e.idEmpresa
     WHERE u.idUsuario = ${idUsuario};`;
@@ -303,12 +304,11 @@ function cadastrarComponentes(fkMaquina) {
 }
 
 function atualizarFoto(idUsuario, urlFoto) {
-    const instrucaoSql = `
+    var instrucaoSql = `
         UPDATE Usuario 
         SET fotoPerfil = '${urlFoto}'
         WHERE idUsuario = ${idUsuario};
     `;
-
     return database.executar(instrucaoSql);
 }
 

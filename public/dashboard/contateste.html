@@ -92,13 +92,13 @@
           </div>
 
           <div class="info-section">
-    <p><b>Nome:</b> <span id="nomeUsuario2">Carregando...</span></p>
-    <p><b>Empresa:</b> <span id="empresaUsuario">Carregando...</span></p>
-    <p><b>E-mail:</b> <span id="emailUsuario">Carregando...</span></p>
-  </div>
+            <p><b>Nome:</b> <span id="nomeUsuario2">Carregando...</span></p>
+            <p><b>Empresa:</b> <span id="empresaUsuario">Carregando...</span></p>
+            <p><b>E-mail:</b> <span id="emailUsuario">Carregando...</span></p>
+          </div>
 
 
-            <!-- <div class="editable">
+          <!-- <div class="editable">
               <b>E-mail secundário:</b>
               <input type="text" id="emailSecundario" placeholder="Digite o e-mail secundário">
               <i class="fa-solid fa-pen"></i>
@@ -498,12 +498,17 @@
 
         // Aqui atualiza a foto do topo
         const fotoTopo = document.getElementById("fotoTopo");
-        if (fotoTopo && dados[0].fotoPerfil) {
+        if (dados[0].fotoPerfil) {
           let url = dados[0].fotoPerfil;
+          // aceitável caso o DB armazene apenas o nome do arquivo
           if (!url.startsWith('/uploads') && !url.startsWith('http')) {
             url = '/uploads/' + url;
           }
-          fotoTopo.src = url + '?t=' + Date.now();
+          const cacheBust = '?t=' + Date.now();
+          const fotoTopo = document.getElementById("fotoTopo");
+          const fotoPerfilEl = document.getElementById("fotoPerfil");
+          if (fotoTopo) fotoTopo.src = url + cacheBust;
+          if (fotoPerfilEl) fotoPerfilEl.src = url + cacheBust;
         }
       })
       .catch(erro => {

@@ -30,28 +30,13 @@ async function carregarAlertasSemana() {
 
 
 async function carregarRam7dias() {
-    // 1. Validação básica do ID
+
     if (!idMaquina) {
         console.error("ID da máquina não foi informado na URL.");
         return;
     }
 
-    // 2. Tentar descobrir o HostName (opcional, se a rota não existir, usamos o ID direto)
-    // Se você costuma passar ?id=NOMEDAMAQUINA, isso vai funcionar direto.
     hostNameGlobal = idMaquina; 
-
-    // Tentativa de buscar nome real se o ID for numérico (descomente se tiver a rota /maquina criada)
-    
-    try {
-        const respMaquina = await fetch(`/maquina/${encodeURIComponent(idMaquina)}`);
-        if (respMaquina.ok) {
-            const maquina = await respMaquina.json();
-            hostNameGlobal = maquina.hostName;
-        }
-    } catch (err) {
-        console.warn('Rota /maquina não encontrada ou erro, usando ID como HostName.');
-    }
-    
 
     console.log(`Buscando dados para o HostName: ${hostNameGlobal}`);
 
@@ -106,7 +91,7 @@ async function carregarRam7dias() {
 
             soma += valor;
             if (valor > maior) maior = valor;
-            if (valor >= 80) horasCriticas++; 
+            if (valor >= 90) horasCriticas++; 
         }
 
         var media = soma / dados.length;
