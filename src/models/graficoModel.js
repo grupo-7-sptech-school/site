@@ -83,36 +83,62 @@ function maisEscrita(hostName) {
     return database.executar(instrucao);
 }
 
-async function getRamUltimos7Dias(idMaquina) {
-    var instrucaoSql = `
-    SELECT 
-        DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H:00:00') AS hora,
-        ROUND(AVG(r.captura), 2) AS ramPercent
-    FROM Registro r
-    JOIN Componente c 
-        ON r.fkComponente = c.idComponente
-    WHERE c.fkMaquina = ${idMaquina} -- Filtra pela máquina específica
-      AND c.nome LIKE 'RAM%'        -- Filtra pelo nome do componente (RAM)
-      AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
-    GROUP BY hora
-    ORDER BY hora ASC;
-  `;
-  return database.executar(instrucaoSql);
+function getRamUltimos7Dias(hostName) {
+    const instrucao = `
+        SELECT 
+    DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H:00') AS hora,
+    ROUND(AVG(r.captura), 2) AS ramPercent
+FROM Registro r
+JOIN Componente c ON r.fkComponente = c.idComponente
+WHERE c.fkMaquina = ${hostName}
+  AND c.nome LIKE 'RAM%'
+  AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
+GROUP BY DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H')
+ORDER BY hora ASC;
+    `;
+    return database.executar(instrucao);
 }
 
-async function alertasSemana(idMaquina) {
-  var instrucaoSql = `
-    SELECT 
-        COUNT(a.idAlerta) AS total -- Contamos o total de alertas
-    FROM Alerta a
-    JOIN Componente c ON a.fkComponente = c.idComponente
-    WHERE c.fkMaquina = ${idMaquina}
-      AND c.nome LIKE 'RAM%' -- Apenas alertas de RAM
-      AND a.estado = 'CRITICO' -- Apenas alertas críticos
-      AND a.dtHora >= NOW() - INTERVAL 7 DAY;
-  `;
-  return database.executar(instrucaoSql);
+
+
+async function alertasSemana(hostName) {
+    const instrucaoSql = `
+         SELECT 
+            COUNT(a.idAlerta) AS total
+        FROM Alerta a
+        JOIN Componente c ON a.fkComponente = c.idComponente
+        WHERE c.fkMaquina = ${hostName}
+          AND a.estado = 'CRITICO'
+          AND a.dtHora >= NOW() - INTERVAL 7 DAY;
+    `;
+    return database.executar(instrucaoSql);
 }
+
+
+function top3EmpresasRAM() {
+    const sql = `
+        SELECT 
+            e.idEmpresa,
+            e.nomeFantasia AS empresa,
+            ROUND(AVG(r.captura), 2) AS consumoMedio
+        FROM Registro r
+        JOIN Componente c 
+            ON r.fkComponente = c.idComponente
+        JOIN Maquina m 
+            ON c.fkMaquina = m.hostName
+        JOIN Empresa e
+            ON m.fkEmpresa = e.idEmpresa
+        WHERE c.nome LIKE 'RAM%' 
+          AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
+        GROUP BY e.idEmpresa, e.nomeFantasia
+        ORDER BY consumoMedio DESC
+        LIMIT 3;
+    `;
+    return database.executar(sql);
+}
+
+
+
 
 
 
@@ -124,5 +150,6 @@ module.exports = {
     maisLeitura,
     maisEscrita,
     getRamUltimos7Dias,
-    alertasSemana
+    alertasSemana,
+    top3EmpresasRAM
 };

@@ -27,12 +27,17 @@ router.get("/disco/maisEscrita/:hostName", function (req, res) {
     graficoController.maisEscrita(req, res);
 });
 
-router.get("/ram-7dias/:idMaquina", function (req, res) {
+router.get("/ram-7dias/:hostname", (req, res) => {
     graficoController.ramUltimos7Dias(req, res);
 });
 
-router.get("/alertas-semana/:idMaquina", function (req, res) {
+router.get("/alertas-semana/:hostname", (req, res) => {
     graficoController.alertasSemana(req, res);
+});
+
+
+router.get("/top3-empresas-ram", function (req, res){
+    graficoController.top3EmpresasRAM(req, res);
 });
 
 

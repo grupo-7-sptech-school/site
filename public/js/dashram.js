@@ -1,19 +1,44 @@
-async function carregarAlertasSemana(id) {
-    const resp = await fetch(`/grafico/alertas-semana/${id}`);
+
+const params = new URLSearchParams(window.location.search);
+const idMaquina = params.get("id");
+
+let hostNameGlobal = null;
+
+
+async function carregarAlertasSemana() {
+    if (!hostNameGlobal) return; 
+
+    const resp = await fetch(`/grafico/alertas-semana/${hostNameGlobal}`);
     const dados = await resp.json();
 
+    const kpi = document.getElementById("kpiAlertasSemana");
+
     if (dados && dados.total !== undefined) {
-        document.getElementById("kpiAlertasSemana").innerText = dados.total;
+        kpi.innerText = dados.total;
     } else {
-        document.getElementById("kpiAlertasSemana").innerText = "--";
+        kpi.innerText = "--";
     }
 }
 
-async function carregarRam7dias() {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
 
-    const resposta = await fetch(`/grafico/ram-7dias/${id}`);
+
+async function carregarRam7dias() {
+    if (!idMaquina) {
+        console.error("ID da máquina não foi informado na URL.");
+        return;
+    }
+
+    const respMaquina = await fetch(`/maquina/${idMaquina}`);
+    const maquina = await respMaquina.json();
+
+    if (!maquina || !maquina.hostName) {
+        console.error("Hostname não encontrado para esta máquina.");
+        return;
+    }
+
+    hostNameGlobal = maquina.hostName;
+
+    const resposta = await fetch(`/grafico/ram-7dias/${hostNameGlobal}`);
     const dados = await resposta.json();
 
     var labels = [];
@@ -60,24 +85,25 @@ async function carregarRam7dias() {
     }
 
     montarGrafico(labels, valores, coresPontos, tamanhosPontos, 90);
-    carregarAlertasSemana(id);
+
+    carregarAlertasSemana();
 }
 
+
 function carregarGraficoPizzaRAM() {
-    fetch('/api/top-ram-machines')
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
+    fetch(`/grafico/top3-empresas-ram`)
+        .then(r => r.json())
+        .then(data => {
             var nomes = [];
             var consumos = [];
 
             for (var i = 0; i < data.length; i++) {
-                nomes.push(data[i].nome);
-                consumos.push(data[i].consumo);
+                nomes.push(data[i].empresa);
+                consumos.push(data[i].consumoMedio);
             }
 
             var ctx = document.getElementById('graficoPizzaRAM').getContext('2d');
+
             new Chart(ctx, {
                 type: 'pie',
                 data: {
@@ -88,25 +114,12 @@ function carregarGraficoPizzaRAM() {
                         borderColor: '#fff',
                         borderWidth: 2
                     }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        },
-                        title: {
-                            display: true,
-                            text: 'Top 3 Máquinas por Consumo de RAM'
-                        }
-                    }
                 }
             });
         })
-        .catch(function (error) {
-            console.error('Erro ao carregar gráfico de pizza:', error);
-        });
+        .catch(error => console.error("Erro:", error));
 }
+
 
 
 function montarGrafico(labels, valores, coresPontos, tamanhosPontos, limiteCritico) {

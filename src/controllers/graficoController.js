@@ -52,9 +52,9 @@ function maisLeitura(req, res) {
 }
 
 function maisEscrita(req, res) {
-    var hostName = req.params.hostName;
+    var host = req.params.hostName;
 
-    graficoModel.maisEscrita(hostName)
+    graficoModel.maisEscrita(host)
         .then(resposta => res.json(resposta))
         .catch(error => {
             res.status(500).json(error);
@@ -62,31 +62,33 @@ function maisEscrita(req, res) {
 }
 
 function ramUltimos7Dias(req, res) {
-    var idMaquina = req.params.idMaquina;
-
-    graficoModel.getRamUltimos7Dias(idMaquina)
-        .then(resposta => res.json(resposta))
-        .catch(error => {
-            res.status(500).json(error);
-        });
-
+    graficoModel.getRamUltimos7Dias(req.params.hostName)
+        .then(r => res.json(r))
+        .catch(e => res.status(500).json(e));
 }
+
 
 function alertasSemana(req, res) {
-    var id = req.params.idMaquina;
+    var host = req.params.hostname;
 
-    graficoModel.alertasSemana(id)
+    graficoModel.alertasSemana(host)
         .then(r => res.json(r[0]))
         .catch(e => res.status(500).json(e));
 }
 
-function top3MaquinasRAM(req, res) {
-    var id = req.params.idMaquina;
 
-    graficoModel.top3MaquinasRAM(id)
-        .then(r => res.json(r[0]))
-        .catch(e => res.status(500).json(e));
+async function top3EmpresasRAM(req, res) {
+    
+    try {
+        const result = await graficoModel.top3EmpresasRAM();
+        res.json(result);
+    } catch (erro) {
+        res.status(500).json(erro);
+    }
 }
+
+
+
 
 
 
@@ -100,5 +102,5 @@ module.exports = {
     maisEscrita,
     ramUltimos7Dias,
     alertasSemana,
-    top3MaquinasRAM
+    top3EmpresasRAM
 };
