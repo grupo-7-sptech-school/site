@@ -69,7 +69,7 @@ function ramUltimos7Dias(req, res) {
 
 
 function alertasSemana(req, res) {
-    var host = req.params.hostname;
+    var host = req.params.hostName;
 
     graficoModel.alertasSemana(host)
         .then(r => res.json(r[0]))

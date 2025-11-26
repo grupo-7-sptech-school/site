@@ -263,7 +263,7 @@ body{
 
 .dashboard-low-right-side{
   display: flex;
-  width: 84vw;
+  width: 85vw;
   flex-direction: column;
   overflow: hidden;
 }

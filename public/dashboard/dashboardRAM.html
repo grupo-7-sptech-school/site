@@ -11,23 +11,77 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
 
     <style>
-        .kpis-ram {
+        /* --- ESTRUTURA GERAL DOS GRÁFICOS --- */
+        .dashboard-charts {
             display: flex;
             flex-direction: row;
+            /* Garante que fiquem lado a lado */
             justify-content: space-between;
-            padding-right: 3vw;
-            padding-left: 3vw;
-            width: 78vw;
-            height: 20vh;
+            gap: 20px;
+            margin-top: 20px;
+            width: 100%;
+            /* align-items: stretch; Faz os dois cards terem a mesma altura */
+        }
+
+        /* Estilo base para os Cards (Linha e Pizza) */
+        .line-charts,
+        .pie-charts {
+            background-color: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- CARD ESQUERDO (LINHA) --- */
+        .line-charts {
+            flex: 2;
+            /* Ocupa 66% do espaço */
+            min-width: 0;
+            /* Impede que o chartjs estoure o container */
+        }
+
+        /* --- CARD DIREITO (PIZZA) --- */
+        .pie-charts {
+            flex: 1;
+            /* Ocupa 33% do espaço */
             align-items: center;
-            padding-top: 2vh;
-            padding-bottom: 2vh;
-            flex-shrink: 0;
+            /* Centraliza o gráfico horizontalmente */
+            justify-content: flex-start;
+        }
+
+        /* Container específico do canvas da pizza para controlar tamanho */
+        .grafico-pizza {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            /* Altura fixa para garantir a bolinha redonda */
+            position: relative;
+        }
+
+        /* Ajuste do Canvas dentro da div */
+        .grafico-pizza canvas {
+            max-height: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* --- KPIS (ESTILO MANTIDO) --- */
+        .kpis-ram {
+            width: 100%;
+            padding: 2vh 0;
+            margin-bottom: 30px;
+            gap: 20px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .kpi-card-ram {
             background-color: white;
-            width: 18vw;
+            width: 100%;
+            /* Distribui igualmente */
             height: 14vh;
             border-radius: 25px;
             display: flex;
@@ -38,8 +92,9 @@
             padding: 1.5vh 1vw;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
-            flex-shrink: 0;
             position: relative;
+            border-bottom: 4px solid #18B187;
+            /* Detalhe visual */
         }
 
         .kpi-card-ram:hover {
@@ -48,7 +103,8 @@
         }
 
         .kpi-card-ram span {
-            font-size: 2.3rem;
+            font-size: 2rem;
+            /* Levemente ajustado */
             font-weight: 800;
             color: #18B187;
             margin: 8px 0;
@@ -58,9 +114,10 @@
             color: #8a8a8a;
             font-weight: 400;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
+        /* --- TOOLTIPS --- */
         .info-icon-kpi {
             position: absolute;
             top: 10px;
@@ -127,7 +184,6 @@
     <div class="total-dash">
         <div class="dashboard-bg">
 
-            <!-- Sidebar -->
             <div class="dashboard-sidebar">
                 <div class="dashboard-logo"></div>
                 <div class="dashboard-sidebar-btns">
@@ -166,9 +222,7 @@
                     </div>
                 </div>
 
-                <!-- *** NOVAS KPIS *** -->
                 <div class="kpis-ram">
-
                     <div class="kpi-card-ram">
                         <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
                         <div class="kpi-tooltip">
@@ -205,38 +259,36 @@
                     <div class="kpi-card-ram">
                         <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
                         <div class="kpi-tooltip">
-                            <strong>Total de alertaa críticos na semana</strong><br>
+                            <strong>Total de alertas críticos</strong><br>
                             Quantidade de vezes em que excederam 90% de uso.
                         </div>
                         Alertas críticos
                         <span id="kpiAlertasSemana">--</span>
                         <small>Baseado em limite de 80%</small>
                     </div>
-
                 </div>
 
-                <!-- GRÁFICO -->
                 <div class="dashboard-charts">
+
                     <div class="line-charts">
                         <h3>Histórico da RAM (7 dias)</h3>
-                        <div class="grafico-ram" style="height: 400px;">
+                        <div class="grafico-ram" style="height: 100%; min-height: 300px;">
                             <canvas id="graficoRam7dias"></canvas>
                         </div>
                     </div>
-                    <div class="dashboard-charts">
-                        <div class="pie-charts">
-                            <h3>Top 3 Máquinas por Consumo de RAM</h3>
-                            <div class="grafico-pizza" style="height: 400px;">
-                                <canvas id="graficoPizzaRAM"></canvas>
-                            </div>
+
+                    <div class="pie-charts">
+                        <h3>Top 3 Máquinas (RAM)</h3>
+                        <div class="grafico-pizza">
+                            <canvas id="graficoPizzaRAM"></canvas>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>
-    
+
     <script src="../js/dashram.js"></script>
 
     <script>

@@ -27,11 +27,11 @@ router.get("/disco/maisEscrita/:hostName", function (req, res) {
     graficoController.maisEscrita(req, res);
 });
 
-router.get("/ram-7dias/:hostname", (req, res) => {
+router.get("/ram-7dias/:hostName", (req, res) => {
     graficoController.ramUltimos7Dias(req, res);
 });
 
-router.get("/alertas-semana/:hostname", (req, res) => {
+router.get("/alertas-semana/:hostName", (req, res) => {
     graficoController.alertasSemana(req, res);
 });
 

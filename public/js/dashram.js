@@ -2,11 +2,18 @@
 const params = new URLSearchParams(window.location.search);
 const idMaquina = params.get("id");
 
+if (!idMaquina || idMaquina.includes('${')) {
+    console.error("ID inválido na URL:", idMaquina);
+    document.body.insertAdjacentHTML('afterbegin',
+        '<div style="padding:12px;background:#fee;border:1px solid #f99;color:#900;">Erro: link inválido. Abra o dashboard pela lista de máquinas.</div>');
+    throw new Error('ID inválido na URL');
+}
+
 let hostNameGlobal = null;
 
 
 async function carregarAlertasSemana() {
-    if (!hostNameGlobal) return; 
+    if (!hostNameGlobal) return;
 
     const resp = await fetch(`/grafico/alertas-semana/${hostNameGlobal}`);
     const dados = await resp.json();
@@ -23,70 +30,98 @@ async function carregarAlertasSemana() {
 
 
 async function carregarRam7dias() {
+    // 1. Validação básica do ID
     if (!idMaquina) {
         console.error("ID da máquina não foi informado na URL.");
         return;
     }
 
-    const respMaquina = await fetch(`/maquina/${idMaquina}`);
-    const maquina = await respMaquina.json();
+    // 2. Tentar descobrir o HostName (opcional, se a rota não existir, usamos o ID direto)
+    // Se você costuma passar ?id=NOMEDAMAQUINA, isso vai funcionar direto.
+    hostNameGlobal = idMaquina; 
 
-    if (!maquina || !maquina.hostName) {
-        console.error("Hostname não encontrado para esta máquina.");
-        return;
+    // Tentativa de buscar nome real se o ID for numérico (descomente se tiver a rota /maquina criada)
+    
+    try {
+        const respMaquina = await fetch(`/maquina/${encodeURIComponent(idMaquina)}`);
+        if (respMaquina.ok) {
+            const maquina = await respMaquina.json();
+            hostNameGlobal = maquina.hostName;
+        }
+    } catch (err) {
+        console.warn('Rota /maquina não encontrada ou erro, usando ID como HostName.');
     }
+    
 
-    hostNameGlobal = maquina.hostName;
+    console.log(`Buscando dados para o HostName: ${hostNameGlobal}`);
 
-    const resposta = await fetch(`/grafico/ram-7dias/${hostNameGlobal}`);
-    const dados = await resposta.json();
+    // 3. Busca os dados do Gráfico e KPIs
+    try {
+        const resposta = await fetch(`/grafico/ram-7dias/${encodeURIComponent(hostNameGlobal)}`);
 
-    var labels = [];
-    var valores = [];
-    var coresPontos = [];
-    var tamanhosPontos = [];
-
-    var limiteCritico = 90;
-
-    var soma = 0;
-    var maior = 0;
-    var horasCriticas = 0;
-
-    for (var i = 0; i < dados.length; i++) {
-        var hora = dados[i].hora;
-        var valor = dados[i].ramPercent;
-
-        labels.push(hora);
-        valores.push(valor);
-
-        if (valor >= 90) {
-            coresPontos.push("red");
-            tamanhosPontos.push(6);
-        } else {
-            coresPontos.push("rgba(255, 150, 200, 0.8)");
-            tamanhosPontos.push(3);
+        if (!resposta.ok) {
+            console.error(`Erro na requisição: ${resposta.status} - ${resposta.statusText}`);
+            if(resposta.status === 404) {
+                alert("Erro 404: A rota '/grafico/ram-7dias' não foi encontrada. Verifique o app.js.");
+            }
+            return;
         }
 
-        soma += valor;
-        if (valor > maior) maior = valor;
-        if (valor >= limiteCritico) horasCriticas++;
-    }
+        const dados = await resposta.json();
+        console.log("Dados recebidos do gráfico:", dados);
 
-    if (dados.length > 0) {
+        // Se não vier dados, avisa e para
+        if (!dados || dados.length === 0) {
+            console.warn("Nenhum dado encontrado para esta máquina.");
+            document.getElementById("kpiMedia").innerText = "0%";
+            document.getElementById("kpiPico").innerText = "0%";
+            document.getElementById("kpiHorasCriticas").innerText = "0h";
+            return;
+        }
+
+        // 4. Processamento dos dados (KPIs e Gráfico)
+        var labels = [];
+        var valores = [];
+        var coresPontos = [];
+        var tamanhosPontos = [];
+        var limiteCritico = 90;
+        var soma = 0;
+        var maior = 0;
+        var horasCriticas = 0;
+
+        for (var i = 0; i < dados.length; i++) {
+            var hora = dados[i].hora; 
+            var valor = parseFloat(dados[i].ramPercent);
+
+            labels.push(hora);
+            valores.push(valor);
+
+            if (valor >= 90) {
+                coresPontos.push("red");
+                tamanhosPontos.push(6);
+            } else {
+                coresPontos.push("#18B187"); 
+                tamanhosPontos.push(3);
+            }
+
+            soma += valor;
+            if (valor > maior) maior = valor;
+            if (valor >= 80) horasCriticas++; 
+        }
+
         var media = soma / dados.length;
-
         document.getElementById("kpiMedia").innerText = media.toFixed(1) + "%";
         document.getElementById("kpiPico").innerText = maior.toFixed(1) + "%";
         document.getElementById("kpiHorasCriticas").innerText = horasCriticas + "h";
-    } else {
-        document.getElementById("kpiMedia").innerText = "--";
-        document.getElementById("kpiPico").innerText = "--";
-        document.getElementById("kpiHorasCriticas").innerText = "--";
+
+        montarGrafico(labels, valores, coresPontos, tamanhosPontos, 90);
+
+
+        carregarAlertasSemana();
+
+    } catch (error) {
+        console.error("Erro interno ao carregar gráfico:", error);
     }
-
-    montarGrafico(labels, valores, coresPontos, tamanhosPontos, 90);
-
-    carregarAlertasSemana();
 }
 
 

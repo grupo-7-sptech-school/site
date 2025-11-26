@@ -71,9 +71,8 @@
                     <a id="btn-pag-alertas" onclick="red()" class="btn-pag-alertas">
                         Gerenciar alertas
                     </a>
-                    <a href="dashboardRAM.html?id=${maquina.hostName}" class="btn-gerar-relatorio">
-                        Ver RAM
-                    </a>
+                    <a id="btnVerRAM" class="btn-gerar-relatorio" href="#">Ver RAM</a>
+
 
 
                     <div class="btns-topbar">
@@ -266,6 +265,19 @@
     const btnAbrirMetricas = document.querySelector(".kpi-metricas button");
     const btnFecharMetricas = document.getElementById("fecharMetricas");
     const btnSalvarMetricas = document.getElementById("salvarMetricas");
+    
+        (function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+        const btnVerRAM = document.getElementById("btnVerRAM");
+        if (btnVerRAM) {
+            if (id) {
+                btnVerRAM.href = `./dashboardRAM.html?id=${encodeURIComponent(id)}`;
+            } else {
+                btnVerRAM.href = "./dashboardRAM.html";
+            }
+        }
+    })();
 
     btnAbrirMetricas.addEventListener("click", () => {
         modalMetricas.classList.add("active");

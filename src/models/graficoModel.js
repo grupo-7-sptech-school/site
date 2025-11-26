@@ -10,7 +10,7 @@ function dadosGrafico(idComponente, hostName) {
         JOIN Maquina m ON c.fkMaquina = m.hostName
         WHERE c.idComponente = ${idComponente}
         AND m.hostName = '${hostName}'
-        ORDER BY r.idRegistro DESC LIMIT 1;
+        ORDER BY r.idRegistro DESC LIMIT 10;
     `;
     return database.executar(instrucao);
 }
@@ -86,15 +86,15 @@ function maisEscrita(hostName) {
 function getRamUltimos7Dias(hostName) {
     const instrucao = `
         SELECT 
-    DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H:00') AS hora,
-    ROUND(AVG(r.captura), 2) AS ramPercent
-FROM Registro r
-JOIN Componente c ON r.fkComponente = c.idComponente
-WHERE c.fkMaquina = ${hostName}
-  AND c.nome LIKE 'RAM%'
-  AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
-GROUP BY DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H')
-ORDER BY hora ASC;
+            DATE_FORMAT(r.dtRegistro, '%d/%m %H:00') AS hora,
+            ROUND(AVG(r.captura), 2) AS ramPercent
+        FROM Registro r
+        JOIN Componente c ON r.fkComponente = c.idComponente
+        WHERE c.fkMaquina = '${hostName}'
+        AND c.nome LIKE 'RAM%'
+        AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
+        GROUP BY DATE_FORMAT(r.dtRegistro, '%d/%m %H:00')
+        ORDER BY MAX(r.dtRegistro) ASC;
     `;
     return database.executar(instrucao);
 }
@@ -107,7 +107,7 @@ async function alertasSemana(hostName) {
             COUNT(a.idAlerta) AS total
         FROM Alerta a
         JOIN Componente c ON a.fkComponente = c.idComponente
-        WHERE c.fkMaquina = ${hostName}
+        WHERE c.fkMaquina = '${hostName}'
           AND a.estado = 'CRITICO'
           AND a.dtHora >= NOW() - INTERVAL 7 DAY;
     `;
