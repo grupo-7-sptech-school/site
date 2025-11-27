@@ -25,7 +25,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
 
     <!--FONT AWESOME-->
-    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script> -->
 </head>
 
 <!-- <body onload=" atualizarFeed()"> -->
@@ -107,7 +107,7 @@
                     </div>
                     <div class="kpi">
                         <h3>Processo que mais consome RAM</h3>
-                        <h2 id="statusRam" style="color:rgb(96, 89, 89)">TrustedInstaller</h2>
+                        <h2 id="statusRam" style="color:rgb(96, 89, 89)"></h2>
                     </div>
                     <div class="kpi-metricas">
                         <h3>Limites de Alerta <a style="color: red;">Crítico</a> Atuais</h3>
@@ -183,7 +183,7 @@
                                 <h2>
                                     <div style=" background-color: #18B187; border-radius: 90px; height: 2vh; width:
                                             1vw; "></div><br>Armazenamento <br> utilizado
-                                    <h1 id=" h1_usoDisco">
+                                    <h1 id="h1_usoDisco">
 
                                         </h1>
                                     </h2>
@@ -354,6 +354,8 @@
         window.location.reload();
     }
 
+
+    puxarMetricas()
 
 
     async function puxarMetricas() {
@@ -749,13 +751,15 @@
     // h1_usoDisco.innerHTML = usoDisco + "%"
     // h1_usoLivre.innerHTML = usoLivre + "%"
 
+    var usoDisco = 0;
+    var usoLivre = 100;
 
-    new Chart(ctxDisco, {
+    var graficoDisco = new Chart(ctxDisco, {
         type: 'bar',
         data: {
-            // labels: [usoDisco + '%'],
+            labels: [usoDisco + '%'],
             datasets: [{
-                // data: [usoDisco],
+                data: [usoDisco],
                 backgroundColor: 'transparent'
             }]
         },
@@ -909,9 +913,7 @@
 
     // Atualiza a cada 30s
     setInterval(atualizarGraficos, 30000);
-
-    // Atualiza ao carregar página
-    body.onload(atualizarGraficos());
+    atualizarGraficos()
 
 
 

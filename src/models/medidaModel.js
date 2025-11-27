@@ -93,7 +93,7 @@ function maiorProcessoRam(hostName) {
 FROM (
     SELECT *
     FROM Processo 
-    WHERE fkMaquina = 1598329989 
+    WHERE fkMaquina = ${hostName} 
       AND nome NOT IN (
         'idle', 'systemd', 'kthreadd', 'ksoftirqd', 'rcu_sched', 'migration',
         'system', 'init', 'udevd', 'cron', 'syslogd', 'kjournald'
