@@ -361,16 +361,20 @@
         var usoCPU = `${cpuValor}%`;
         var usoRAM = `${ramValor}%`;
 
+        console.log(cpuValor)
+        console.log(ramValor)
+
         var estado = "";
         if (cpuValor > 80 || ramValor > 90) {
           estado = "critico";
-        } else if ((cpuValor >= 70 && cpuValor <= 80) || (ramValor >= 80 && ramValor <= 90)) {
+        } else if ((cpuValor > 69 && cpuValor < 81) || (ramValor > 79 && ramValor < 91)) {
           estado = "alerta";
         } else if (cpuValor < 10 && ramValor < 10) {
           estado = "ocioso";
         } else {
           estado = "normal";
         }
+        console.log(estado);
 
         const linhaBagulho = document.createElement("div"); // chama a div especifica para cada linha
         linhaBagulho.classList.add("line-notifica");  // adiciona css a linha especifica
@@ -385,6 +389,7 @@
       <div class="box-rack"><p>${usoRAM}</p></div>
       <div class="box-status"><p class="status ${estado}">${estado.toUpperCase()}</p></div>
     `;
+
 
         linhaBagulho.onclick = function () {
           const hostAtual = m["HostName"];
