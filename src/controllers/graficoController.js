@@ -77,12 +77,13 @@ function alertasSemana(req, res) {
 }
 
 
-async function top3EmpresasRAM(req, res) {
-    
+async function top3MaquinasRAM(req, res) {
+    const hostName = req.params.hostName;
     try {
-        const result = await graficoModel.top3EmpresasRAM();
+        const result = await graficoModel.top3MaquinasRAM(hostName);
         res.json(result);
     } catch (erro) {
+        console.error("[top3MaquinasRAM] erro:", erro);
         res.status(500).json(erro);
     }
 }
@@ -102,5 +103,5 @@ module.exports = {
     maisEscrita,
     ramUltimos7Dias,
     alertasSemana,
-    top3EmpresasRAM
+    top3MaquinasRAM
 };

@@ -85,16 +85,23 @@ function maisEscrita(hostName) {
 
 function getRamUltimos7Dias(hostName) {
     var instrucao = `
-        SELECT 
-            DATE_FORMAT(r.dtRegistro, '%d/%m %H:00') AS hora,
-            ROUND(AVG(r.captura), 2) AS ramPercent
-        FROM Registro r
-        JOIN Componente c ON r.fkComponente = c.idComponente
-        WHERE c.fkMaquina = '${hostName}'
-        AND c.nome LIKE 'RAM%'
-        AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
-        GROUP BY DATE_FORMAT(r.dtRegistro, '%d/%m %H:00')
-        ORDER BY MAX(r.dtRegistro) ASC;
+        SELECT
+            DATE_FORMAT(hora_chave, '%d/%m %H:%i') AS hora,
+            ROUND(AVG(ram_val), 2) AS ramPercent
+        FROM (
+            SELECT
+                r.captura AS ram_val,
+                DATE_FORMAT(r.dtRegistro, '%Y-%m-%d %H:%i:00') AS hora_chave
+            FROM Registro r
+            JOIN Componente c ON r.fkComponente = c.idComponente
+            JOIN Maquina m ON c.fkMaquina = m.hostName
+            WHERE m.hostName = '${hostName}'
+              AND LOWER(c.nome) LIKE '%ram%'
+              AND r.captura IS NOT NULL
+              AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
+        ) AS sub
+        GROUP BY hora_chave
+        ORDER BY hora_chave ASC;
     `;
     return database.executar(instrucao);
 }
@@ -115,22 +122,21 @@ async function alertasSemana(hostName) {
 }
 
 
-function top3EmpresasRAM() {
+function top3MaquinasRAM(hostName) {
     var instrucao = `
-        SELECT 
-            e.idEmpresa,
-            e.nomeFantasia AS empresa,
+        SELECT
+            m.hostName AS idMaquina,
+            m.identificador AS nomeMaquina,
             ROUND(AVG(r.captura), 2) AS consumoMedio
         FROM Registro r
-        JOIN Componente c 
-            ON r.fkComponente = c.idComponente
-        JOIN Maquina m 
-            ON c.fkMaquina = m.hostName
-        JOIN Empresa e
-            ON m.fkEmpresa = e.idEmpresa
-        WHERE c.nome LIKE 'RAM%' 
+        JOIN Componente c ON r.fkComponente = c.idComponente
+        JOIN Maquina m ON c.fkMaquina = m.hostName
+        WHERE LOWER(c.nome) LIKE '%ram%'
           AND r.dtRegistro >= NOW() - INTERVAL 7 DAY
-        GROUP BY e.idEmpresa, e.nomeFantasia
+          AND m.fkEmpresa = (
+              SELECT fkEmpresa FROM Maquina WHERE hostName = '${hostName}'
+          )
+        GROUP BY m.hostName, m.identificador
         ORDER BY consumoMedio DESC
         LIMIT 3;
     `;
@@ -151,5 +157,5 @@ module.exports = {
     maisEscrita,
     getRamUltimos7Dias,
     alertasSemana,
-    top3EmpresasRAM
+    top3MaquinasRAM
 };

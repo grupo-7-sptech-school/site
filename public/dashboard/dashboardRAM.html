@@ -14,49 +14,76 @@
     <style>
         .dashboard-charts {
             display: flex;
-            flex-direction: row;
             justify-content: space-between;
-            gap: 20px;
-            margin-top: 20px;
+            gap: 2vw;
+            padding: 0 3vw;
+            margin-top: 1vh;
             width: 100%;
             align-items: stretch;
+            flex-wrap: nowrap;
+            height: 50vh;
+            box-sizing: border-box;
         }
 
         .line-charts,
         .pie-charts {
             background-color: white;
             border-radius: 20px;
-            padding: 25px;
+            padding: 16px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .line-charts {
-            flex: 2;
-            min-width: 0;
+            flex: 0 0 62%;
+            min-width: 420px;
+            height: 100%;
         }
 
         .pie-charts {
-            flex: 1;
+            flex: 0 0 34%;
+            min-width: 260px;
+            height: 100%;
+            display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
         }
 
+        .line-charts h3,
+        .pie-charts h3 {
+            margin: 0 0 10px 6px;
+            font-size: 1.05rem;
+            color: #0B795B;
+            font-weight: 700;
+        }
+
+        .grafico-ram,
         .grafico-pizza {
             width: 100%;
+            height: calc(100% - 42px);
+            min-height: 300px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 300px;
+            justify-content: center;
             position: relative;
+            padding: 8px;
+            box-sizing: border-box;
         }
 
-        .grafico-pizza canvas {
+        .grafico-pizza canvas,
+        .grafico-ram canvas,
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
             max-height: 100% !important;
             max-width: 100% !important;
+            display: block;
+            object-fit: contain;
         }
 
+        /* KPIs */
         .kpis-ram {
             width: 100%;
             padding: 2vh 0;
@@ -64,6 +91,7 @@
             gap: 20px;
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
         }
 
         .kpi-card-ram {
@@ -81,6 +109,8 @@
             transition: all 0.3s ease;
             position: relative;
             border-bottom: 4px solid #18B187;
+            min-width: 180px;
+            flex: 1 1 220px;
         }
 
         .kpi-card-ram:hover {
@@ -163,7 +193,7 @@
     </style>
 </head>
 
-<body onload="carregarRam7dias(); carregarGraficoPizzaRAM()">
+<body onload="carregarRam7dias()">
 
     <div class="total-dash">
         <div class="dashboard-bg">
@@ -197,7 +227,7 @@
             <div class="dashboard-low-right-side">
 
                 <div class="dashboard-topbar">
-                    <h2>Consumo de RAM — Últimos 7 dias</h2>
+                    <h2>Consumo de RAM Por Minuto</h2>
                     <div class="btns-topbar">
                         <div class="btn-padrao">
                             <button class="btn-notificacao"></button>
@@ -218,7 +248,7 @@
                         <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
                         <div class="kpi-tooltip">
                             <strong>Média de uso de RAM</strong><br>
-                            Média de utilização (%) ao longo dos últimos 7 dias.
+                            Média de utilização (%) ao longo dos ultimo minuto.
                         </div>
                         Média semanal
                         <span id="kpiMedia">0%</span>
@@ -239,12 +269,12 @@
                     <div class="kpi-card-ram">
                         <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
                         <div class="kpi-tooltip">
-                            <strong>Horas em alerta crítico</strong><br>
-                            Quantidade de horas que excederam 80% de uso.
+                            <strong>Minutos em alerta crítico</strong><br>
+                            Quantidade de minutos que excederam 90% de uso.
                         </div>
-                        Horas críticas
-                        <span id="kpiHorasCriticas">0h</span>
-                        <small>Baseado em limite de 80%</small>
+                        Minutos críticos
+                        <span id="kpiHorasCriticas">0</span>
+                        <small>Baseado em limite de 90%</small>
                     </div>
 
                     <div class="kpi-card-ram">
@@ -255,7 +285,7 @@
                         </div>
                         Alertas críticos
                         <span id="kpiAlertasSemana">--</span>
-                        <small>Baseado em limite de 80%</small>
+                        <small>Baseado em limite de 90%</small>
                     </div>
                 </div>
 

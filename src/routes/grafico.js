@@ -36,8 +36,8 @@ router.get("/alertas-semana/:hostName", (req, res) => {
 });
 
 
-router.get("/top3-empresas-ram", function (req, res){
-    graficoController.top3EmpresasRAM(req, res);
+router.get("/top3-maquinas-ram/:hostName", function (req, res) {
+    graficoController.top3MaquinasRAM(req, res);
 });
 
 

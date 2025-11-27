@@ -40,7 +40,7 @@ async function carregarRam7dias() {
 
     console.log(`Buscando dados para o HostName: ${hostNameGlobal}`);
 
-    // 3. Busca os dados do Gráfico e KPIs
+
     try {
         const resposta = await fetch(`/grafico/ram-7dias/${encodeURIComponent(hostNameGlobal)}`);
 
@@ -55,7 +55,6 @@ async function carregarRam7dias() {
         const dados = await resposta.json();
         console.log("Dados recebidos do gráfico:", dados);
 
-        // Se não vier dados, avisa e para
         if (!dados || dados.length === 0) {
             console.warn("Nenhum dado encontrado para esta máquina.");
             document.getElementById("kpiMedia").innerText = "0%";
@@ -64,7 +63,7 @@ async function carregarRam7dias() {
             return;
         }
 
-        // 4. Processamento dos dados (KPIs e Gráfico)
+
         var labels = [];
         var valores = [];
         var coresPontos = [];
@@ -97,10 +96,11 @@ async function carregarRam7dias() {
         var media = soma / dados.length;
         document.getElementById("kpiMedia").innerText = media.toFixed(1) + "%";
         document.getElementById("kpiPico").innerText = maior.toFixed(1) + "%";
-        document.getElementById("kpiHorasCriticas").innerText = horasCriticas + "h";
+        document.getElementById("kpiHorasCriticas").innerText = horasCriticas ;
 
         montarGrafico(labels, valores, coresPontos, tamanhosPontos, 90);
 
+        carregarGraficoPizzaRAM(hostNameGlobal);
 
         carregarAlertasSemana();
 
@@ -110,15 +110,20 @@ async function carregarRam7dias() {
 }
 
 
-function carregarGraficoPizzaRAM() {
-    fetch(`/grafico/top3-empresas-ram`)
+function carregarGraficoPizzaRAM(hostName) {
+    if(!hostName){
+        console.log("Não foi possível encontrar o hostname")
+        return;
+    }
+
+    fetch(`/grafico/top3-maquinas-ram/${encodeURIComponent(hostName)}`)
         .then(r => r.json())
         .then(data => {
-            var nomes = [];
+            var nomes = []; 
             var consumos = [];
 
             for (var i = 0; i < data.length; i++) {
-                nomes.push(data[i].empresa);
+                nomes.push(data[i].nomeMaquina || data[i].idMaquina);
                 consumos.push(data[i].consumoMedio);
             }
 
