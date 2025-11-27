@@ -184,7 +184,7 @@
                                 <h2>
                                     <div style=" background-color: #18B187; border-radius: 90px; height: 2vh; width:
                                             1vw; "></div><br>Armazenamento <br> utilizado
-                                    <h1 id=" h1_usoDisco">
+                                    <h1 id="h1_usoDisco">
 
                                         </h1>
                                     </h2>
@@ -355,6 +355,8 @@
         window.location.reload();
     }
 
+
+    puxarMetricas()
 
 
     async function puxarMetricas() {
@@ -744,107 +746,109 @@
 
 
 
-    // const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
+    const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
 
-    // // var usoLivre = 100 - usoDisco;
-    // // h1_usoDisco.innerHTML = usoDisco + "%"
-    // // h1_usoLivre.innerHTML = usoLivre + "%"
+    // var usoLivre = 100 - usoDisco;
+    // h1_usoDisco.innerHTML = usoDisco + "%"
+    // h1_usoLivre.innerHTML = usoLivre + "%"
+
+    var usoDisco = 0;
+    var usoLivre = 100;
+
+    var graficoDisco = new Chart(ctxDisco, {
+        type: 'bar',
+        data: {
+            labels: [usoDisco + '%'],
+            datasets: [{
+                data: [usoDisco],
+                backgroundColor: 'transparent'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true }
+            },
+            scales: {
+                x: { display: false },
+                y: { display: false, min: 0, max: 100 }
+            },
+            animation: {
+                duration: 800,
+                easing: 'easeInOutQuad'
+            }
+        },
+        plugins: [{
+            id: 'liquidoDisco',
+            beforeDatasetsDraw(graficoDisco) {
+                const ctx = graficoDisco.ctx;
+                const area = graficoDisco.chartArea;
+                const meta = graficoDisco.getDatasetMeta(0);
+                const barra = meta.data[0];
+
+                const margemVertical = area.height * 0.025;
+
+                const areaUtil = {
+                    left: area.left,
+                    right: area.right,
+                    top: area.top + margemVertical,
+                    bottom: area.bottom - margemVertical
+                };
+
+                const yTopo = barra.y;
+                const yBase = areaUtil.bottom;
+
+                const yTopoAjustado = Math.max(yTopo, areaUtil.top + 7);
+
+                ctx.beginPath();
+                ctx.ellipse(
+                    (areaUtil.left + areaUtil.right) / 2,
+                    yTopoAjustado,
+                    (areaUtil.right - areaUtil.left) / 2,
+                    18,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
+
+                const gradienteHorizontal = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
+                gradienteHorizontal.addColorStop(0, '#25a683');
+                gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
+                gradienteHorizontal.addColorStop(0.85, '#25a683');
+
+                ctx.fillStyle = gradienteHorizontal;
 
 
-    // new Chart(ctxDisco, {
-    //     type: 'bar',
-    //     data: {
-    //         // labels: [usoDisco + '%'],
-    //         datasets: [{
-    //             // data: [usoDisco],
-    //             backgroundColor: 'transparent'
-    //         }]
-    //     },
-    //     options: {
-    //         responsive: true,
-    //         maintainAspectRatio: false,
-    //         plugins: {
-    //             legend: { display: false },
-    //             tooltip: { enabled: true }
-    //         },
-    //         scales: {
-    //             x: { display: false },
-    //             y: { display: false, min: 0, max: 100 }
-    //         },
-    //         animation: {
-    //             duration: 800,
-    //             easing: 'easeInOutQuad'
-    //         }
-    //     },
-    //     plugins: [{
-    //         id: 'liquidoDisco',
-    //         beforeDatasetsDraw(graficoDisco) {
-    //             const ctx = graficoDisco.ctx;
-    //             const area = graficoDisco.chartArea;
-    //             const meta = graficoDisco.getDatasetMeta(0);
-    //             const barra = meta.data[0];
+                const alturaPreenchimento = yBase - yTopoAjustado;
+                if (alturaPreenchimento > 0) {
+                    ctx.fillRect(areaUtil.left, yTopoAjustado, areaUtil.right - areaUtil.left, alturaPreenchimento);
+                }
 
-    //             const margemVertical = area.height * 0.025;
+                ctx.beginPath();
+                ctx.ellipse(
+                    (areaUtil.left + areaUtil.right) / 2,
+                    yTopoAjustado,
+                    (areaUtil.right - areaUtil.left) / 2,
+                    18,
+                    0,
+                    0,
+                    Math.PI * 2
+                );
 
-    //             const areaUtil = {
-    //                 left: area.left,
-    //                 right: area.right,
-    //                 top: area.top + margemVertical,
-    //                 bottom: area.bottom - margemVertical
-    //             };
+                const gradienteEscuro = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
+                gradienteEscuro.addColorStop(0, '#1d8066');
+                gradienteEscuro.addColorStop(0.33, '#18a47d');
+                gradienteEscuro.addColorStop(0.85, '#1d8066');
 
-    //             const yTopo = barra.y;
-    //             const yBase = areaUtil.bottom;
+                ctx.fillStyle = gradienteEscuro;
+                ctx.fill();
 
-    //             const yTopoAjustado = Math.max(yTopo, areaUtil.top + 7);
-
-    //             ctx.beginPath();
-    //             ctx.ellipse(
-    //                 (areaUtil.left + areaUtil.right) / 2,
-    //                 yTopoAjustado,
-    //                 (areaUtil.right - areaUtil.left) / 2,
-    //                 18,
-    //                 0,
-    //                 0,
-    //                 Math.PI * 2
-    //             );
-
-    //             const gradienteHorizontal = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
-    //             gradienteHorizontal.addColorStop(0, '#25a683');
-    //             gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
-    //             gradienteHorizontal.addColorStop(0.85, '#25a683');
-
-    //             ctx.fillStyle = gradienteHorizontal;
-
-
-    //             const alturaPreenchimento = yBase - yTopoAjustado;
-    //             if (alturaPreenchimento > 0) {
-    //                 ctx.fillRect(areaUtil.left, yTopoAjustado, areaUtil.right - areaUtil.left, alturaPreenchimento);
-    //             }
-
-    //             ctx.beginPath();
-    //             ctx.ellipse(
-    //                 (areaUtil.left + areaUtil.right) / 2,
-    //                 yTopoAjustado,
-    //                 (areaUtil.right - areaUtil.left) / 2,
-    //                 18,
-    //                 0,
-    //                 0,
-    //                 Math.PI * 2
-    //             );
-
-    //             const gradienteEscuro = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
-    //             gradienteEscuro.addColorStop(0, '#1d8066');
-    //             gradienteEscuro.addColorStop(0.33, '#18a47d');
-    //             gradienteEscuro.addColorStop(0.85, '#1d8066');
-
-    //             ctx.fillStyle = gradienteEscuro;
-    //             ctx.fill();
-
-    //             ctx.restore();
-    //         }
-    //     }]
-    // });
+                ctx.restore();
+            }
+        }]
+    });
 
     function atualizarGraficos() {
 
@@ -910,9 +914,7 @@
 
     // Atualiza a cada 30s
     setInterval(atualizarGraficos, 30000);
-
-    // Atualiza ao carregar página
-    // body.onload(atualizarGraficos());
+    atualizarGraficos()
 
 
 
