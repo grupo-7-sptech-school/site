@@ -25,7 +25,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
 
     <!--FONT AWESOME-->
-    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script> -->
 </head>
 
 <!-- <body onload=" atualizarFeed()"> -->
@@ -108,7 +108,7 @@
                     </div>
                     <div class="kpi">
                         <h3>Processo que mais consome RAM</h3>
-                        <h2 id="statusRam" style="color:rgb(96, 89, 89)">TrustedInstaller</h2>
+                        <h2 id="statusRam" style="color:rgb(96, 89, 89)"></h2>
                     </div>
                     <div class="kpi-metricas">
                         <h3>Limites de Alerta <a style="color: red;">Crítico</a> Atuais</h3>
@@ -744,107 +744,107 @@
 
 
 
-    const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
+    // const ctxDisco = document.getElementById('graficoDiscoCanvas').getContext('2d');
 
-    // var usoLivre = 100 - usoDisco;
-    // h1_usoDisco.innerHTML = usoDisco + "%"
-    // h1_usoLivre.innerHTML = usoLivre + "%"
-
-
-    new Chart(ctxDisco, {
-        type: 'bar',
-        data: {
-            // labels: [usoDisco + '%'],
-            datasets: [{
-                // data: [usoDisco],
-                backgroundColor: 'transparent'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: { enabled: true }
-            },
-            scales: {
-                x: { display: false },
-                y: { display: false, min: 0, max: 100 }
-            },
-            animation: {
-                duration: 800,
-                easing: 'easeInOutQuad'
-            }
-        },
-        plugins: [{
-            id: 'liquidoDisco',
-            beforeDatasetsDraw(graficoDisco) {
-                const ctx = graficoDisco.ctx;
-                const area = graficoDisco.chartArea;
-                const meta = graficoDisco.getDatasetMeta(0);
-                const barra = meta.data[0];
-
-                const margemVertical = area.height * 0.025;
-
-                const areaUtil = {
-                    left: area.left,
-                    right: area.right,
-                    top: area.top + margemVertical,
-                    bottom: area.bottom - margemVertical
-                };
-
-                const yTopo = barra.y;
-                const yBase = areaUtil.bottom;
-
-                const yTopoAjustado = Math.max(yTopo, areaUtil.top + 7);
-
-                ctx.beginPath();
-                ctx.ellipse(
-                    (areaUtil.left + areaUtil.right) / 2,
-                    yTopoAjustado,
-                    (areaUtil.right - areaUtil.left) / 2,
-                    18,
-                    0,
-                    0,
-                    Math.PI * 2
-                );
-
-                const gradienteHorizontal = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
-                gradienteHorizontal.addColorStop(0, '#25a683');
-                gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
-                gradienteHorizontal.addColorStop(0.85, '#25a683');
-
-                ctx.fillStyle = gradienteHorizontal;
+    // // var usoLivre = 100 - usoDisco;
+    // // h1_usoDisco.innerHTML = usoDisco + "%"
+    // // h1_usoLivre.innerHTML = usoLivre + "%"
 
 
-                const alturaPreenchimento = yBase - yTopoAjustado;
-                if (alturaPreenchimento > 0) {
-                    ctx.fillRect(areaUtil.left, yTopoAjustado, areaUtil.right - areaUtil.left, alturaPreenchimento);
-                }
+    // new Chart(ctxDisco, {
+    //     type: 'bar',
+    //     data: {
+    //         // labels: [usoDisco + '%'],
+    //         datasets: [{
+    //             // data: [usoDisco],
+    //             backgroundColor: 'transparent'
+    //         }]
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         maintainAspectRatio: false,
+    //         plugins: {
+    //             legend: { display: false },
+    //             tooltip: { enabled: true }
+    //         },
+    //         scales: {
+    //             x: { display: false },
+    //             y: { display: false, min: 0, max: 100 }
+    //         },
+    //         animation: {
+    //             duration: 800,
+    //             easing: 'easeInOutQuad'
+    //         }
+    //     },
+    //     plugins: [{
+    //         id: 'liquidoDisco',
+    //         beforeDatasetsDraw(graficoDisco) {
+    //             const ctx = graficoDisco.ctx;
+    //             const area = graficoDisco.chartArea;
+    //             const meta = graficoDisco.getDatasetMeta(0);
+    //             const barra = meta.data[0];
 
-                ctx.beginPath();
-                ctx.ellipse(
-                    (areaUtil.left + areaUtil.right) / 2,
-                    yTopoAjustado,
-                    (areaUtil.right - areaUtil.left) / 2,
-                    18,
-                    0,
-                    0,
-                    Math.PI * 2
-                );
+    //             const margemVertical = area.height * 0.025;
 
-                const gradienteEscuro = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
-                gradienteEscuro.addColorStop(0, '#1d8066');
-                gradienteEscuro.addColorStop(0.33, '#18a47d');
-                gradienteEscuro.addColorStop(0.85, '#1d8066');
+    //             const areaUtil = {
+    //                 left: area.left,
+    //                 right: area.right,
+    //                 top: area.top + margemVertical,
+    //                 bottom: area.bottom - margemVertical
+    //             };
 
-                ctx.fillStyle = gradienteEscuro;
-                ctx.fill();
+    //             const yTopo = barra.y;
+    //             const yBase = areaUtil.bottom;
 
-                ctx.restore();
-            }
-        }]
-    });
+    //             const yTopoAjustado = Math.max(yTopo, areaUtil.top + 7);
+
+    //             ctx.beginPath();
+    //             ctx.ellipse(
+    //                 (areaUtil.left + areaUtil.right) / 2,
+    //                 yTopoAjustado,
+    //                 (areaUtil.right - areaUtil.left) / 2,
+    //                 18,
+    //                 0,
+    //                 0,
+    //                 Math.PI * 2
+    //             );
+
+    //             const gradienteHorizontal = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
+    //             gradienteHorizontal.addColorStop(0, '#25a683');
+    //             gradienteHorizontal.addColorStop(0.33, '#1ed1a1');
+    //             gradienteHorizontal.addColorStop(0.85, '#25a683');
+
+    //             ctx.fillStyle = gradienteHorizontal;
+
+
+    //             const alturaPreenchimento = yBase - yTopoAjustado;
+    //             if (alturaPreenchimento > 0) {
+    //                 ctx.fillRect(areaUtil.left, yTopoAjustado, areaUtil.right - areaUtil.left, alturaPreenchimento);
+    //             }
+
+    //             ctx.beginPath();
+    //             ctx.ellipse(
+    //                 (areaUtil.left + areaUtil.right) / 2,
+    //                 yTopoAjustado,
+    //                 (areaUtil.right - areaUtil.left) / 2,
+    //                 18,
+    //                 0,
+    //                 0,
+    //                 Math.PI * 2
+    //             );
+
+    //             const gradienteEscuro = ctx.createLinearGradient(areaUtil.left, 0, areaUtil.right, 0);
+    //             gradienteEscuro.addColorStop(0, '#1d8066');
+    //             gradienteEscuro.addColorStop(0.33, '#18a47d');
+    //             gradienteEscuro.addColorStop(0.85, '#1d8066');
+
+    //             ctx.fillStyle = gradienteEscuro;
+    //             ctx.fill();
+
+    //             ctx.restore();
+    //         }
+    //     }]
+    // });
 
     function atualizarGraficos() {
 
@@ -912,7 +912,7 @@
     setInterval(atualizarGraficos, 30000);
 
     // Atualiza ao carregar página
-    body.onload(atualizarGraficos());
+    // body.onload(atualizarGraficos());
 
 
 
