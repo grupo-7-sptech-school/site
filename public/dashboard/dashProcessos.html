@@ -469,13 +469,13 @@
                 const info = kpis[0];
 
                 if (info) {
-                    totalAlertas.textContent = info.total_alertas_semana;
-                    totalCriticos.textContent = info.total_criticos_semana;
-                    totalPreventivos.textContent = info.total_preventivos_semana;
+                    totalAlertas.textContent = info.total_alertas_semana || 0;
+                    totalCriticos.textContent = info.total_criticos_semana || 0;
+                    totalPreventivos.textContent = info.total_preventivos_semana || 0;
                 } else {
-                    totalAlertas.textContent = "—";
-                    totalCriticos.textContent = "—";
-                    totalPreventivos.textContent = "—";
+                    totalAlertas.textContent = 0;
+                    totalCriticos.textContent = 0;
+                    totalPreventivos.textContent = 0;
                 }
 
                 var url = "";
