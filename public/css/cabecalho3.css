@@ -112,7 +112,7 @@ body{
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.btn-gerar-relatorio{
+.btn-gerar-relatorio, .btn-consumo{
   width: 10vw;
   height: 5vh;
   background-color: white;
@@ -136,7 +136,7 @@ body{
   background-color: #0B795B;
 }
 
-.btn-gerar-relatorio:hover{
+.btn-gerar-relatorio:hover, .btn-consumo:hover{
   transition: scale 0.3s ease-in-out;
   scale: 1.1;
   background-color: #06503d;
@@ -154,6 +154,7 @@ body{
   align-items: center;
   gap: 20px;
   flex-shrink: 0;
+  width: 40rem;
 }
 
 .btn-padrao{
