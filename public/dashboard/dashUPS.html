@@ -299,7 +299,8 @@
                     <div class="btns-topbar">
                         <div class="btn-padrao">
                             <button class="btn-notificacao"></button>
-                            <a href="contateste.html" class="btn-conta"></a>
+                            <img id="fotoTopo" src="/assets/icon/icon-user.png" alt="Foto do usuário"
+                                style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
                         </div>
                     </div>
                 </div>
@@ -376,374 +377,375 @@
         </div>
     </div>
 </body>
+
 </html>
 <script>
-        class UPSDashboard {
-            constructor() {
-                this.baseURL = '/api/ups';
-                this.donutChart = null;
-                this.lineChart = null;
-                this.dadosAtuais = {
-                    status: [],
-                    estatisticas: {},
-                    graficos: {}
-                };
-                this.init();
+    class UPSDashboard {
+        constructor() {
+            this.baseURL = '/api/ups';
+            this.donutChart = null;
+            this.lineChart = null;
+            this.dadosAtuais = {
+                status: [],
+                estatisticas: {},
+                graficos: {}
+            };
+            this.init();
+        }
+
+        init() {
+            console.log('Inicializando UPS Dashboard...');
+            this.inicializarGraficos();
+            this.carregarDados();
+            this.configurarEventos();
+
+            setInterval(() => this.carregarDados(), 30000);
+            console.log('UPS Dashboard inicializado');
+        }
+
+        async carregarDados() {
+            try {
+                console.log('Iniciando carregamento de dados...');
+                const [status, estatisticas, graficos] = await Promise.all([
+                    this.carregarStatus(),
+                    this.carregarEstatisticas(),
+                    this.carregarGraficos()
+                ]);
+
+                this.dadosAtuais = { status, estatisticas, graficos };
+                console.log('Dados carregados com sucesso');
+
+            } catch (error) {
+                console.error('Erro crítico ao carregar dados:', error);
+                this.usarDadosMock();
+            }
+        }
+
+        async carregarStatus() {
+            try {
+                console.log(' Buscando status UPS...');
+                const response = await fetch(`${this.baseURL}/status`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const status = await response.json();
+                console.log(`Status carregado: ${status.length} UPS(s)`);
+                return status;
+
+            } catch (error) {
+                console.error('Falha ao carregar status:', error.message);
+                throw error;
+            }
+        }
+
+        async carregarEstatisticas() {
+            try {
+                console.log('Buscando estatísticas...');
+                const response = await fetch(`${this.baseURL}/estatisticas`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const estatisticas = await response.json();
+                console.log('Estatísticas recebidas:', estatisticas);
+                this.atualizarKPI(estatisticas);
+                return estatisticas;
+
+            } catch (error) {
+                console.error('Falha ao carregar estatísticas:', error.message);
+                throw error;
+            }
+        }
+
+        async carregarGraficos() {
+            try {
+                const periodo = document.getElementById('seletorPeriodo').value;
+                console.log(`Buscando dados gráficos - período: ${periodo}`);
+
+                const response = await fetch(`${this.baseURL}/graficos?periodo=${periodo}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const graficos = await response.json();
+                console.log('Dados gráficos recebidos');
+                this.atualizarGraficos(graficos);
+                return graficos;
+
+            } catch (error) {
+                console.error('Falha ao carregar gráficos:', error.message);
+                throw error;
+            }
+        }
+
+        atualizarKPI(estatisticas) {
+            console.log('Atualizando KPIs com:', estatisticas);
+            const kpis = document.querySelectorAll('.kpi-card-ups');
+
+            if (!kpis.length) {
+                console.error('Elementos KPI não encontrados');
+                return;
             }
 
-            init() {
-                console.log('Inicializando UPS Dashboard...');
-                this.inicializarGraficos();
-                this.carregarDados();
-                this.configurarEventos();
-
-                setInterval(() => this.carregarDados(), 30000);
-                console.log('UPS Dashboard inicializado');
+            // KPI 1: Quantidade de UPS
+            if (kpis[0]) {
+                const quantidade = estatisticas.quantidadeUPS || 0;
+                kpis[0].querySelector('span').textContent = quantidade;
+                kpis[0].querySelector('small').textContent = this.gerarVariacao(quantidade, 'quantidade');
             }
 
-            async carregarDados() {
-                try {
-                    console.log('Iniciando carregamento de dados...');
-                    const [status, estatisticas, graficos] = await Promise.all([
-                        this.carregarStatus(),
-                        this.carregarEstatisticas(),
-                        this.carregarGraficos()
-                    ]);
-
-                    this.dadosAtuais = { status, estatisticas, graficos };
-                    console.log('Dados carregados com sucesso');
-
-                } catch (error) {
-                    console.error('Erro crítico ao carregar dados:', error);
-                    this.usarDadosMock();
-                }
+            // KPI 2: P.U.E
+            if (kpis[1]) {
+                const pue = estatisticas.pue || 1.2;
+                kpis[1].querySelector('span').textContent = pue.toFixed(1);
+                kpis[1].querySelector('small').textContent = this.gerarVariacao(pue, 'pue');
             }
 
-            async carregarStatus() {
-                try {
-                    console.log(' Buscando status UPS...');
-                    const response = await fetch(`${this.baseURL}/status`);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-                    const status = await response.json();
-                    console.log(`Status carregado: ${status.length} UPS(s)`);
-                    return status;
-
-                } catch (error) {
-                    console.error('Falha ao carregar status:', error.message);
-                    throw error;
-                }
+            // KPI 3: Energia disponível
+            if (kpis[2]) {
+                const energia = estatisticas.energiaDisponivel || 0;
+                kpis[2].querySelector('span').textContent = `${energia}%`;
+                kpis[2].querySelector('small').textContent = this.gerarVariacao(energia, 'energia');
             }
 
-            async carregarEstatisticas() {
-                try {
-                    console.log('Buscando estatísticas...');
-                    const response = await fetch(`${this.baseURL}/estatisticas`);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            this.atualizarCoresStatus(estatisticas);
+            console.log('KPIs atualizados na interface');
+        }
 
-                    const estatisticas = await response.json();
-                    console.log('Estatísticas recebidas:', estatisticas);
-                    this.atualizarKPI(estatisticas);
-                    return estatisticas;
+        gerarVariacao(valor, tipo) {
+            const variacoes = {
+                quantidade: ['+2 novas esta semana', '+1 nova hoje', 'Estável'],
+                pue: ['-0.03% em relação ao último dia', '+0.02% em relação ao último dia', 'Estável'],
+                energia: ['-0.2% em relação ao último dia', '+0.5% em relação ao último dia', 'Estável']
+            };
+            const opcoes = variacoes[tipo] || variacoes.energia;
+            if (valor > 80) return opcoes[1];
+            if (valor < 20) return opcoes[0];
+            return opcoes[2];
+        }
 
-                } catch (error) {
-                    console.error('Falha ao carregar estatísticas:', error.message);
-                    throw error;
-                }
+        inicializarGraficos() {
+            console.log('Inicializando gráficos...');
+            this.criarGraficoPizza();
+            this.criarGraficoLinha();
+        }
+
+        criarGraficoPizza() {
+            const ctx = document.getElementById('donutChart');
+            if (!ctx) {
+                console.error('Canvas donutChart não encontrado');
+                return;
             }
 
-            async carregarGraficos() {
-                try {
-                    const periodo = document.getElementById('seletorPeriodo').value;
-                    console.log(`Buscando dados gráficos - período: ${periodo}`);
+            if (this.donutChart) this.donutChart.destroy();
 
-                    const response = await fetch(`${this.baseURL}/graficos?periodo=${periodo}`);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-                    const graficos = await response.json();
-                    console.log('Dados gráficos recebidos');
-                    this.atualizarGraficos(graficos);
-                    return graficos;
-
-                } catch (error) {
-                    console.error('Falha ao carregar gráficos:', error.message);
-                    throw error;
-                }
-            }
-
-            atualizarKPI(estatisticas) {
-                console.log('Atualizando KPIs com:', estatisticas);
-                const kpis = document.querySelectorAll('.kpi-card-ups');
-
-                if (!kpis.length) {
-                    console.error('Elementos KPI não encontrados');
-                    return;
-                }
-
-                // KPI 1: Quantidade de UPS
-                if (kpis[0]) {
-                    const quantidade = estatisticas.quantidadeUPS || 0;
-                    kpis[0].querySelector('span').textContent = quantidade;
-                    kpis[0].querySelector('small').textContent = this.gerarVariacao(quantidade, 'quantidade');
-                }
-
-                // KPI 2: P.U.E
-                if (kpis[1]) {
-                    const pue = estatisticas.pue || 1.2;
-                    kpis[1].querySelector('span').textContent = pue.toFixed(1);
-                    kpis[1].querySelector('small').textContent = this.gerarVariacao(pue, 'pue');
-                }
-
-                // KPI 3: Energia disponível
-                if (kpis[2]) {
-                    const energia = estatisticas.energiaDisponivel || 0;
-                    kpis[2].querySelector('span').textContent = `${energia}%`;
-                    kpis[2].querySelector('small').textContent = this.gerarVariacao(energia, 'energia');
-                }
-
-                this.atualizarCoresStatus(estatisticas);
-                console.log('KPIs atualizados na interface');
-            }
-
-            gerarVariacao(valor, tipo) {
-                const variacoes = {
-                    quantidade: ['+2 novas esta semana', '+1 nova hoje', 'Estável'],
-                    pue: ['-0.03% em relação ao último dia', '+0.02% em relação ao último dia', 'Estável'],
-                    energia: ['-0.2% em relação ao último dia', '+0.5% em relação ao último dia', 'Estável']
-                };
-                const opcoes = variacoes[tipo] || variacoes.energia;
-                if (valor > 80) return opcoes[1];
-                if (valor < 20) return opcoes[0];
-                return opcoes[2];
-            }
-
-            inicializarGraficos() {
-                console.log('Inicializando gráficos...');
-                this.criarGraficoPizza();
-                this.criarGraficoLinha();
-            }
-
-            criarGraficoPizza() {
-                const ctx = document.getElementById('donutChart');
-                if (!ctx) {
-                    console.error('Canvas donutChart não encontrado');
-                    return;
-                }
-
-                if (this.donutChart) this.donutChart.destroy();
-
-                this.donutChart = new Chart(ctx, {
-                    type: "doughnut",
-                    data: {
-                        labels: ["Em uso", "Sem uso"],
-                        datasets: [{
-                            data: [65, 35],
-                            backgroundColor: ["#4bc0c0", "#FF6384"],
-                            borderWidth: 0,
-                            hoverOffset: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: "65%",
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'bottom',
-                                labels: {
-                                    color: '#333',
-                                    font: { family: "'Montserrat', sans-serif", size: 12 },
-                                    padding: 20
-                                }
+            this.donutChart = new Chart(ctx, {
+                type: "doughnut",
+                data: {
+                    labels: ["Em uso", "Sem uso"],
+                    datasets: [{
+                        data: [65, 35],
+                        backgroundColor: ["#4bc0c0", "#FF6384"],
+                        borderWidth: 0,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "65%",
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                color: '#333',
+                                font: { family: "'Montserrat', sans-serif", size: 12 },
+                                padding: 20
                             }
                         }
                     }
-                });
+                }
+            });
+        }
+
+        criarGraficoLinha() {
+            const ctx = document.getElementById('lineChart');
+            if (!ctx) {
+                console.error('Canvas lineChart não encontrado');
+                return;
             }
 
-            criarGraficoLinha() {
-                const ctx = document.getElementById('lineChart');
-                if (!ctx) {
-                    console.error('Canvas lineChart não encontrado');
-                    return;
-                }
+            if (this.lineChart) this.lineChart.destroy();
 
-                if (this.lineChart) this.lineChart.destroy();
-
-                this.lineChart = new Chart(ctx, {
-                    type: "line",
-                    data: {
-                        labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
-                        datasets: [{
-                            label: "Acionamentos de UPS",
-                            data: [3, 5, 2, 8, 4, 1, 6],
-                            tension: 0.4,
-                            borderWidth: 3,
-                            borderColor: "#4bc0c0",
-                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                            pointRadius: 5,
-                            pointBackgroundColor: "#4bc0c0",
-                            pointBorderColor: "#fff",
-                            pointBorderWidth: 2,
-                            pointHoverRadius: 7,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
-                                labels: {
-                                    color: '#333',
-                                    font: { family: "'Montserrat', sans-serif", size: 12 }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    title: (context) => `Dia: ${context[0].label}`,
-                                    label: (context) => `Acionamentos: ${context.raw} vez(es)`
-                                }
+            this.lineChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+                    datasets: [{
+                        label: "Acionamentos de UPS",
+                        data: [3, 5, 2, 8, 4, 1, 6],
+                        tension: 0.4,
+                        borderWidth: 3,
+                        borderColor: "#4bc0c0",
+                        backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                        pointRadius: 5,
+                        pointBackgroundColor: "#4bc0c0",
+                        pointBorderColor: "#fff",
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 7,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#333',
+                                font: { family: "'Montserrat', sans-serif", size: 12 }
                             }
                         },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Número de Acionamentos',
-                                    font: { family: "'Montserrat', sans-serif", size: 12 }
-                                },
-                                border: { display: false },
-                                ticks: {
-                                    color: "#666",
-                                    font: { family: "'Montserrat', sans-serif", size: 11 },
-                                    stepSize: 1
-                                },
-                                grid: { color: "rgba(0,0,0,0.05)" }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Período',
-                                    font: { family: "'Montserrat', sans-serif", size: 12 }
-                                },
-                                border: { display: false },
-                                ticks: {
-                                    color: "#666",
-                                    font: { family: "'Montserrat', sans-serif", size: 11 }
-                                },
-                                grid: { display: false }
+                        tooltip: {
+                            callbacks: {
+                                title: (context) => `Dia: ${context[0].label}`,
+                                label: (context) => `Acionamentos: ${context.raw} vez(es)`
                             }
                         }
-                    }
-                });
-                console.log('Gráfico de acionamentos inicializado');
-            }
-
-            atualizarGraficos(dados) {
-                console.log('Atualizando gráficos com dados:', dados);
-                try {
-                    if (this.donutChart && dados.donut) {
-                        this.donutChart.data.labels = dados.donut.labels || ["Em uso", "Sem uso"];
-                        this.donutChart.data.datasets[0].data = dados.donut.datasets?.[0]?.data || [65, 35];
-                        this.donutChart.data.datasets[0].backgroundColor = dados.donut.datasets?.[0]?.backgroundColor || ["#4bc0c0", "#FF6384"];
-                        this.donutChart.update();
-                        console.log('Gráfico de pizza atualizado');
-                    }
-
-                    if (this.lineChart && dados.linha) {
-                        this.lineChart.data.labels = dados.linha.labels || ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
-                        this.lineChart.data.datasets[0].data = dados.linha.datasets?.[0]?.data || [3, 5, 2, 8, 4, 1, 6];
-                        this.lineChart.update();
-                        console.log('Gráfico de linha atualizado');
-                    }
-                } catch (error) {
-                    console.error('Erro ao atualizar gráficos:', error);
-                }
-            }
-
-            atualizarCoresStatus(estatisticas) {
-                const kpis = document.querySelectorAll('.kpi-card-ups');
-                kpis.forEach((kpi, index) => {
-                    kpi.classList.remove('status-critico', 'status-alerta', 'status-normal');
-                    let status = 'normal';
-
-                    switch (index) {
-                        case 0:
-                            if (estatisticas.quantidadeUPS === 0) status = 'critico';
-                            break;
-                        case 1:
-                            if (estatisticas.pue > 1.5) status = 'critico';
-                            else if (estatisticas.pue > 1.3) status = 'alerta';
-                            break;
-                        case 2:
-                            if (estatisticas.energiaDisponivel < 20) status = 'critico';
-                            else if (estatisticas.energiaDisponivel < 50) status = 'alerta';
-                            break;
-                    }
-                    kpi.classList.add(`status-${status}`);
-                });
-            }
-
-            usarDadosMock() {
-                console.warn('Usando dados mock para demonstração');
-                const estatisticasMock = {
-                    quantidadeUPS: 2,
-                    pue: 1.2,
-                    energiaDisponivel: 85
-                };
-
-                const graficosMock = {
-                    donut: {
-                        labels: ["Em uso", "Sem uso"],
-                        datasets: [{ data: [2, 0], backgroundColor: ["#4bc0c0", "#FF6384"] }]
                     },
-                    linha: {
-                        labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
-                        datasets: [{ label: "Acionamentos de UPS", data: [3, 5, 2, 8, 4, 1, 6] }]
-                    },
-                    usandoMock: true
-                };
-
-                this.atualizarKPI(estatisticasMock);
-                this.atualizarGraficos(graficosMock);
-                this.mostrarAlerta('Usando dados de demonstração. Servidor offline.', 'warning');
-            }
-
-            configurarEventos() {
-                console.log('Configurando eventos...');
-
-                const btnAddUPS = document.querySelector('.btn-add-ups');
-                if (btnAddUPS) {
-                    btnAddUPS.addEventListener('click', () => {
-                        this.abrirModalIncluirUPS();
-                    });
-                }
-
-                const seletorPeriodo = document.getElementById('seletorPeriodo');
-                if (seletorPeriodo) {
-                    seletorPeriodo.addEventListener('change', () => this.carregarGraficos());
-                }
-
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'F5') {
-                        e.preventDefault();
-                        this.carregarDados();
-                        this.mostrarAlerta('Dados atualizados!', 'success');
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Número de Acionamentos',
+                                font: { family: "'Montserrat', sans-serif", size: 12 }
+                            },
+                            border: { display: false },
+                            ticks: {
+                                color: "#666",
+                                font: { family: "'Montserrat', sans-serif", size: 11 },
+                                stepSize: 1
+                            },
+                            grid: { color: "rgba(0,0,0,0.05)" }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Período',
+                                font: { family: "'Montserrat', sans-serif", size: 12 }
+                            },
+                            border: { display: false },
+                            ticks: {
+                                color: "#666",
+                                font: { family: "'Montserrat', sans-serif", size: 11 }
+                            },
+                            grid: { display: false }
+                        }
                     }
-                });
+                }
+            });
+            console.log('Gráfico de acionamentos inicializado');
+        }
 
-                console.log('Eventos configurados');
+        atualizarGraficos(dados) {
+            console.log('Atualizando gráficos com dados:', dados);
+            try {
+                if (this.donutChart && dados.donut) {
+                    this.donutChart.data.labels = dados.donut.labels || ["Em uso", "Sem uso"];
+                    this.donutChart.data.datasets[0].data = dados.donut.datasets?.[0]?.data || [65, 35];
+                    this.donutChart.data.datasets[0].backgroundColor = dados.donut.datasets?.[0]?.backgroundColor || ["#4bc0c0", "#FF6384"];
+                    this.donutChart.update();
+                    console.log('Gráfico de pizza atualizado');
+                }
+
+                if (this.lineChart && dados.linha) {
+                    this.lineChart.data.labels = dados.linha.labels || ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+                    this.lineChart.data.datasets[0].data = dados.linha.datasets?.[0]?.data || [3, 5, 2, 8, 4, 1, 6];
+                    this.lineChart.update();
+                    console.log('Gráfico de linha atualizado');
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar gráficos:', error);
+            }
+        }
+
+        atualizarCoresStatus(estatisticas) {
+            const kpis = document.querySelectorAll('.kpi-card-ups');
+            kpis.forEach((kpi, index) => {
+                kpi.classList.remove('status-critico', 'status-alerta', 'status-normal');
+                let status = 'normal';
+
+                switch (index) {
+                    case 0:
+                        if (estatisticas.quantidadeUPS === 0) status = 'critico';
+                        break;
+                    case 1:
+                        if (estatisticas.pue > 1.5) status = 'critico';
+                        else if (estatisticas.pue > 1.3) status = 'alerta';
+                        break;
+                    case 2:
+                        if (estatisticas.energiaDisponivel < 20) status = 'critico';
+                        else if (estatisticas.energiaDisponivel < 50) status = 'alerta';
+                        break;
+                }
+                kpi.classList.add(`status-${status}`);
+            });
+        }
+
+        usarDadosMock() {
+            console.warn('Usando dados mock para demonstração');
+            const estatisticasMock = {
+                quantidadeUPS: 2,
+                pue: 1.2,
+                energiaDisponivel: 85
+            };
+
+            const graficosMock = {
+                donut: {
+                    labels: ["Em uso", "Sem uso"],
+                    datasets: [{ data: [2, 0], backgroundColor: ["#4bc0c0", "#FF6384"] }]
+                },
+                linha: {
+                    labels: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+                    datasets: [{ label: "Acionamentos de UPS", data: [3, 5, 2, 8, 4, 1, 6] }]
+                },
+                usandoMock: true
+            };
+
+            this.atualizarKPI(estatisticasMock);
+            this.atualizarGraficos(graficosMock);
+            this.mostrarAlerta('Usando dados de demonstração. Servidor offline.', 'warning');
+        }
+
+        configurarEventos() {
+            console.log('Configurando eventos...');
+
+            const btnAddUPS = document.querySelector('.btn-add-ups');
+            if (btnAddUPS) {
+                btnAddUPS.addEventListener('click', () => {
+                    this.abrirModalIncluirUPS();
+                });
             }
 
-            abrirModalIncluirUPS() {
-                console.log('Abrindo modal de inclusão UPS');
+            const seletorPeriodo = document.getElementById('seletorPeriodo');
+            if (seletorPeriodo) {
+                seletorPeriodo.addEventListener('change', () => this.carregarGraficos());
+            }
 
-                const modalHTML = `
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F5') {
+                    e.preventDefault();
+                    this.carregarDados();
+                    this.mostrarAlerta('Dados atualizados!', 'success');
+                }
+            });
+
+            console.log('Eventos configurados');
+        }
+
+        abrirModalIncluirUPS() {
+            console.log('Abrindo modal de inclusão UPS');
+
+            const modalHTML = `
         <div class="modal-overlay" style="
             position: fixed;
             top: 0;
@@ -969,78 +971,78 @@
         </div>
     `;
 
-                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-                this.configurarModalIncluirUPS();
+            this.configurarModalIncluirUPS();
+        }
+
+        configurarModalIncluirUPS() {
+            const form = document.getElementById('formIncluirUPS');
+            const capacidadeVA = document.getElementById('capacidadeVA');
+            const capacidadeWatts = document.getElementById('capacidadeWatts');
+            const mensagemResultado = document.getElementById('mensagemResultado');
+
+            if (capacidadeVA && capacidadeWatts) {
+                capacidadeVA.addEventListener('input', function () {
+                    if (this.value && !capacidadeWatts.value) {
+                        capacidadeWatts.value = Math.round(this.value * 0.8);
+                    }
+                });
             }
 
-            configurarModalIncluirUPS() {
-                const form = document.getElementById('formIncluirUPS');
-                const capacidadeVA = document.getElementById('capacidadeVA');
-                const capacidadeWatts = document.getElementById('capacidadeWatts');
-                const mensagemResultado = document.getElementById('mensagemResultado');
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
 
-                if (capacidadeVA && capacidadeWatts) {
-                    capacidadeVA.addEventListener('input', function () {
-                        if (this.value && !capacidadeWatts.value) {
-                            capacidadeWatts.value = Math.round(this.value * 0.8);
+                    const formData = new FormData(form);
+                    const dados = {
+                        identificador: formData.get('identificador'),
+                        modelo: formData.get('modelo'),
+                        fabricante: formData.get('fabricante'),
+                        capacidadeVA: formData.get('capacidadeVA'),
+                        capacidadeWatts: formData.get('capacidadeWatts'),
+                        ip: formData.get('ip'),
+                        ativo: formData.get('ativo') === 'on'
+                    };
+
+                    console.log('Enviando dados da UPS:', dados);
+
+                    try {
+                        const response = await fetch(`${this.baseURL}/incluir`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(dados)
+                        });
+
+                        const resultado = await response.json();
+
+                        if (resultado.sucesso) {
+                            this.mostrarAlerta('UPS cadastrada com sucesso!', 'success');
+                            this.carregarDados();
+
+                            setTimeout(() => {
+                                const modal = document.querySelector('.modal-overlay');
+                                if (modal) modal.remove();
+                            }, 1000);
+
+                        } else {
+                            this.mostrarMensagemErro(resultado.error);
                         }
-                    });
-                }
 
-                if (form) {
-                    form.addEventListener('submit', async (e) => {
-                        e.preventDefault();
-
-                        const formData = new FormData(form);
-                        const dados = {
-                            identificador: formData.get('identificador'),
-                            modelo: formData.get('modelo'),
-                            fabricante: formData.get('fabricante'),
-                            capacidadeVA: formData.get('capacidadeVA'),
-                            capacidadeWatts: formData.get('capacidadeWatts'),
-                            ip: formData.get('ip'),
-                            ativo: formData.get('ativo') === 'on'
-                        };
-
-                        console.log('Enviando dados da UPS:', dados);
-
-                        try {
-                            const response = await fetch(`${this.baseURL}/incluir`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(dados)
-                            });
-
-                            const resultado = await response.json();
-
-                            if (resultado.sucesso) {
-                                this.mostrarAlerta('UPS cadastrada com sucesso!', 'success');
-                                this.carregarDados();
-
-                                setTimeout(() => {
-                                    const modal = document.querySelector('.modal-overlay');
-                                    if (modal) modal.remove();
-                                }, 1000);
-
-                            } else {
-                                this.mostrarMensagemErro(resultado.error);
-                            }
-
-                        } catch (error) {
-                            console.error('Erro ao cadastrar UPS:', error);
-                            this.mostrarMensagemErro('Erro de conexão com o servidor');
-                        }
-                    });
-                }
+                    } catch (error) {
+                        console.error('Erro ao cadastrar UPS:', error);
+                        this.mostrarMensagemErro('Erro de conexão com o servidor');
+                    }
+                });
             }
+        }
 
-            mostrarMensagemErro(mensagem) {
-                const mensagemDiv = document.getElementById('mensagemResultado');
-                if (mensagemDiv) {
-                    mensagemDiv.innerHTML = `
+        mostrarMensagemErro(mensagem) {
+            const mensagemDiv = document.getElementById('mensagemResultado');
+            if (mensagemDiv) {
+                mensagemDiv.innerHTML = `
             <div style="
                 background: #fee;
                 border: 1px solid #fcc;
@@ -1052,40 +1054,40 @@
                  ${mensagem}
             </div>
         `;
-                }
             }
-            mostrarAlerta(mensagem, tipo = 'info') {
-                const cores = { success: '#28a745', error: '#dc3545', warning: '#ffc107', info: '#17a2b8' };
-                const alerta = document.createElement('div');
-                alerta.style.cssText = `
+        }
+        mostrarAlerta(mensagem, tipo = 'info') {
+            const cores = { success: '#28a745', error: '#dc3545', warning: '#ffc107', info: '#17a2b8' };
+            const alerta = document.createElement('div');
+            alerta.style.cssText = `
                     position: fixed; top: 20px; right: 20px; background: ${cores[tipo] || '#17a2b8'};
                     color: white; padding: 15px 20px; border-radius: 8px; z-index: 1001;
                     font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                     animation: slideIn 0.3s ease;
                 `;
-                alerta.textContent = mensagem;
-                document.body.appendChild(alerta);
+            alerta.textContent = mensagem;
+            document.body.appendChild(alerta);
 
-                setTimeout(() => {
-                    alerta.style.animation = 'slideOut 0.3s ease';
-                    setTimeout(() => alerta.remove(), 300);
-                }, 4000);
-            }
-
-            debugInfo() {
-                console.group(' Debug UPS Dashboard');
-                console.log('Dados atuais:', this.dadosAtuais);
-                console.log('Gráficos:', { donut: !!this.donutChart, linha: !!this.lineChart });
-                console.log('URL base:', this.baseURL);
-                console.groupEnd();
-            }
+            setTimeout(() => {
+                alerta.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => alerta.remove(), 300);
+            }, 4000);
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log('DOM carregado, iniciando aplicação...');
-            window.upsDashboard = new UPSDashboard();
+        debugInfo() {
+            console.group(' Debug UPS Dashboard');
+            console.log('Dados atuais:', this.dadosAtuais);
+            console.log('Gráficos:', { donut: !!this.donutChart, linha: !!this.lineChart });
+            console.log('URL base:', this.baseURL);
+            console.groupEnd();
+        }
+    }
 
-            const dynamicStyles = `
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOM carregado, iniciando aplicação...');
+        window.upsDashboard = new UPSDashboard();
+
+        const dynamicStyles = `
                 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
                 @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
                 .status-critico { border-left: 4px solid #dc3545 !important;}
@@ -1095,48 +1097,48 @@
                 .kpi-card-ups:hover { transform: translateY(-2px) !important; box-shadow: 0 6px 16px rgba(0,0,0,0.15) !important; }
             `;
 
-            const styleSheet = document.createElement('style');
-            styleSheet.textContent = dynamicStyles;
-            document.head.appendChild(styleSheet);
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = dynamicStyles;
+        document.head.appendChild(styleSheet);
 
-            console.log('Aplicação UPS Dashboard carregada com sucesso!');
-            window.debugUPS = () => window.upsDashboard?.debugInfo();
-        });
+        console.log('Aplicação UPS Dashboard carregada com sucesso!');
+        window.debugUPS = () => window.upsDashboard?.debugInfo();
+    });
 
-        window.UPSUtils = {
-            formatarPercentual: (valor) => `${Math.round(valor)}%`,
-            formatarNumero: (valor) => new Intl.NumberFormat('pt-BR').format(valor),
-            formatarData: (data) => new Date(data).toLocaleString('pt-BR'),
-            testarConexao: async () => {
-                try {
-                    const response = await fetch('/api/ups/status');
-                    return { online: response.ok, status: response.status, statusText: response.statusText };
-                } catch (error) {
-                    return { online: false, error: error.message };
-                }
-            }
-        };
-        status - normal
-        console.log('UPS Dashboard Framework carregado');
-
-        function toggleKpiTooltip(icon) {
-            const tooltip = icon.nextElementSibling;
-            const isShowing = tooltip.classList.contains('show');
-
-            document.querySelectorAll('.kpi-tooltip.show').forEach(t => {
-                t.classList.remove('show');
-            });
-
-            if (!isShowing) {
-                tooltip.classList.add('show');
+    window.UPSUtils = {
+        formatarPercentual: (valor) => `${Math.round(valor)}%`,
+        formatarNumero: (valor) => new Intl.NumberFormat('pt-BR').format(valor),
+        formatarData: (data) => new Date(data).toLocaleString('pt-BR'),
+        testarConexao: async () => {
+            try {
+                const response = await fetch('/api/ups/status');
+                return { online: response.ok, status: response.status, statusText: response.statusText };
+            } catch (error) {
+                return { online: false, error: error.message };
             }
         }
+    };
+    status - normal
+    console.log('UPS Dashboard Framework carregado');
 
-        document.addEventListener('click', function (event) {
-            if (!event.target.classList.contains('info-icon-kpi')) {
-                document.querySelectorAll('.kpi-tooltip.show').forEach(tooltip => {
-                    tooltip.classList.remove('show');
-                });
-            }
+    function toggleKpiTooltip(icon) {
+        const tooltip = icon.nextElementSibling;
+        const isShowing = tooltip.classList.contains('show');
+
+        document.querySelectorAll('.kpi-tooltip.show').forEach(t => {
+            t.classList.remove('show');
         });
+
+        if (!isShowing) {
+            tooltip.classList.add('show');
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.classList.contains('info-icon-kpi')) {
+            document.querySelectorAll('.kpi-tooltip.show').forEach(tooltip => {
+                tooltip.classList.remove('show');
+            });
+        }
+    });
 </script>

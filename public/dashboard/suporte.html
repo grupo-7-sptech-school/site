@@ -76,8 +76,8 @@
             <div class="btn-padrao">
               <button class="btn-notificacao">
               </button>
-              <a href="contateste.html" class="btn-conta">
-              </a>
+              <img id="fotoTopo" src="/assets/icon/icon-user.png" href="contateste.html" alt="Foto do usuário"
+                style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
             </div>
           </div>
         </div>
@@ -153,19 +153,21 @@
           </div>
 
         </div>
-        </div></div></div>
-
       </div>
     </div>
-    <!-- <div id="lista-maquinas"></div> -->
-    
-    <div id="modalNotificacoes">
-      <div class="modal-content">
-        <div id="alertasContainer"></div>
-        <button id="btnFecharModal">Fechar</button>
-        
-      </div>
-       </div>
+  </div>
+
+  </div>
+  </div>
+  <!-- <div id="lista-maquinas"></div> -->
+
+  <div id="modalNotificacoes">
+    <div class="modal-content">
+      <div id="alertasContainer"></div>
+      <button id="btnFecharModal">Fechar</button>
+
+    </div>
+  </div>
 
 
 </body>
@@ -204,63 +206,63 @@
       return;
     }
 
-    
+
     function formatarData(iso) {
       if (!iso) return "—";
       const d = new Date(iso);
       if (isNaN(d)) return "—";
       return d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
     }
-async function carregarAlertas() {
+    async function carregarAlertas() {
       alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
 
       try {
-          const resposta = await fetch("/usuarios/puxarAlerta");
-          if (!resposta.ok) throw new Error("Erro ao buscar alertas do servidor.");
+        const resposta = await fetch("/usuarios/puxarAlerta");
+        if (!resposta.ok) throw new Error("Erro ao buscar alertas do servidor.");
 
-          const alertas = await resposta.json();
-          alertasContainer.innerHTML = "";
+        const alertas = await resposta.json();
+        alertasContainer.innerHTML = "";
 
-          if (alertas.length == 0) {
-              alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta encontrado.</p>";
-              return;
+        if (alertas.length == 0) {
+          alertasContainer.innerHTML = "<p class='text-muted text-center'>Nenhum alerta encontrado.</p>";
+          return;
+        }
+
+        alertas.forEach(alerta => {
+          let tipoClasse = "";
+          switch (alerta.estado) {
+            case "CRITICO":
+              tipoClasse = "danger";
+              break;
+            case "ALERTA":
+              tipoClasse = "warning";
+              break;
+            case "NORMAL":
+              tipoClasse = "success";
+              break;
+            default:
+              tipoClasse = "success";
           }
 
-          alertas.forEach(alerta => {
-              let tipoClasse = "";
-              switch (alerta.estado) {
-                  case "CRITICO":
-                      tipoClasse = "danger";
-                      break;
-                  case "ALERTA":
-                      tipoClasse = "warning";
-                      break;
-                  case "NORMAL":
-                      tipoClasse = "success";
-                      break;
-                  default:
-                      tipoClasse = "success";
-              }
-
-              const dataFormatada = new Date(alerta.dtHora).toLocaleString("pt-BR");
+          const dataFormatada = new Date(alerta.dtHora).toLocaleString("pt-BR");
 
 
-              const div = document.createElement("div");
-              div.className = `alerta-item ${tipoClasse}`;
-              div.innerHTML = `
+          const div = document.createElement("div");
+          div.className = `alerta-item ${tipoClasse}`;
+          div.innerHTML = `
               <strong>Identificador da máquina:</strong> <small>${alerta.identificador || "Desconhecida"}</small><br>
               <strong>${alerta.componenteNome || "Componente"}:</strong> ${alerta.captura || "Sem dados."}<br>
               <strong>Estado:</strong> <small>${alerta.estado || "DESCONHECIDO"}</small><br>
               <small>${new Date(alerta.dtHora).toLocaleString("pt-BR")}</small>
           `;
 
-              alertasContainer.appendChild(div);
-          });
+          alertasContainer.appendChild(div);
+        });
       } catch (error) {
-          console.error("Erro ao carregar alertas:", error);
-          alertasContainer.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
+        console.error("Erro ao carregar alertas:", error);
+        alertasContainer.innerHTML = `<p class="text-danger text-center">Erro ao carregar alertas.</p>`;
       }
-  }
+    }
 
     btnNotificacao.addEventListener("click", () => {
       console.log("Clicou no botão de notificação");

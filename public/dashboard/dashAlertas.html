@@ -14,21 +14,22 @@
   <link rel="stylesheet" href="./../css/dashisa.css">
 
   <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;disco1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;disco1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
 
   <script src="../js/sessao.js"></script>
   <script src="./../js/alerta.js"></script>
 
   <!-- CHART.JS -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.3"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
 
   <!--FONT AWESOME-->
-<script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
 
 </head>
+
 <body>
 
   <div class="total-dash">
@@ -73,300 +74,305 @@
           <div class="btns-topbar">
             <div class="btn-padrao">
               <button class="btn-notificacao"></button>
-              <a href="contateste.html" class="btn-conta">
-                <img id="fotoTopo" src="../assets/icon/icon-user.png" alt="Foto de perfil"
-                  style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
-              </a>
+                <img id="fotoTopo" src="/assets/icon/icon-user.png" alt="Foto do usuário" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
             </div>
           </div>
         </div>
 
         <div class="dashboard-content">
 
- <br> <div class="periodo-container">
+          <br>
+          <div class="periodo-container">
             <label for="periodo">Período:</label>
-          <select class="periodo">
-          <option value="hoje">Hoje</option>
-          <option value="semana">Últimos 7 dias</option>
-          <option value="2semanas">Últimos 15 dias</option>
-          <option value="mes">Neste mês</option>
-        </select>
-        <span class="info-tooltip">ℹ
-        <span class="info-text"><b>Nesta área, você pode selecionar o período desejado para realizar a análise.</b></span>
-      </span>
+            <select class="periodo">
+              <option value="hoje">Hoje</option>
+              <option value="semana">Últimos 7 dias</option>
+              <option value="2semanas">Últimos 15 dias</option>
+              <option value="mes">Neste mês</option>
+            </select>
+            <span class="info-tooltip">ℹ
+              <span class="info-text"><b>Nesta área, você pode selecionar o período desejado para realizar a
+                  análise.</b></span>
+            </span>
           </div> <br>
 
-  <div class="kpi-container">
-  <div class="kpi-card">
-    <h3>Total de Alertas
-  <span class="info-tooltip">ℹ
-    <span class="info-text">Este indicador exibe a quantidade total de todos alertas emitidos pela máquina durante o
-       período selecionado.</span>
-  </span>
-</h3>
-    <p class="kpi-value"></p>
-<span class="kpi-sub"></span>
-  </div>
+          <div class="kpi-container">
+            <div class="kpi-card">
+              <h3>Total de Alertas
+                <span class="info-tooltip">ℹ
+                  <span class="info-text">Este indicador exibe a quantidade total de todos alertas emitidos pela máquina
+                    durante o
+                    período selecionado.</span>
+                </span>
+              </h3>
+              <p class="kpi-value"></p>
+              <span class="kpi-sub"></span>
+            </div>
 
-  <div class="kpi-card critico">
-    <h3>Alertas Críticos
-      <span class="info-tooltip">ℹ
-        <span class="info-text">Este indicador exibe a quantidade total de alertas críticos gerados pela máquina durante 
-          o período selecionado.</span>
-      </span>
-    </h3>
-    <p class="kpi-value"></p>
-<span class="kpi-sub"></span>
+            <div class="kpi-card critico">
+              <h3>Alertas Críticos
+                <span class="info-tooltip">ℹ
+                  <span class="info-text">Este indicador exibe a quantidade total de alertas críticos gerados pela
+                    máquina durante
+                    o período selecionado.</span>
+                </span>
+              </h3>
+              <p class="kpi-value"></p>
+              <span class="kpi-sub"></span>
 
-  </div>
+            </div>
 
-  <div class="kpi-card">
-    <h3>Limites de Ociosidade
-      <span class="info-tooltip">ℹ
-        <span class="info-text">Este indicador exibe a quantidade de alertas gerados no limite de ociosidade durante
-           o período selecionado.</span>
-      </span>
-    </h3>
-    <p class="kpi-value"></p>
-<span class="kpi-sub"></span>
+            <div class="kpi-card">
+              <h3>Limites de Ociosidade
+                <span class="info-tooltip">ℹ
+                  <span class="info-text">Este indicador exibe a quantidade de alertas gerados no limite de ociosidade
+                    durante
+                    o período selecionado.</span>
+                </span>
+              </h3>
+              <p class="kpi-value"></p>
+              <span class="kpi-sub"></span>
 
-  </div>
+            </div>
 
-  <div class="kpi-card">
-    <h3>Componente Mais Crítico 
-      <span class="info-tooltip">ℹ
-        <span class="info-text"> Este indicador exibe o componente com maior número de alertas durante o período selecionado.</span>
-      </span>
-    </h3>
-    <p class="kpi-value"></p>
-<span class="kpi-sub"></span>
-  </div>
+            <div class="kpi-card">
+              <h3>Componente Mais Crítico
+                <span class="info-tooltip">ℹ
+                  <span class="info-text"> Este indicador exibe o componente com maior número de alertas durante o
+                    período selecionado.</span>
+                </span>
+              </h3>
+              <p class="kpi-value"></p>
+              <span class="kpi-sub"></span>
+            </div>
 
-</div>
-         <div class="graficos-container">
-  <div class="grafico-card grafico-linhas">
-    <div class="titulo-area">
-      <h3>Alertas ao longo do período</h3>
-      <div class="titulo-actions">
-        <span class="info-tooltip">ℹ
-          <span class="info-text">
-            <b>Neste gráfico, é exibida a variação da quantidade de alertas durante o período selecionado,
-               de todos os componentes ou do componente selecionado.</b>
-          </span>
-        </span>
-        <select class="filtro-componente">
-          <option value="todos">Todos os Componentes</option>
-          <option value="cpu">CPU</option>
-          <option value="ram">Memória RAM</option>
-          <option value="disco">Disco</option>
-        </select>
-      </div>
-    </div>
-    <canvas id="graficoLinha"></canvas>
-  </div>
+          </div>
+          <div class="graficos-container">
+            <div class="grafico-card grafico-linhas">
+              <div class="titulo-area">
+                <h3>Alertas ao longo do período</h3>
+                <div class="titulo-actions">
+                  <span class="info-tooltip">ℹ
+                    <span class="info-text">
+                      <b>Neste gráfico, é exibida a variação da quantidade de alertas durante o período selecionado,
+                        de todos os componentes ou do componente selecionado.</b>
+                    </span>
+                  </span>
+                  <select class="filtro-componente">
+                    <option value="todos">Todos os Componentes</option>
+                    <option value="cpu">CPU</option>
+                    <option value="ram">Memória RAM</option>
+                    <option value="disco">Disco</option>
+                  </select>
+                </div>
+              </div>
+              <canvas id="graficoLinha"></canvas>
+            </div>
 
-  <div class="grafico-card grafico-barras">
-    <div class="titulo-area">
-      <h3>Alertas por Componentes</h3>
-      <div class="titulo-actions">
-        <span class="info-tooltip">ℹ
-          <span class="info-text">
-            <b>Neste gráfico, é exibida a distribuição da quantidade de alertas por componente durante o período selecionado.</b>
-          </span>
-        </span>
-      </div>
-    </div>
-    <br> <br>
-    <canvas id="graficoComponentes"></canvas>
-  </div>
+            <div class="grafico-card grafico-barras">
+              <div class="titulo-area">
+                <h3>Alertas por Componentes</h3>
+                <div class="titulo-actions">
+                  <span class="info-tooltip">ℹ
+                    <span class="info-text">
+                      <b>Neste gráfico, é exibida a distribuição da quantidade de alertas por componente durante o
+                        período selecionado.</b>
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <br> <br>
+              <canvas id="graficoComponentes"></canvas>
+            </div>
 
-  <div class="grafico-card grafico-pizza">
-    <div class="titulo-area">
-      <h3>Tipos de Alerta</h3>
-      <div class="titulo-actions">
-        <span class="info-tooltip">ℹ
-          <span class="info-text">
-            <b>Neste gráfico, é exibido um comparativo entre alertas críticos e preventivos.</b>
-          </span>
-        </span>
-        <select class="filtro-componente">
-          <option value="todos">Todos os Componentes</option>
-          <option value="cpu">CPU</option>
-          <option value="ram">Memória RAM</option>
-          <option value="disco">Disco</option>
-        </select>
-      </div>
-    </div>
-    <canvas id="graficoTipos"></canvas>
-  </div>
+            <div class="grafico-card grafico-pizza">
+              <div class="titulo-area">
+                <h3>Tipos de Alerta</h3>
+                <div class="titulo-actions">
+                  <span class="info-tooltip">ℹ
+                    <span class="info-text">
+                      <b>Neste gráfico, é exibido um comparativo entre alertas críticos e preventivos.</b>
+                    </span>
+                  </span>
+                  <select class="filtro-componente">
+                    <option value="todos">Todos os Componentes</option>
+                    <option value="cpu">CPU</option>
+                    <option value="ram">Memória RAM</option>
+                    <option value="disco">Disco</option>
+                  </select>
+                </div>
+              </div>
+              <canvas id="graficoTipos"></canvas>
+            </div>
 
-</div>
+          </div>
 
-  <script>
+          <script>
 
-  let hostName = sessionStorage.HOSTNAME_USUARIO || 1598329989;
+            let hostName = sessionStorage.HOSTNAME_USUARIO || 1598329989;
 
-  const selectPeriodo = document.querySelector(".periodo");
-  const selectComponenteLinha = document.querySelectorAll(".filtro-componente")[0];
-  const selectComponentePizza = document.querySelectorAll(".filtro-componente")[1];
+            const selectPeriodo = document.querySelector(".periodo");
+            const selectComponenteLinha = document.querySelectorAll(".filtro-componente")[0];
+            const selectComponentePizza = document.querySelectorAll(".filtro-componente")[1];
 
 
-    function traduzirPeriodo(p) {
-      switch (p) {
-        case "hoje": return "1 DAY";
-        case "semana": return "7 DAY";
-        case "2semanas": return "15 DAY";
-        case "mes": return "30 DAY";
-        default: return "1 DAY";
-    }
-}
+            function traduzirPeriodo(p) {
+              switch (p) {
+                case "hoje": return "1 DAY";
+                case "semana": return "7 DAY";
+                case "2semanas": return "15 DAY";
+                case "mes": return "30 DAY";
+                default: return "1 DAY";
+              }
+            }
 
-// KPIs
-    async function carregarKPIs() {
-      const periodo = traduzirPeriodo(selectPeriodo.value);
+            // KPIs
+            async function carregarKPIs() {
+              const periodo = traduzirPeriodo(selectPeriodo.value);
 
-     const resposta = await fetch("/alertas/kpis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hostName: hostName, periodo })
-    });
+              const resposta = await fetch("/alertas/kpis", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ hostName: hostName, periodo })
+              });
 
-    if (!resposta.ok) return console.log("Erro ao carregar KPIs");
+              if (!resposta.ok) return console.log("Erro ao carregar KPIs");
 
-    const dados = await resposta.json();
+              const dados = await resposta.json();
 
-    document.querySelector(".kpi-card:nth-child(1) .kpi-value").innerText = dados.totalAlertas;
-    document.querySelector(".kpi-card:nth-child(2) .kpi-value").innerText = dados.criticos;
-    document.querySelector(".kpi-card:nth-child(3) .kpi-value").innerText = dados.ociosidade;
-    document.querySelector(".kpi-card:nth-child(4) .kpi-value").innerText = dados.componente;
-}
+              document.querySelector(".kpi-card:nth-child(1) .kpi-value").innerText = dados.totalAlertas;
+              document.querySelector(".kpi-card:nth-child(2) .kpi-value").innerText = dados.criticos;
+              document.querySelector(".kpi-card:nth-child(3) .kpi-value").innerText = dados.ociosidade;
+              document.querySelector(".kpi-card:nth-child(4) .kpi-value").innerText = dados.componente;
+            }
 
-// gráfico Linhas
-let graficoLinha = new Chart(document.getElementById("graficoLinha"), {
-    type: "line",
-    data: {
-        labels: [],
-        datasets: [{
-            label: "Alertas",
-            data: [],
-            borderWidth: 3,
-            borderColor: "#1abc9c",
-            fill: true,
-            tension: 0.3
-        }]
-    },
-    options: {
-        plugins: {
-            legend: { display: false }
-        }
-    }
-});
-  async function carregarGraficoLinha() {
-    const periodo = traduzirPeriodo(selectPeriodo.value);
-    let componente = selectComponenteLinha.value;
-    componente = componente === "todos" ? null : componente.toUpperCase();
+            // gráfico Linhas
+            let graficoLinha = new Chart(document.getElementById("graficoLinha"), {
+              type: "line",
+              data: {
+                labels: [],
+                datasets: [{
+                  label: "Alertas",
+                  data: [],
+                  borderWidth: 3,
+                  borderColor: "#1abc9c",
+                  fill: true,
+                  tension: 0.3
+                }]
+              },
+              options: {
+                plugins: {
+                  legend: { display: false }
+                }
+              }
+            });
+            async function carregarGraficoLinha() {
+              const periodo = traduzirPeriodo(selectPeriodo.value);
+              let componente = selectComponenteLinha.value;
+              componente = componente === "todos" ? null : componente.toUpperCase();
 
-    const resposta = await fetch("/alertas/graficoLinha", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ hostName: hostName, periodo, componente })
-    });
+              const resposta = await fetch("/alertas/graficoLinha", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ hostName: hostName, periodo, componente })
+              });
 
-    if (!resposta.ok) return console.log("Erro no gráfico de linha");
+              if (!resposta.ok) return console.log("Erro no gráfico de linha");
 
-    const dados = await resposta.json();
+              const dados = await resposta.json();
 
-    const labels = dados.map(r => r.momento);
-    const valores = dados.map(r => r.total);
+              const labels = dados.map(r => r.momento);
+              const valores = dados.map(r => r.total);
 
-    graficoLinha.data.labels = labels;
-    graficoLinha.data.datasets[0].data = valores;
-    graficoLinha.update();
-}
+              graficoLinha.data.labels = labels;
+              graficoLinha.data.datasets[0].data = valores;
+              graficoLinha.update();
+            }
 
-// gráfico Componentes
-let graficoComponentes = new Chart(document.getElementById("graficoComponentes"), {
-    type: "bar",
-    data: {
-        labels: [],
-        datasets: [{
-            label: "Quantidade de Alertas",
-            data: [],
-            backgroundColor: ["#3498db", "#D16D85", "#00C04B"]
-        }]
-    },
-    options: {
-        plugins: {
-            legend: { display: false }
-        },
-        indexAxis: "y"
-    }
-});
+            // gráfico Componentes
+            let graficoComponentes = new Chart(document.getElementById("graficoComponentes"), {
+              type: "bar",
+              data: {
+                labels: [],
+                datasets: [{
+                  label: "Quantidade de Alertas",
+                  data: [],
+                  backgroundColor: ["#3498db", "#D16D85", "#00C04B"]
+                }]
+              },
+              options: {
+                plugins: {
+                  legend: { display: false }
+                },
+                indexAxis: "y"
+              }
+            });
 
-  async function carregarGraficoComponentes() {
-    const periodo = traduzirPeriodo(selectPeriodo.value);
+            async function carregarGraficoComponentes() {
+              const periodo = traduzirPeriodo(selectPeriodo.value);
 
-    const resposta = await fetch("/alertas/graficoComponentes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ hostName: hostName, periodo })
-    });
+              const resposta = await fetch("/alertas/graficoComponentes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ hostName: hostName, periodo })
+              });
 
-    if (!resposta.ok) return console.log("Erro no gráfico de barras");
+              if (!resposta.ok) return console.log("Erro no gráfico de barras");
 
-    const dados = await resposta.json();
+              const dados = await resposta.json();
 
-    graficoComponentes.data.labels = dados.map(d => d.componente);
-    graficoComponentes.data.datasets[0].data = dados.map(d => d.total);
-    graficoComponentes.update();
-}
+              graficoComponentes.data.labels = dados.map(d => d.componente);
+              graficoComponentes.data.datasets[0].data = dados.map(d => d.total);
+              graficoComponentes.update();
+            }
 
-// gráfico Tipos
-let graficoTipos = new Chart(document.getElementById("graficoTipos"), {
-    type: "pie",
-    data: {
-        labels: ["Crítico", "Preventivo"],
-        datasets: [{
-            data: [0, 0],
-            backgroundColor: ["#d9534f", "#FFC04D"]
-        }]
-    }
-});
+            // gráfico Tipos
+            let graficoTipos = new Chart(document.getElementById("graficoTipos"), {
+              type: "pie",
+              data: {
+                labels: ["Crítico", "Preventivo"],
+                datasets: [{
+                  data: [0, 0],
+                  backgroundColor: ["#d9534f", "#FFC04D"]
+                }]
+              }
+            });
 
-  async function carregarGraficoTipos() {
-    const periodo = traduzirPeriodo(selectPeriodo.value);
-    let componente = selectComponentePizza.value;
-    componente = componente === "todos" ? null : componente.toUpperCase();
+            async function carregarGraficoTipos() {
+              const periodo = traduzirPeriodo(selectPeriodo.value);
+              let componente = selectComponentePizza.value;
+              componente = componente === "todos" ? null : componente.toUpperCase();
 
-    const resposta = await fetch("/alertas/graficoTipos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ hostName: hostName, periodo, componente })
-    });
+              const resposta = await fetch("/alertas/graficoTipos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ hostName: hostName, periodo, componente })
+              });
 
-    if (!resposta.ok) return console.log("Erro no gráfico de pizza");
+              if (!resposta.ok) return console.log("Erro no gráfico de pizza");
 
-    const dados = await resposta.json();
+              const dados = await resposta.json();
 
-    const criticos = dados.find(d => d.estado === "CRITICO")?.total || 0;
-    const preventivos = dados.find(d => d.estado === "ALERTA")?.total || 0;
+              const criticos = dados.find(d => d.estado === "CRITICO")?.total || 0;
+              const preventivos = dados.find(d => d.estado === "ALERTA")?.total || 0;
 
-    graficoTipos.data.datasets[0].data = [criticos, preventivos];
-    graficoTipos.update();
-}
+              graficoTipos.data.datasets[0].data = [criticos, preventivos];
+              graficoTipos.update();
+            }
 
-function atualizarTudo() {
-    carregarKPIs();
-    carregarGraficoLinha();
-    carregarGraficoComponentes();
-    carregarGraficoTipos();
-}
+            function atualizarTudo() {
+              carregarKPIs();
+              carregarGraficoLinha();
+              carregarGraficoComponentes();
+              carregarGraficoTipos();
+            }
 
-selectPeriodo.addEventListener("change", atualizarTudo);
-selectComponenteLinha.addEventListener("change", carregarGraficoLinha);
-selectComponentePizza.addEventListener("change", carregarGraficoTipos);
+            selectPeriodo.addEventListener("change", atualizarTudo);
+            selectComponenteLinha.addEventListener("change", carregarGraficoLinha);
+            selectComponentePizza.addEventListener("change", carregarGraficoTipos);
 
-atualizarTudo();
-</script>
+            atualizarTudo();
+          </script>
 </body>
+
 </html>

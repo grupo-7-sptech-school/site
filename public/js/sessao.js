@@ -10,6 +10,7 @@ function validarSessao() {
     } else {
         window.location = "../login.html";
     }
+    carregarFotoUsuario();
 }
 
 function limparSessao() {
@@ -17,7 +18,6 @@ function limparSessao() {
     window.location = "../login.html";
 }
 
-// carregamento (loading)
 function aguardar() {
     var divAguardar = document.getElementById("div_aguardar");
     divAguardar.style.display = "flex";
@@ -33,4 +33,42 @@ function finalizarAguardar(texto) {
         divErrosLogin.innerHTML = texto;
     }
 }
+
+async function carregarFotoUsuario() {
+    const idUsuario = sessionStorage.getItem("ID_USUARIO");
+    if (!idUsuario) return;
+
+    try {
+        const resp = await fetch("/usuarios/infoUsuario", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idUsuario })
+        });
+        const dados = await resp.json();
+        if (!dados || dados.length === 0) return;
+
+        let foto = dados[0].fotoPerfil;
+        if (!foto) return;
+
+        if (!foto.startsWith("/uploads") && !/^https?:\/\//.test(foto)) {
+            foto = "/uploads/" + foto;
+        }
+
+        const cacheBust = "?t=" + Date.now();
+        const urlFinal = foto + cacheBust;
+
+        const elemsTopo = document.querySelectorAll("#fotoTopo, .foto-topo");
+        elemsTopo.forEach(el => { if (el.tagName === "IMG") el.src = urlFinal; else el.style.backgroundImage = `url(${urlFinal})`; });
+
+        const fotoPerfil = document.getElementById("fotoPerfil");
+        if (fotoPerfil) fotoPerfil.src = urlFinal;
+    } catch (err) {
+        console.error("Erro ao carregar foto do usuário:", err);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    carregarFotoUsuario();
+});
+
 

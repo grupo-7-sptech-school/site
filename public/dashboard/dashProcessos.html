@@ -78,7 +78,8 @@
                     <div class="btns-topbar">
                         <div class="btn-padrao">
                             <button class="btn-notificacao"></button>
-                            <a href="contateste.html" class="btn-conta"></a>
+                            <img id="fotoTopo" src="/assets/icon/icon-user.png" alt="Foto do usuário"
+                                style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
                         </div>
                     </div>
                 </div>
@@ -90,7 +91,7 @@
                                 <option value="CPU" selected>CPU</option>
                                 <option value="RAM">RAM</option>
                             </select>
-                            </div>
+                        </div>
 
                         <div class="kpi">
                             <a id="btnGerarRelatorio" onclick="baixarPDF()" class="btn-gerar-relatorio">Ver previsão de
@@ -146,7 +147,8 @@
                                     <div class="server-grid">
 
                                         <div class="item">
-                                            <span class="label">Variação do <br>consumo de <br> recursos <br>processos</span>
+                                            <span class="label">Variação do <br>consumo de <br> recursos
+                                                <br>processos</span>
                                             <div class="divider"></div>
 
                                             <div class="value-big">
@@ -269,48 +271,48 @@
 
     <script>
 
-    var ultimaLeituraCpu = null;
-    var ultimaLeituraRam = null;
+        var ultimaLeituraCpu = null;
+        var ultimaLeituraRam = null;
 
-    var tipoSelecionado = "CPU";
+        var tipoSelecionado = "CPU";
 
         window.onload = () => {
-        const salvo = localStorage.getItem("componenteSelecionado") || "CPU";
-        document.getElementById("selectComponente").value = salvo;
-        tipoSelecionado = salvo; 
-        trocarComponente(); 
-    };
+            const salvo = localStorage.getItem("componenteSelecionado") || "CPU";
+            document.getElementById("selectComponente").value = salvo;
+            tipoSelecionado = salvo;
+            trocarComponente();
+        };
 
         mostrarMetricasUI()
 
 
 
         function formatStatus(valor) {
-        const metricas = carregarMetricas();
-        const tipo = localStorage.getItem("componenteSelecionado") || "CPU";
+            const metricas = carregarMetricas();
+            const tipo = localStorage.getItem("componenteSelecionado") || "CPU";
 
-        let m;
+            let m;
 
-        if (tipo == "CPU") {
-            m = metricas.cpu;
-        } else {
-            m = metricas.ram;
+            if (tipo == "CPU") {
+                m = metricas.cpu;
+            } else {
+                m = metricas.ram;
+            }
+
+            if (valor >= m.critico) {
+                return { text: "CRÍTICO", cls: "status-pill status-critical" };
+            }
+
+            if (valor >= m.preventivo) {
+                return { text: "PREVENTIVO", cls: "status-pill status-warning" };
+            }
+
+            if (valor <= m.ocioso) {
+                return { text: "OCIOSO", cls: "status-pill status-ocioso" };
+            }
+
+            return { text: "NORMAL", cls: "status-pill status-normal" };
         }
-
-        if (valor >= m.critico) {
-            return { text: "CRÍTICO", cls: "status-pill status-critical" };
-        }
-
-        if (valor >= m.preventivo) {
-            return { text: "PREVENTIVO", cls: "status-pill status-warning" };
-        }
-
-        if (valor <= m.ocioso) {
-            return { text: "OCIOSO", cls: "status-pill status-ocioso" };
-        }
-
-        return { text: "NORMAL", cls: "status-pill status-normal" };
-    }
 
         function formatarData(d) {
             const dt = new Date(d);
@@ -327,25 +329,25 @@
 
 
         function renderRanking(data, tipo) {
-        const tbody = document.getElementById("lista-processos");
-        tbody.innerHTML = "";
+            const tbody = document.getElementById("lista-processos");
+            tbody.innerHTML = "";
 
-        data.forEach(p => {
+            data.forEach(p => {
 
-            const cpu = Number(p.cpu).toFixed(1);
-            const ram = Number(p.ram).toFixed(1);
+                const cpu = Number(p.cpu).toFixed(1);
+                const ram = Number(p.ram).toFixed(1);
 
-            let valorMonitorado = 0;
+                let valorMonitorado = 0;
 
-            if (tipo == "CPU") {
-                valorMonitorado = Number(p.cpu);
-            } else {
-                valorMonitorado = Number(p.ram);
-            }
-            const status = formatStatus(valorMonitorado);
+                if (tipo == "CPU") {
+                    valorMonitorado = Number(p.cpu);
+                } else {
+                    valorMonitorado = Number(p.ram);
+                }
+                const status = formatStatus(valorMonitorado);
 
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
                 <td>
                     <div style="font-weight:700">${p.processo}</div>
                 </td>
@@ -374,173 +376,173 @@
 
                 <td class="data-cell">${formatarData(p.data_registro)}</td>
             `;
-        tbody.appendChild(tr);
-    });
-}
+                tbody.appendChild(tr);
+            });
+        }
 
 
 
 
         function atualizarVariacaoCpu(cpuAtual) {
 
-        if (ultimaLeituraCpu != null) {
+            if (ultimaLeituraCpu != null) {
 
-            let variacao = cpuAtual - ultimaLeituraCpu;
+                let variacao = cpuAtual - ultimaLeituraCpu;
 
-            let textoStatus = "";
-            if (variacao > 0) {
-                textoStatus = "Aumentou";
-            } else if (variacao < 0) {
-                textoStatus = "Diminuiu";
-            } else {
-                textoStatus = "Estável";
+                let textoStatus = "";
+                if (variacao > 0) {
+                    textoStatus = "Aumentou";
+                } else if (variacao < 0) {
+                    textoStatus = "Diminuiu";
+                } else {
+                    textoStatus = "Estável";
+                }
+
+                document.getElementById("statusVariacaoCpu").textContent = textoStatus;
+                document.getElementById("valorVariacaoCpu").textContent = `${Math.abs(variacao).toFixed(1)}%`;
             }
 
-            document.getElementById("statusVariacaoCpu").textContent = textoStatus;
-            document.getElementById("valorVariacaoCpu").textContent = `${Math.abs(variacao).toFixed(1)}%`;
+            ultimaLeituraCpu = cpuAtual;
         }
 
-        ultimaLeituraCpu = cpuAtual;
-    }
 
+        function atualizarVariacaoRam(ramAtual) {
 
-    function atualizarVariacaoRam(ramAtual) {
+            if (ultimaLeituraRam != null) {
 
-        if (ultimaLeituraRam != null) {
+                let variacao = ramAtual - ultimaLeituraRam;
 
-            let variacao = ramAtual - ultimaLeituraRam;
+                let textoStatus = "";
+                if (variacao > 0) {
+                    textoStatus = "Aumentou";
+                } else if (variacao < 0) {
+                    textoStatus = "Diminuiu";
+                } else {
+                    textoStatus = "Estável";
+                }
 
-            let textoStatus = "";
-            if (variacao > 0) {
-                textoStatus = "Aumentou";
-            } else if (variacao < 0) {
-                textoStatus = "Diminuiu";
-            } else {
-                textoStatus = "Estável";
+                document.getElementById("statusVariacaoCpu").textContent = textoStatus;
+                document.getElementById("valorVariacaoCpu").textContent = `${Math.abs(variacao).toFixed(1)}%`;
             }
 
-            document.getElementById("statusVariacaoCpu").textContent = textoStatus;
-            document.getElementById("valorVariacaoCpu").textContent = `${Math.abs(variacao).toFixed(1)}%`;
+            ultimaLeituraRam = ramAtual;
         }
 
-        ultimaLeituraRam = ramAtual;
-    }
 
 
 
+        async function carregarInfoMaquina() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const hostName = params.get("id");
 
-      async function carregarInfoMaquina() {
-    try {
-        const params = new URLSearchParams(window.location.search);
-        const hostName = params.get("id");
+                const resposta = await fetch("/medidas/puxarMaquinaProcessos", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ hostName })
+                });
 
-        const resposta = await fetch("/medidas/puxarMaquinaProcessos", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ hostName })
-        });
+                const dados = await resposta.json();
+                const primeiro = dados[0];
 
-        const dados = await resposta.json();
-        const primeiro = dados[0];
+                if (!primeiro) {
+                    console.warn("Nenhuma máquina encontrada.");
+                    return;
+                }
 
-        if (!primeiro) {
-            console.warn("Nenhuma máquina encontrada.");
-            return;
-        }
+                let nome = primeiro.nomeMaquina;
+                if (!nome) {
+                    nome = "Máquina desconhecida";
+                }
+                serverTitle.textContent = nome + " - Visão Semanal";
 
-        let nome = primeiro.nomeMaquina;
-        if (!nome) {
-            nome = "Máquina desconhecida";
-        }
-        serverTitle.textContent = nome + " - Visão Semanal";
+                const dt = new Date(primeiro.dtUltimaCaptura);
+                serverSub.textContent = "Última Checagem: " + dt.toLocaleString();
 
-        const dt = new Date(primeiro.dtUltimaCaptura);
-        serverSub.textContent = "Última Checagem: " + dt.toLocaleString();
+                const respostaKpis = await fetch("/medidas/quantidadeAlertasProcessos", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ hostName })
+                });
 
-        const respostaKpis = await fetch("/medidas/quantidadeAlertasProcessos", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ hostName })
-        });
+                const kpis = await respostaKpis.json();
+                const info = kpis[0];
 
-        const kpis = await respostaKpis.json();
-        const info = kpis[0];
+                if (info) {
+                    totalAlertas.textContent = info.total_alertas_semana;
+                    totalCriticos.textContent = info.total_criticos_semana;
+                    totalPreventivos.textContent = info.total_preventivos_semana;
+                } else {
+                    totalAlertas.textContent = "—";
+                    totalCriticos.textContent = "—";
+                    totalPreventivos.textContent = "—";
+                }
 
-        if (info) {
-            totalAlertas.textContent = info.total_alertas_semana;
-            totalCriticos.textContent = info.total_criticos_semana;
-            totalPreventivos.textContent = info.total_preventivos_semana;
-        } else {
-            totalAlertas.textContent = "—";
-            totalCriticos.textContent = "—";
-            totalPreventivos.textContent = "—";
-        }
+                var url = "";
+                if (tipoSelecionado == "CPU") {
+                    url = "/medidas/graficoProcessos";
+                } else {
+                    url = "/medidas/graficoProcessosRAM";
+                }
 
-        var url = "";
-        if (tipoSelecionado == "CPU") {
-            url = "/medidas/graficoProcessos";
-        } else {
-            url = "/medidas/graficoProcessosRAM";
-        }
+                const respGraf = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ hostName })
+                });
 
-        const respGraf = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ hostName })
-        });
+                const dadosGraf = await respGraf.json();
 
-        const dadosGraf = await respGraf.json();
+                const labels = [];
+                const valores = [];
 
-        const labels = [];
-        const valores = [];
+                let i = 0;
+                while (i < dadosGraf.length) {
+                    const registro = dadosGraf[i];
+                    const dataObj = new Date(registro.dtRegistro);
+                    const horario = dataObj.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
-        let i = 0;
-        while (i < dadosGraf.length) {
-            const registro = dadosGraf[i];
-            const dataObj = new Date(registro.dtRegistro);
-            const horario = dataObj.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+                    labels.push(horario);
 
-            labels.push(horario);
+                    if (tipoSelecionado === "CPU") {
+                        valores.push(Number(registro.total_cpu));
+                    } else {
+                        valores.push(Number(registro.total_ram) / 11);
+                    }
+                    i++;
+                }
 
-            if (tipoSelecionado === "CPU") {
-                valores.push(Number(registro.total_cpu));
-            } else {
-                valores.push(Number(registro.total_ram) / 11);
-            }
-            i++;
-        }
+                window.graficoDados = {
+                    labels: labels,
+                    valores: valores,
+                    tipo: tipoSelecionado
+                };
 
-        window.graficoDados = {
-            labels: labels,
-            valores: valores,
-            tipo: tipoSelecionado
-        };
+                let ultimo = 0;
+                if (valores.length > 0) {
+                    ultimo = Number(valores[valores.length - 1]);
+                }
 
-        let ultimo = 0;
-        if (valores.length > 0) {
-            ultimo = Number(valores[valores.length - 1]);
-        }
+                let variacao = 0;
 
-        let variacao = 0;
+                if (valores.length >= 2) {
+                    const penultimo = Number(valores[valores.length - 2]);
+                    const ultimo = Number(valores[valores.length - 1]);
 
-        if (valores.length >= 2) {
-            const penultimo = Number(valores[valores.length - 2]);
-            const ultimo = Number(valores[valores.length - 1]);
+                    variacao = ultimo - penultimo;
 
-            variacao = ultimo - penultimo;
+                    let textoStatus = "";
+                    if (variacao > 1) {
+                        textoStatus = "Aumentou";
+                    } else if (variacao < -1) {
+                        textoStatus = "Diminuiu";
+                    } else {
+                        textoStatus = "Estável";
+                    }
 
-            let textoStatus = "";
-            if (variacao > 1) {
-                textoStatus = "Aumentou";
-            } else if (variacao < -1) {
-                textoStatus = "Diminuiu";
-            } else {
-                textoStatus = "Estável";
-            }
-
-            document.getElementById("statusVariacaoCpu").textContent = textoStatus;
-            document.getElementById("valorVariacaoCpu").textContent = `${Math.abs(variacao).toFixed(1)}%`;
-        }
+                    document.getElementById("statusVariacaoCpu").textContent = textoStatus;
+                    document.getElementById("valorVariacaoCpu").textContent = `${Math.abs(variacao).toFixed(1)}%`;
+                }
 
                 if (info) {
                     window.alertasProcessos = {
@@ -569,7 +571,7 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ hostName, limite })
                 });
-                
+
 
                 let lista = await resposta.json();
                 const busca = document.getElementById("ranking-search").value.toLowerCase();
@@ -590,28 +592,28 @@
 
 
         async function carregarRankingRAM() {
-        const params = new URLSearchParams(window.location.search);
-        const hostName = params.get("id");
-        const limite = document.getElementById("ranking-limit").value;
+            const params = new URLSearchParams(window.location.search);
+            const hostName = params.get("id");
+            const limite = document.getElementById("ranking-limit").value;
 
-        const resposta = await fetch("/medidas/rankingProcessosRAM", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ hostName, limite })
-        });
+            const resposta = await fetch("/medidas/rankingProcessosRAM", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ hostName, limite })
+            });
 
-        let lista = await resposta.json();
+            let lista = await resposta.json();
 
-        const busca = document.getElementById("ranking-search").value.toLowerCase();
-        if (busca != "") {
-            lista = lista.filter(p =>
-                p.processo.toLowerCase().includes(busca)
-            );
+            const busca = document.getElementById("ranking-search").value.toLowerCase();
+            if (busca != "") {
+                lista = lista.filter(p =>
+                    p.processo.toLowerCase().includes(busca)
+                );
+            }
+
+            renderRanking(lista);
+            window.listaProcessos = lista;
         }
-
-        renderRanking(lista);
-        window.listaProcessos = lista;
-    }
 
 
 
@@ -663,7 +665,7 @@
         }
 
 
-        let graficoAtual; 
+        let graficoAtual;
 
         async function carregarGrafico() {
             const params = new URLSearchParams(window.location.search);
@@ -717,7 +719,7 @@
                 }
                 if (tipoSelecionado == "CPU") {
                     window.cpuAtual = ultimo;
-                    window.ramAtual = window.ramAtual || 0; 
+                    window.ramAtual = window.ramAtual || 0;
                 } else {
                     window.ramAtual = ultimo;
                     window.cpuAtual = window.cpuAtual || 0;
@@ -759,7 +761,7 @@
                         plugins: { legend: { display: true } },
                         scales: {
                             x: { grid: { display: false } },
-                            y: { beginAtZero: true, max: 100, ticks: { callback: function(v){ return v + "%"; } } }
+                            y: { beginAtZero: true, max: 100, ticks: { callback: function (v) { return v + "%"; } } }
                         }
                     }
                 });
@@ -785,7 +787,7 @@
 
                 if (window.graficoDados != undefined && window.graficoDados != null) {
                     labels = window.graficoDados.labels;
-                    
+
                     if (window.graficoDados.tipo == "CPU") {
                         for (var i = 0; i < window.graficoDados.valores.length; i++) {
                             cpuSeries.push(window.graficoDados.valores[i]);
@@ -842,7 +844,7 @@
                     for (var j = 0; j < linhas.length; j++) {
                         var rec = linhas[j];
                         if (rec !== "" && rec.charAt(0) == "-") {
-                            var texto = rec.substring(1); 
+                            var texto = rec.substring(1);
                             var li = document.createElement("li");
                             li.textContent = texto;
                             ul.appendChild(li);
@@ -868,67 +870,67 @@
             if (tipoSelecionado == "CPU") {
                 carregarRanking();
                 carregarInfoMaquina()
-            } 
+            }
             else {
-                carregarRankingRAM(); 
+                carregarRankingRAM();
                 carregarInfoMaquina()
             }
         }, 30000);
 
 
-    function carregarMetricas() {
-        var metricas = JSON.parse(localStorage.getItem("metricasProcessos"));
+        function carregarMetricas() {
+            var metricas = JSON.parse(localStorage.getItem("metricasProcessos"));
 
-        if (!metricas) {
-            metricas = {
-                cpu: { preventivo: 10, critico: 20, ocioso: 0 },
-                ram: { preventivo: 15, critico: 30, ocioso: 0 }
-            };
+            if (!metricas) {
+                metricas = {
+                    cpu: { preventivo: 10, critico: 20, ocioso: 0 },
+                    ram: { preventivo: 15, critico: 30, ocioso: 0 }
+                };
+            }
+
+            if (!metricas.cpu) metricas.cpu = { preventivo: 10, critico: 20, ocioso: 0 };
+            if (!metricas.ram) metricas.ram = { preventivo: 15, critico: 30, ocioso: 0 };
+
+            localStorage.setItem("metricasProcessos", JSON.stringify(metricas));
+            return metricas;
         }
-
-        if (!metricas.cpu) metricas.cpu = { preventivo: 10, critico: 20, ocioso: 0 };
-        if (!metricas.ram) metricas.ram = { preventivo: 15, critico: 30, ocioso: 0 };
-
-        localStorage.setItem("metricasProcessos", JSON.stringify(metricas));
-        return metricas;
-    }
 
         function mostrarMetricasUI() {
-        var metricas = carregarMetricas();
-        var tipo = localStorage.getItem("componenteSelecionado") || "CPU";
+            var metricas = carregarMetricas();
+            var tipo = localStorage.getItem("componenteSelecionado") || "CPU";
 
-        let m;
+            let m;
 
-        if (tipo == "CPU") {
-            m = metricas.cpu;
-        } else {
-            m = metricas.ram;
+            if (tipo == "CPU") {
+                m = metricas.cpu;
+            } else {
+                m = metricas.ram;
+            }
+
+            uiPreventivo.textContent = m.preventivo + "%";
+            uiCritico.textContent = m.critico + "%";
+            uiOcioso.textContent = m.ocioso + "%";
         }
-
-        uiPreventivo.textContent = m.preventivo + "%";
-        uiCritico.textContent = m.critico + "%";
-        uiOcioso.textContent = m.ocioso + "%";
-    }
 
 
         function alterarMetricas() {
-        const metricas = carregarMetricas();
-        const tipo = localStorage.getItem("componenteSelecionado") || "CPU";
+            const metricas = carregarMetricas();
+            const tipo = localStorage.getItem("componenteSelecionado") || "CPU";
 
-        var m;
+            var m;
 
-        if (tipo == "CPU") {
-            m = metricas.cpu;
-        } else {
-            m = metricas.ram;
+            if (tipo == "CPU") {
+                m = metricas.cpu;
+            } else {
+                m = metricas.ram;
+            }
+
+            inpPreventivo.value = m.preventivo;
+            inpCritico.value = m.critico;
+            inpOcioso.value = m.ocioso;
+
+            document.getElementById("modalMetricas").style.display = "flex";
         }
-
-        inpPreventivo.value = m.preventivo;
-        inpCritico.value = m.critico;
-        inpOcioso.value = m.ocioso;
-
-        document.getElementById("modalMetricas").style.display = "flex";
-    }
 
         function fecharMetricas() {
             document.getElementById("modalMetricas").style.display = "none";
@@ -936,147 +938,147 @@
 
 
         function salvarMetricas() {
-        const preventivo = Number(inpPreventivo.value);
-        const critico = Number(inpCritico.value);
-        const ocioso = Number(inpOcioso.value);
+            const preventivo = Number(inpPreventivo.value);
+            const critico = Number(inpCritico.value);
+            const ocioso = Number(inpOcioso.value);
 
-        const metricas = carregarMetricas();
-        const tipo = localStorage.getItem("componenteSelecionado") || "CPU";
+            const metricas = carregarMetricas();
+            const tipo = localStorage.getItem("componenteSelecionado") || "CPU";
 
-        if (tipo == "CPU") {
-            metricas.cpu = { preventivo, critico, ocioso };
-        } else {
-            metricas.ram = { preventivo, critico, ocioso };
+            if (tipo == "CPU") {
+                metricas.cpu = { preventivo, critico, ocioso };
+            } else {
+                metricas.ram = { preventivo, critico, ocioso };
+            }
+
+            localStorage.setItem("metricasProcessos", JSON.stringify(metricas));
+
+            mostrarMetricasUI();
+            fecharMetricas();
+
+            const url = new URL(window.location.href);
+            window.location.href = url.toString();
         }
 
-        localStorage.setItem("metricasProcessos", JSON.stringify(metricas));
-
-        mostrarMetricasUI();
-        fecharMetricas();
-
-        const url = new URL(window.location.href);
-        window.location.href = url.toString();
-    }
 
 
 
+        async function recomendacoesIA() {
+            try {
+                var cpuSeries = [];
+                var ramSeries = [];
+                var labels = [];
 
-    async function recomendacoesIA() {
-    try {
-        var cpuSeries = [];
-        var ramSeries = [];
-        var labels = [];
+                if (window.graficoDados !== undefined && window.graficoDados !== null) {
+                    labels = window.graficoDados.labels;
+                    if (window.graficoDados.tipo == "CPU") {
 
-        if (window.graficoDados !== undefined && window.graficoDados !== null) {
-            labels = window.graficoDados.labels;
-            if (window.graficoDados.tipo == "CPU") {
+                        for (var i = 0; i < window.graficoDados.valores.length; i++) {
+                            cpuSeries.push(window.graficoDados.valores[i]);
+                        }
+                    }
 
-                for (var i = 0; i < window.graficoDados.valores.length; i++) {
-                    cpuSeries.push(window.graficoDados.valores[i]);
+                    else {
+                        for (var i = 0; i < window.graficoDados.valores.length; i++) {
+                            ramSeries.push(window.graficoDados.valores[i]);
+                        }
+                    }
                 }
-            } 
-            
-            else {
-                for (var i = 0; i < window.graficoDados.valores.length; i++) {
-                    ramSeries.push(window.graficoDados.valores[i]);
+
+                var cpu = 0;
+                var ram = 0;
+
+                if (cpuSeries.length > 0) {
+                    cpu = Number(cpuSeries[cpuSeries.length - 1]);
                 }
+
+                else if (window.cpuAtual !== undefined && window.cpuAtual !== null) {
+                    cpu = Number(window.cpuAtual);
+                }
+
+                if (ramSeries.length > 0) {
+                    ram = Number(ramSeries[ramSeries.length - 1]);
+                }
+
+                else if (window.ramAtual !== undefined && window.ramAtual !== null) {
+                    ram = Number(window.ramAtual);
+                }
+
+                var disco = 0;
+                if (window.alertasProcessos && window.alertasProcessos.total !== undefined) {
+                    disco = Number(window.alertasProcessos.total);
+                }
+
+                var payload = {
+                    cpu: cpu,
+                    ram: ram,
+                    disco: disco,
+                    cpuSeries: cpuSeries,
+                    ramSeries: ramSeries,
+                    labels: labels
+                };
+
+                const resposta = await fetch("/medidas/recomendacoesIA", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await resposta.json();
+
+                var ul = document.querySelector(".recomm-list");
+                ul.innerHTML = "";
+
+                if (data.recomendacoes) {
+                    var linhas = data.recomendacoes.split("\n");
+                    for (var j = 0; j < linhas.length; j++) {
+                        var rec = linhas[j];
+                        if (rec !== "" && rec.charAt(0) == "-") {
+                            var texto = rec.substring(1);
+                            var li = document.createElement("li");
+                            li.textContent = texto;
+                            ul.appendChild(li);
+                        }
+                    }
+                }
+
+                document.getElementById("recomm-date").textContent = new Date().toLocaleString();
+
+            } catch (erro) {
+                console.error("Erro ao gerar recomendações IA:", erro);
             }
         }
-
-        var cpu = 0;
-        var ram = 0;
-
-        if (cpuSeries.length > 0) {
-            cpu = Number(cpuSeries[cpuSeries.length - 1]);
-        } 
-        
-        else if (window.cpuAtual !== undefined && window.cpuAtual !== null) {
-            cpu = Number(window.cpuAtual);
-        }
-
-        if (ramSeries.length > 0) {
-            ram = Number(ramSeries[ramSeries.length - 1]);
-        } 
-        
-        else if (window.ramAtual !== undefined && window.ramAtual !== null) {
-            ram = Number(window.ramAtual);
-        }
-
-        var disco = 0;
-        if (window.alertasProcessos && window.alertasProcessos.total !== undefined) {
-            disco = Number(window.alertasProcessos.total);
-        }
-
-        var payload = {
-            cpu: cpu,
-            ram: ram,
-            disco: disco,
-            cpuSeries: cpuSeries,
-            ramSeries: ramSeries,
-            labels: labels
-        };
-
-        const resposta = await fetch("/medidas/recomendacoesIA", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        const data = await resposta.json();
-
-        var ul = document.querySelector(".recomm-list");
-        ul.innerHTML = "";
-
-        if (data.recomendacoes) {
-            var linhas = data.recomendacoes.split("\n");
-            for (var j = 0; j < linhas.length; j++) {
-                var rec = linhas[j];
-                if (rec !== "" && rec.charAt(0) == "-") {
-                    var texto = rec.substring(1);
-                    var li = document.createElement("li");
-                    li.textContent = texto;
-                    ul.appendChild(li);
-                }
-            }
-        }
-
-        document.getElementById("recomm-date").textContent = new Date().toLocaleString();
-
-    } catch (erro) {
-        console.error("Erro ao gerar recomendações IA:", erro);
-    }
-}
 
 
 
         document.getElementById("ranking-limit").addEventListener("change", () => trocarComponente());
         document.getElementById("ranking-search").addEventListener("input", () => trocarComponente());
 
-            
+
         function trocarComponente() {
-        const selecionado = document.getElementById("selectComponente").value;
-        tipoSelecionado = selecionado;
-        localStorage.setItem("componenteSelecionado", selecionado);
+            const selecionado = document.getElementById("selectComponente").value;
+            tipoSelecionado = selecionado;
+            localStorage.setItem("componenteSelecionado", selecionado);
 
-        carregarGrafico(); 
-        carregarInfoMaquina();
+            carregarGrafico();
+            carregarInfoMaquina();
 
-        if (selecionado == "CPU") carregarRanking();
-        else carregarRankingRAM();
-    }
+            if (selecionado == "CPU") carregarRanking();
+            else carregarRankingRAM();
+        }
 
 
 
         function tentarRecomendacoes() {
-    if (window.cpuAtual != undefined &&
-        window.alertasProcessos != undefined &&
-        window.listaProcessos != undefined) {
+            if (window.cpuAtual != undefined &&
+                window.alertasProcessos != undefined &&
+                window.listaProcessos != undefined) {
 
-    } else {
-        setTimeout(recomendacoesIA, 300);
-    }
-}
+            } else {
+                setTimeout(recomendacoesIA, 300);
+            }
+        }
 
-    tentarRecomendacoes();
+        tentarRecomendacoes();
 
     </script>

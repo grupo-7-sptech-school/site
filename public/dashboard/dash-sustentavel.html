@@ -22,7 +22,7 @@
   <!-- scripts do Chart.js - 2022-1 -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.3"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script> -->
-  
+
   <!--FONT AWESOME-->
   <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
 
@@ -32,15 +32,15 @@
     href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet">
 
-    <!-- CDN Tabulator -->
-<link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator.min.css" rel="stylesheet">
-<script src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
+  <!-- CDN Tabulator -->
+  <link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
 </head>
 
-    <!-- Velocimetro -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/highcharts-more.js"></script>
-    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+<!-- Velocimetro -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
 <!-- <body onload=" atualizarFeed()"> -->
 
 <body>
@@ -89,7 +89,8 @@
             <div class="btn-padrao">
               <button class="btn-notificacao">
               </button>
-              <a href="contateste.html" class="btn-conta">
+              <img id="fotoTopo" src="/assets/icon/icon-user.png" alt="Foto do usuário"
+                style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
               </a>
             </div>
           </div>
@@ -97,20 +98,20 @@
         <!-- Fim Cabeçalho -->
         <div class="box-dashboard">
           <div class="filtroSustentabilidade">
-          <h5>Período:</h5>
-        <select id="filtroPeriodo" class="filtro-kpi" onchange="trocarPeriodo()">
-         <option value="ano">Anual</option>
-         <option value="mes">Mensal</option>
-        <option value="semana">Semanal</option>
-         <option value="dia" selected>Diário</option>
-          </select>
-          <h5>Matriz Eletrica:</h5>
-          <select id="filtroMatriz" class="filtro-kpi" onchange="trocarFonte()">
-         <option value="Carvao">Carvão Mineral</option>
-         <option value="Gas">Gás Natural</option>
-         <option value="Nuclear">Nuclear</option>
-         <option value="Hidrelétrica" selected>Hidrelétrica</option>
-          </select>
+            <h5>Período:</h5>
+            <select id="filtroPeriodo" class="filtro-kpi" onchange="trocarPeriodo()">
+              <option value="ano">Anual</option>
+              <option value="mes">Mensal</option>
+              <option value="semana">Semanal</option>
+              <option value="dia" selected>Diário</option>
+            </select>
+            <h5>Matriz Eletrica:</h5>
+            <select id="filtroMatriz" class="filtro-kpi" onchange="trocarFonte()">
+              <option value="Carvao">Carvão Mineral</option>
+              <option value="Gas">Gás Natural</option>
+              <option value="Nuclear">Nuclear</option>
+              <option value="Hidrelétrica" selected>Hidrelétrica</option>
+            </select>
           </div>
           <div class="box-notificacao">
             <div class="kpis-dashboard">
@@ -157,51 +158,55 @@
             <!-- Topo  quadro de monitoramento -->
             <div class="dash-consumo">
               <div class="dash-esquerda">
-          <div class="box-consumo-diario">
-            <h2>Consumo de Energia - #definir</h2>
-          <canvas id="graficoConsumoEnergia"></canvas></div>
+                <div class="box-consumo-diario">
+                  <h2>Consumo de Energia - #definir</h2>
+                  <canvas id="graficoConsumoEnergia"></canvas>
+                </div>
 
-        <div class="box-emissao">
-    <h2>Redução de Emissão - #definir</h2>
-    <canvas id="graficoPoluentes"></canvas></div>
-        </div>
-        <div class="dash-direita">
-    <div class="box-divisao">
-<div class="ranking-card">
-<div id="tabelaTop5"></div>
-    <div class="ranking-table-wrap">
-        <table class="ranking-table">
-            <thead>
-                <tr>
-                    <th style="width:30%">Máquina</th>
-                    <th style="width:25%">Consumo (Wh)</th>
-                    <th style="width:15%">Hostname</th>
-                    <th style="width:15%">Data</th>
-                </tr>
-            </thead>
-            <tbody id="lista-maquinas"></tbody>
-        </table>
-    </div>
-</div>
-</div>
-  <div class="box-divisao">
-    <div class="filtroDeMaquina">
-        <select id="filtroMaquina" class="filtro-maquina" onchange="trocarMaquina()">
-         <option value="m1" selected>Máquina 1</option>
-         <option value="m2">Máquina 2</option>
-         <option value="m3">Máquina 3</option>
-        <option value="m4">Máquina 4</option>
-         <option value="m5">Máquina 5</option>
-          </select></div>
-        <div id="container"></div>
-  </div>  </div>
-    </div>
-</div>
-    </div>
+                <div class="box-emissao">
+                  <h2>Redução de Emissão - #definir</h2>
+                  <canvas id="graficoPoluentes"></canvas>
+                </div>
+              </div>
+              <div class="dash-direita">
+                <div class="box-divisao">
+                  <div class="ranking-card">
+                    <div id="tabelaTop5"></div>
+                    <div class="ranking-table-wrap">
+                      <table class="ranking-table">
+                        <thead>
+                          <tr>
+                            <th style="width:30%">Máquina</th>
+                            <th style="width:25%">Consumo (Wh)</th>
+                            <th style="width:15%">Hostname</th>
+                            <th style="width:15%">Data</th>
+                          </tr>
+                        </thead>
+                        <tbody id="lista-maquinas"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="box-divisao">
+                  <div class="filtroDeMaquina">
+                    <select id="filtroMaquina" class="filtro-maquina" onchange="trocarMaquina()">
+                      <option value="m1" selected>Máquina 1</option>
+                      <option value="m2">Máquina 2</option>
+                      <option value="m3">Máquina 3</option>
+                      <option value="m4">Máquina 4</option>
+                      <option value="m5">Máquina 5</option>
+                    </select>
+                  </div>
+                  <div id="container"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  </div>
   </div>
   <div id="modalNotificacoes">
     <div class="modal-content">
@@ -214,225 +219,225 @@
 
 <script>
 
-let periodoSelecionado = "dia";
+  let periodoSelecionado = "dia";
 
-function trocarPeriodo() {
+  function trocarPeriodo() {
     periodoSelecionado = document.getElementById("filtroPeriodo").value;
     carregarKPIS();
     carregarConsumoMensal();
     emissaoPoluentes();
     MaiorConsumo();
 
-}
+  }
 
-function trocarMaquina() {
+  function trocarMaquina() {
     maquinaSelecionada = document.getElementById("filtroMaquina").value;
     atualizarPonteiro();
-}
+  }
 
   var valorEmissaoCO2 = 0.015;
 
-function trocarFonte() {
-  if(document.getElementById("filtroMatriz").value == "Carvao"){
-  valorEmissaoCO2 = 1;
+  function trocarFonte() {
+    if (document.getElementById("filtroMatriz").value == "Carvao") {
+      valorEmissaoCO2 = 1;
 
-  }else if(document.getElementById("filtroMatriz").value == "Gas"){
-  valorEmissaoCO2 = 0.49;
-  }else if(document.getElementById("filtroMatriz").value == "Nuclear"){
-  valorEmissaoCO2 = 0.012;
-  }else{
-  valorEmissaoCO2 = 0.015;
+    } else if (document.getElementById("filtroMatriz").value == "Gas") {
+      valorEmissaoCO2 = 0.49;
+    } else if (document.getElementById("filtroMatriz").value == "Nuclear") {
+      valorEmissaoCO2 = 0.012;
+    } else {
+      valorEmissaoCO2 = 0.015;
 
-  }
+    }
     carregarKPIS();
     emissaoPoluentes();
-}
+  }
 
   carregarKPIS();
-async function carregarKPIS() {
-    const idEmpresa = sessionStorage.FK_EMPRESA;
-    const periodo = document.getElementById("filtroPeriodo").value.toLowerCase(); 
-
-    try {
-       const consumo = await fetch(`/sustentabilidade/total/${idEmpresa}/${periodo}`)
-            .then(r => r.json());
-       const potencia = await fetch(`/sustentabilidade/potencia/${idEmpresa}/${periodo}`)
-            .then(r => r.json());
-       const nome = await fetch(`/sustentabilidade/nomeMaquina/${idEmpresa}/${periodo}`)
-            .then(r => r.json());
-       const resposta = await fetch(`/sustentabilidade/kpis/${idEmpresa}/${periodo}`)
-            .then(r => r.json());
-
-
-        if (!resposta || resposta.length === 0) {
-            console.warn("Nenhum dado encontrado para o período selecionado.");
-            return;
-        }
-
-        const dado = resposta[0];
-     
-
-        document.getElementById("kpiConsumoDia").textContent = (consumo[0].total_consumo_wh) + " Wh";
-        document.getElementById("kpiCO2").textContent = `${(consumo[0].total_consumo_wh * valorEmissaoCO2).toFixed(2) + " g/Wh"}`
-        document.getElementById("kpiMaiorPotencia").textContent = `${potencia[0].potencia_maxima} W`;
-        document.getElementById("kpiNomeMaquina").textContent = `${nome[0].identificador}`;
-
-    } catch (erro) {
-        console.error("Erro ao carregar KPIs:", erro);
-        document.getElementById("kpiConsumoDia").textContent = "-";
-        document.getElementById("kpiCO2").textContent = "-";
-        document.getElementById("kpiMaiorPotencia").textContent = "-";
-        document.getElementById("kpiNomeMaquina").textContent = "-";
-    }
-}
-
-
-
-// Gráfico Consumo Mensal
-const ctx = document.getElementById('graficoConsumoEnergia');
-
-let graficoConsumoEnergia = new Chart(ctx, {
-  type: 'bar',        
-  data: {
-    labels: [],
-    datasets: [{
-      label: 'Consumo (kWh)',
-      data: [],
-      backgroundColor: 'rgba(54, 162, 235, 0.5)',
-      borderColor: 'rgba(54, 162, 235, 1)',
-      borderWidth: 1
-    }]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      y: { beginAtZero: true }
-    }
-  }
-});
-
-
-carregarConsumoMensal();
-setInterval(carregarConsumoMensal, 60000);
-
-async function carregarConsumoMensal() {
+  async function carregarKPIS() {
     const idEmpresa = sessionStorage.FK_EMPRESA;
     const periodo = document.getElementById("filtroPeriodo").value.toLowerCase();
 
     try {
-        const resposta = await fetch(`/sustentabilidade/consumo/${idEmpresa}/${periodo}`);
-        const dados = await resposta.json();
+      const consumo = await fetch(`/sustentabilidade/total/${idEmpresa}/${periodo}`)
+        .then(r => r.json());
+      const potencia = await fetch(`/sustentabilidade/potencia/${idEmpresa}/${periodo}`)
+        .then(r => r.json());
+      const nome = await fetch(`/sustentabilidade/nomeMaquina/${idEmpresa}/${periodo}`)
+        .then(r => r.json());
+      const resposta = await fetch(`/sustentabilidade/kpis/${idEmpresa}/${periodo}`)
+        .then(r => r.json());
 
-        const labels = dados.map(item => item.periodo);
-        const valores = dados.map(item => item.consumo);
 
-        graficoConsumoEnergia.data.labels = labels;
-        graficoConsumoEnergia.data.datasets[0].data = valores;
-        graficoConsumoEnergia.update();
+      if (!resposta || resposta.length === 0) {
+        console.warn("Nenhum dado encontrado para o período selecionado.");
+        return;
+      }
 
-        console.log("Gráfico atualizado:", dados);
+      const dado = resposta[0];
+
+
+      document.getElementById("kpiConsumoDia").textContent = (consumo[0].total_consumo_wh) + " Wh";
+      document.getElementById("kpiCO2").textContent = `${(consumo[0].total_consumo_wh * valorEmissaoCO2).toFixed(2) + " g/Wh"}`
+      document.getElementById("kpiMaiorPotencia").textContent = `${potencia[0].potencia_maxima} W`;
+      document.getElementById("kpiNomeMaquina").textContent = `${nome[0].identificador}`;
 
     } catch (erro) {
-        console.error("Erro ao carregar gráfico:", erro);
+      console.error("Erro ao carregar KPIs:", erro);
+      document.getElementById("kpiConsumoDia").textContent = "-";
+      document.getElementById("kpiCO2").textContent = "-";
+      document.getElementById("kpiMaiorPotencia").textContent = "-";
+      document.getElementById("kpiNomeMaquina").textContent = "-";
     }
-}
+  }
 
-// Gráfico Poluentes
-const ctxLinha = document.getElementById('graficoPoluentes');
 
-const graficoPoluentes = new Chart(ctxLinha, {
-    type: 'line',
+
+  // Gráfico Consumo Mensal
+  const ctx = document.getElementById('graficoConsumoEnergia');
+
+  let graficoConsumoEnergia = new Chart(ctx, {
+    type: 'bar',
     data: {
-        labels: [],
-        datasets: [
-            {
-                label: 'CO₂ (ppm)',
-                data: [],
-                borderColor: 'rgba(255, 99, 132, 1)',
-                tension: 0.2
-            },
-        ]
+      labels: [],
+      datasets: [{
+        label: 'Consumo (kWh)',
+        data: [],
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
     },
     options: {
-        responsive: true,
-        scales: {
-            y: { beginAtZero: false }
-        }
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
     }
-});
+  });
 
 
-emissaoPoluentes();
-setInterval(emissaoPoluentes, 60000);
+  carregarConsumoMensal();
+  setInterval(carregarConsumoMensal, 60000);
 
-async function emissaoPoluentes() {
+  async function carregarConsumoMensal() {
+    const idEmpresa = sessionStorage.FK_EMPRESA;
+    const periodo = document.getElementById("filtroPeriodo").value.toLowerCase();
+
+    try {
+      const resposta = await fetch(`/sustentabilidade/consumo/${idEmpresa}/${periodo}`);
+      const dados = await resposta.json();
+
+      const labels = dados.map(item => item.periodo);
+      const valores = dados.map(item => item.consumo);
+
+      graficoConsumoEnergia.data.labels = labels;
+      graficoConsumoEnergia.data.datasets[0].data = valores;
+      graficoConsumoEnergia.update();
+
+      console.log("Gráfico atualizado:", dados);
+
+    } catch (erro) {
+      console.error("Erro ao carregar gráfico:", erro);
+    }
+  }
+
+  // Gráfico Poluentes
+  const ctxLinha = document.getElementById('graficoPoluentes');
+
+  const graficoPoluentes = new Chart(ctxLinha, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: 'CO₂ (ppm)',
+          data: [],
+          borderColor: 'rgba(255, 99, 132, 1)',
+          tension: 0.2
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: false }
+      }
+    }
+  });
+
+
+  emissaoPoluentes();
+  setInterval(emissaoPoluentes, 60000);
+
+  async function emissaoPoluentes() {
     const idEmpresa = sessionStorage.FK_EMPRESA;
     const periodo = document.getElementById("filtroPeriodo").value.toLowerCase();
 
     if (!idEmpresa) {
-        console.error("ID da empresa não encontrado no sessionStorage");
-        return;
+      console.error("ID da empresa não encontrado no sessionStorage");
+      return;
     }
 
     try {
-        const resposta = await fetch(`/sustentabilidade/consumo/${idEmpresa}/${periodo}`);
-  
-        if (!resposta.ok) throw new Error("Erro na API Emissão");
+      const resposta = await fetch(`/sustentabilidade/consumo/${idEmpresa}/${periodo}`);
 
-        const dados = await resposta.json();
-        console.log("Dados recebidos:", dados);
-        
-        const labels = dados.map(item => item.periodo);
-        const valores = dados.map(item => item.consumo);
+      if (!resposta.ok) throw new Error("Erro na API Emissão");
 
-        const valoresCO2 = dados.map(item => item.consumo);
-        const valoresNOx = dados.map(item => item.consumo);
-        const valoresSO2 = dados.map(item => item.consumo);
+      const dados = await resposta.json();
+      console.log("Dados recebidos:", dados);
 
-        graficoPoluentes.data.labels = labels;
-        graficoPoluentes.data.datasets[0].data = valoresCO2.map(v => v * valorEmissaoCO2);
-        graficoPoluentes.update();
+      const labels = dados.map(item => item.periodo);
+      const valores = dados.map(item => item.consumo);
 
-        console.log("Gráfico atualizado!");
+      const valoresCO2 = dados.map(item => item.consumo);
+      const valoresNOx = dados.map(item => item.consumo);
+      const valoresSO2 = dados.map(item => item.consumo);
+
+      graficoPoluentes.data.labels = labels;
+      graficoPoluentes.data.datasets[0].data = valoresCO2.map(v => v * valorEmissaoCO2);
+      graficoPoluentes.update();
+
+      console.log("Gráfico atualizado!");
 
     } catch (erro) {
-        console.error("Erro ao atualizar gráfico:", erro);
+      console.error("Erro ao atualizar gráfico:", erro);
     }
-}
+  }
 
-// Gráficos Maiores Consumos
-const ctxAtual = document.getElementById("consumoEmTempoReal");
+  // Gráficos Maiores Consumos
+  const ctxAtual = document.getElementById("consumoEmTempoReal");
 
-let consumoEmTempoReal = new Chart(ctxAtual, {
+  let consumoEmTempoReal = new Chart(ctxAtual, {
     type: "bar",
     data: {
-        labels: [],
-        datasets: [{
-            label: "Consumo médio (Watts)",
-            data: [],
-            backgroundColor: "rgba(255, 99, 132, 0.5)",
-            borderColor: "rgba(255, 99, 132, 1)",
-            borderWidth: 1
-        }]
+      labels: [],
+      datasets: [{
+        label: "Consumo médio (Watts)",
+        data: [],
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1
+      }]
     },
     options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
-            }
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
         }
+      }
     }
-});
+  });
 
   const fkTipoUsuario = sessionStorage.getItem("FK_TIPO_USUARIO");
   const listaMaquinas = document.getElementById('lista-maquinas');
 
 
- MaiorConsumo()
+  MaiorConsumo()
 
-// Gráfico Ranking Consumo
-async function MaiorConsumo() {
+  // Gráfico Ranking Consumo
+  async function MaiorConsumo() {
     const idEmpresa = sessionStorage.FK_EMPRESA;
     const periodo = document.getElementById("filtroPeriodo").value.toLowerCase();
     const tbody = document.getElementById("lista-maquinas");
@@ -440,161 +445,161 @@ async function MaiorConsumo() {
 
     try {
 
-        const resposta = await fetch(`/sustentabilidade/maior/${idEmpresa}/${periodo}`);
-        const data = await resposta.json(); 
+      const resposta = await fetch(`/sustentabilidade/maior/${idEmpresa}/${periodo}`);
+      const data = await resposta.json();
 
-        console.log("Dados do Ranking:", data);
+      console.log("Dados do Ranking:", data);
 
-        if (!data || data.length === 0) {
-            tbody.innerHTML = `<tr>
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr>
                 <td colspan="4" style="text-align:center;">Nenhum dado encontrado</td>
             </tr>`;
-            return;
-        }
+        return;
+      }
 
-        data.forEach(item => {
-            tbody.innerHTML += `
+      data.forEach(item => {
+        tbody.innerHTML += `
                 <tr>
                     <td>${item.identificador}</td>
                     <td>${item.total_consumo_wh}</td>
                     <td>${item.hostName ?? '-'}</td>
                     <td>${item.ultima_captura ?? '-'}</td>
                 </tr>`;
-        });
+      });
 
     } catch (erro) {
-        console.error("Erro no Ranking:", erro);
+      console.error("Erro no Ranking:", erro);
 
-        tbody.innerHTML = `<tr>
+      tbody.innerHTML = `<tr>
             <td colspan="4" style="text-align:center;color:red;">Erro ao carregar dados</td>
         </tr>`;
     }
-}
+  }
 
 
-//Gráfico consumo em tempo real
-   const chart =  Highcharts.chart('container', {
+  //Gráfico consumo em tempo real
+  const chart = Highcharts.chart('container', {
 
     chart: {
-        type: 'gauge',
-        plotBackgroundColor: null,
-        plotBackgroundImage: null,
-        plotBorderWidth: 0,
-        plotShadow: false,
-        height: '40%'
+      type: 'gauge',
+      plotBackgroundColor: null,
+      plotBackgroundImage: null,
+      plotBorderWidth: 0,
+      plotShadow: false,
+      height: '40%'
     },
 
     title: {
-        text: 'Consumo Atual - Máquina #definir'
+      text: 'Consumo Atual - Máquina #definir'
     },
 
-     legend: { enabled: false },
+    legend: { enabled: false },
 
     pane: {
-        startAngle: -90,
-        endAngle: 89.9,
-        background: null,
-        center: ['50%', '75%'],
-        size: '110%'
+      startAngle: -90,
+      endAngle: 89.9,
+      background: null,
+      center: ['50%', '75%'],
+      size: '110%'
     },
 
     yAxis: {
-        min: 0,
-        max: 200,
-        tickPixelInterval: 100,
-        tickPosition: 'inside',
-        tickColor: 'var(--highcharts-background-color, #FFFFFF)',
-        tickLength: 20,
-        tickWidth: 2,
-        minorTickInterval: null,
-        labels: {
-            distance: 20,
-            style: {
-                fontSize: '14px'
-            }
-        },
-        lineWidth: 0,
-        plotBands: [{
-            from: 0,
-            to: 120,
-            color: '#55BF3B', // verde
-            thickness: 20,
-            borderRadius: '50%'
-        }, {
-            from: 120,
-            to: 160,
-            color: '#DDDF0D', // amarelo
-            thickness: 20,
-            borderRadius: '50%'
-        }, {
-            from: 160,
-            to: 200,
-            color: '#DF5353', // vermelho
-            thickness: 20,
-            borderRadius: '50%'
-        }]
+      min: 0,
+      max: 200,
+      tickPixelInterval: 100,
+      tickPosition: 'inside',
+      tickColor: 'var(--highcharts-background-color, #FFFFFF)',
+      tickLength: 20,
+      tickWidth: 2,
+      minorTickInterval: null,
+      labels: {
+        distance: 20,
+        style: {
+          fontSize: '14px'
+        }
+      },
+      lineWidth: 0,
+      plotBands: [{
+        from: 0,
+        to: 120,
+        color: '#55BF3B', // verde
+        thickness: 20,
+        borderRadius: '50%'
+      }, {
+        from: 120,
+        to: 160,
+        color: '#DDDF0D', // amarelo
+        thickness: 20,
+        borderRadius: '50%'
+      }, {
+        from: 160,
+        to: 200,
+        color: '#DF5353', // vermelho
+        thickness: 20,
+        borderRadius: '50%'
+      }]
     },
 
     series: [{
-        name: 'Speed',
-        data: [0],
-        tooltip: {
-            valueSuffix: ' km/h'
-        },
-        dataLabels: {
-            format: '{y} km/h',
-            borderWidth: 0,
-            color: (
-                Highcharts.defaultOptions.title &&
-                Highcharts.defaultOptions.title.style &&
-                Highcharts.defaultOptions.title.style.color
-            ) || '#000000',
-            style: {
-                fontSize: '16px'
-            }
-        },
-        dial: {
-            radius: '80%',
-            backgroundColor: 'gray',
-            baseWidth: 12,
-            baseLength: '0%',
-            rearLength: '0%'
-        },
-        pivot: {
-            backgroundColor: 'gray',
-            radius: 6
+      name: 'Speed',
+      data: [0],
+      tooltip: {
+        valueSuffix: ' km/h'
+      },
+      dataLabels: {
+        format: '{y} km/h',
+        borderWidth: 0,
+        color: (
+          Highcharts.defaultOptions.title &&
+          Highcharts.defaultOptions.title.style &&
+          Highcharts.defaultOptions.title.style.color
+        ) || '#000000',
+        style: {
+          fontSize: '16px'
         }
+      },
+      dial: {
+        radius: '80%',
+        backgroundColor: 'gray',
+        baseWidth: 12,
+        baseLength: '0%',
+        rearLength: '0%'
+      },
+      pivot: {
+        backgroundColor: 'gray',
+        radius: 6
+      }
     }]
 
-});
+  });
 
-// Valor do Ponteiro
-async function atualizarPonteiro(){
+  // Valor do Ponteiro
+  async function atualizarPonteiro() {
     const idEmpresa = sessionStorage.FK_EMPRESA;
     const maquina = document.getElementById("filtroMaquina").value.toLowerCase();
 
     try {
-        const response = await fetch(`/sustentabilidade/atual/${idEmpresa}/${maquina}`); 
-        const data = await response.json();
-        const newVal = Number(data[0].potencia);
+      const response = await fetch(`/sustentabilidade/atual/${idEmpresa}/${maquina}`);
+      const data = await response.json();
+      const newVal = Number(data[0].potencia);
 
-        // Atualiza o ponteiro
-        const point = chart.series[0].points[0];
+      // Atualiza o ponteiro
+      const point = chart.series[0].points[0];
 
-        point.update(newVal);
-console.log("Recebido da API:", data);
-console.log("Valor calculado:", newVal);
-console.log("Ponteiro atual:", chart.series[0].points[0].y);
+      point.update(newVal);
+      console.log("Recebido da API:", data);
+      console.log("Valor calculado:", newVal);
+      console.log("Ponteiro atual:", chart.series[0].points[0].y);
     } catch (err) {
-        console.error('Erro ao atualizar ponteiro:', err);
+      console.error('Erro ao atualizar ponteiro:', err);
     }
 
-}
-atualizarPonteiro()
-document.getElementById("filtroMaquina").addEventListener('change', atualizarPonteiro);
+  }
+  atualizarPonteiro()
+  document.getElementById("filtroMaquina").addEventListener('change', atualizarPonteiro);
 
 
-document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", () => {
     carregarKPIS();
     atualizarPonteiro();
     // carregarConsumoMensal();
@@ -605,7 +610,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // setInterval(carregarConsumoMensal, 60000);
     // setInterval(MaiorConsumo, 60000);
     // setInterval(emissaoPoluentes, 60000);
-});
+  });
 
   const btnNotificacao = document.querySelector('.btn-notificacao');
   const modal = document.getElementById('modalNotificacoes');
@@ -628,7 +633,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-// Código Padrão
+  // Código Padrão
   async function carregarAlertas() {
     alertasContainer.innerHTML = "<p class='loading'>Carregando alertas...</p>";
 
