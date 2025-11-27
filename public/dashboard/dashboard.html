@@ -82,7 +82,10 @@
                         <div class="btn-padrao">
                             <button class="btn-notificacao">
                             </button>
-                            <img id="fotoTopo" src="../assets/icon/icon-user.png" href="contateste.html" class="btn-conta" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+                            <a href="contateste.html">
+                                <img id="fotoTopo" src="/assets/icon/icon-user.png"
+                                    style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -183,7 +186,7 @@
                                 <h2>
                                     <div style=" background-color: #18B187; border-radius: 90px; height: 2vh; width:
                                             1vw; "></div><br>Armazenamento <br> utilizado
-                                    <h1 id="h1_usoDisco">
+                                    <h1 id=" h1_usoDisco">
 
                                         </h1>
                                     </h2>
@@ -264,8 +267,8 @@
     const btnAbrirMetricas = document.querySelector(".kpi-metricas button");
     const btnFecharMetricas = document.getElementById("fecharMetricas");
     const btnSalvarMetricas = document.getElementById("salvarMetricas");
-    
-        (function () {
+
+    (function () {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get("id");
         const btnVerRAM = document.getElementById("btnVerRAM");

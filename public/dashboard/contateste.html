@@ -67,8 +67,10 @@
                 <button id="btnGerenciarUsuarios" class="btn-user">Ger. usuário</button>
               </a>
               <button class="btn-notificacao"></button>
-              <img id="fotoTopo" src="../assets/icon/icon-user.png" href="contateste.html" class="btn-conta"
-                style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+              <a href="contateste.html">
+                <img id="fotoTopo" src="/assets/icon/icon-user.png"
+                  style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+              </a>
             </div>
           </div>
 
@@ -83,8 +85,9 @@
                 style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
               <form id="formFotoPerfil" enctype="multipart/form-data" style="margin-top: 10px;">
                 <input type="file" id="inputFotoPerfil" name="foto" accept=".jpg,.jpeg,.png" style="display:none;">
-                <button type="button" onclick="document.getElementById('inputFotoPerfil').click()">Alterar Foto</button>
-                <button type="submit" style="display:none;" id="btnSalvarFoto">Salvar</button>
+                <button type="button" class="btn-salvar"
+                  onclick="document.getElementById('inputFotoPerfil').click()">Alterar Foto</button>
+                <button type="submit" class="btn-salvar" style="display:none;" id="btnSalvarFoto">Salvar</button>
               </form>
             </div>
           </div>

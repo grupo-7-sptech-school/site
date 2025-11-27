@@ -62,7 +62,9 @@
                         <div class="btn-padrao">
                             <button class="btn-notificacao">
                             </button>
-                            <a href="contateste.html" class="btn-conta">
+                            <a href="contateste.html">
+                                <img id="fotoTopo" src="/assets/icon/icon-user.png"
+                                    style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
                             </a>
                         </div>
                     </div>
@@ -203,13 +205,13 @@
 
 
         function javaStringHashCodeNonNegative(s) {
-                    let h = 0;
-                    for (let i = 0; i < s.length; i++) {
-                        h = Math.imul(31, h) + s.charCodeAt(i);
-                        h |= 0;
-                    }
-                    return h & 0x7FFFFFFF; // equivalente a conversão do JAVA
-                }
+            let h = 0;
+            for (let i = 0; i < s.length; i++) {
+                h = Math.imul(31, h) + s.charCodeAt(i);
+                h |= 0;
+            }
+            return h & 0x7FFFFFFF; // equivalente a conversão do JAVA
+        }
 
 
 

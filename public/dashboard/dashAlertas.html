@@ -74,8 +74,10 @@
           <div class="btns-topbar">
             <div class="btn-padrao">
               <button class="btn-notificacao"></button>
-              <img id="fotoTopo" src="/assets/icon/icon-user.png" alt="Foto do usuário"
-                style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+              <a href="contateste.html">
+                <img id="fotoTopo" src="/assets/icon/icon-user.png"
+                  style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+              </a>
             </div>
           </div>
         </div>
@@ -155,7 +157,8 @@
                 <div class="titulo-actions">
                   <span class="info-tooltip">ℹ
                     <span class="info-text">
-                      <b>Este gráfico mostra os alertas agrupados. A janela desliza automaticamente conforme novos alertas chegam.</b>
+                      <b>Este gráfico mostra os alertas agrupados. A janela desliza automaticamente conforme novos
+                        alertas chegam.</b>
                     </span>
                   </span>
                   <select class="filtro-componente">
@@ -231,7 +234,7 @@
               alertas.forEach(alerta => {
                 const partes = alerta.momento.split(' ');
                 const horaCompleta = partes[0] + ' ' + partes[1].split(':')[0] + ':00';
-                
+
                 if (!agrupado[horaCompleta]) {
                   agrupado[horaCompleta] = 0;
                 }
@@ -246,8 +249,8 @@
                 .sort((a, b) => {
                   const [diaA, horaA] = a.momento.split(' ');
                   const [diaB, horaB] = b.momento.split(' ');
-                  return new Date(`2024-${diaA.split('/').reverse().join('-')} ${horaA}`) - 
-                         new Date(`2024-${diaB.split('/').reverse().join('-')} ${horaB}`);
+                  return new Date(`2024-${diaA.split('/').reverse().join('-')} ${horaA}`) -
+                    new Date(`2024-${diaB.split('/').reverse().join('-')} ${horaB}`);
                 });
 
               return resultado.slice(-5);
@@ -424,4 +427,5 @@
             atualizarTudo();
           </script>
 </body>
+
 </html>
