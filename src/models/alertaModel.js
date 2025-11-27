@@ -1,16 +1,16 @@
 var database = require("../database/config");
 
 function converterPeriodo(periodo) {
-    if (periodo === "hoje") return "NOW() - INTERVAL 1 DAY";
-    if (periodo === "semana") return "NOW() - INTERVAL 7 DAY";
-    if (periodo === "2semanas") return "NOW() - INTERVAL 15 DAY";
-    if (periodo === "mes") return "NOW() - INTERVAL 30 DAY";
-
-    return "NOW() - INTERVAL 1 DAY"; 
+    if (periodo === "1 DAY" || periodo === "hoje") return 1;
+    if (periodo === "7 DAY" || periodo === "semana") return 7;
+    if (periodo === "15 DAY" || periodo === "2semanas") return 15;
+    if (periodo === "30 DAY" || periodo === "mes") return 30;
+    
+    return 1;
 }
 
 function kpis(hostName, periodo) {
-    var intervalo = converterPeriodo(periodo);
+    var dias = converterPeriodo(periodo);
 
     var instrucao = `
         SELECT 
@@ -18,27 +18,27 @@ function kpis(hostName, periodo) {
              FROM Alerta a
              JOIN Componente c ON a.fkComponente = c.idComponente
              WHERE c.fkMaquina = ${hostName}
-             AND a.dtHora >= ${intervalo}) AS total,
+             AND a.dtHora >= NOW() - INTERVAL ${dias} DAY) AS total,
 
             (SELECT COUNT(*) 
              FROM Alerta a
              JOIN Componente c ON a.fkComponente = c.idComponente
              WHERE c.fkMaquina = ${hostName}
              AND a.estado = 'CRITICO'
-             AND a.dtHora >= ${intervalo}) AS criticos,
+             AND a.dtHora >= NOW() - INTERVAL ${dias} DAY) AS criticos,
 
             (SELECT COUNT(*) 
              FROM Alerta a
              JOIN Componente c ON a.fkComponente = c.idComponente
              WHERE c.fkMaquina = ${hostName}
              AND a.estado = 'ALERTA'
-             AND a.dtHora >= ${intervalo}) AS preventivos,
+             AND a.dtHora >= NOW() - INTERVAL ${dias} DAY) AS preventivos,
 
             (SELECT c.nome 
              FROM Alerta a
              JOIN Componente c ON a.fkComponente = c.idComponente
              WHERE c.fkMaquina = ${hostName}
-             AND a.dtHora >= ${intervalo}
+             AND a.dtHora >= NOW() - INTERVAL ${dias} DAY
              GROUP BY c.nome
              ORDER BY COUNT(*) DESC
              LIMIT 1) AS componenteCritico;
@@ -47,18 +47,21 @@ function kpis(hostName, periodo) {
     return database.executar(instrucao);
 }
 
-function graficoLinha(hostName, periodo) {
-    var intervalo = converterPeriodo(periodo);
+function graficoLinha(hostName, periodo, componente = null) {
+    var dias = converterPeriodo(periodo);
+    
+    var componenteFiltro = componente ? `AND c.nome = '${componente}'` : '';
 
     var instrucao = `
         SELECT 
             DATE_FORMAT(a.dtHora, '%d/%m %H:%i') AS momento,
-            COUNT(*) AS total
+            a.estado,
+            c.nome AS componente
         FROM Alerta a
         JOIN Componente c ON a.fkComponente = c.idComponente
         WHERE c.fkMaquina = ${hostName}
-        AND a.dtHora >= ${intervalo}
-        GROUP BY DATE_FORMAT(a.dtHora, '%d/%m %H')
+        AND a.dtHora >= NOW() - INTERVAL ${dias} DAY
+        ${componenteFiltro}
         ORDER BY a.dtHora ASC;
     `;
 
@@ -66,7 +69,7 @@ function graficoLinha(hostName, periodo) {
 }
 
 function graficoComponentes(hostName, periodo) {
-    var intervalo = converterPeriodo(periodo);
+    var dias = converterPeriodo(periodo);
 
     var instrucao = `
         SELECT 
@@ -75,7 +78,7 @@ function graficoComponentes(hostName, periodo) {
         FROM Alerta a
         JOIN Componente c ON a.fkComponente = c.idComponente
         WHERE c.fkMaquina = ${hostName}
-        AND a.dtHora >= ${intervalo}
+        AND a.dtHora >= NOW() - INTERVAL ${dias} DAY
         GROUP BY c.nome
         ORDER BY total DESC;
     `;
@@ -83,18 +86,21 @@ function graficoComponentes(hostName, periodo) {
     return database.executar(instrucao);
 }
 
-function graficoTipos(hostName, periodo) {
-    var intervalo = converterPeriodo(periodo);
+function graficoTipos(hostName, periodo, componente = null) {
+    var dias = converterPeriodo(periodo);
+    
+    var componenteFiltro = componente ? `AND c.nome = '${componente}'` : '';
 
     var instrucao = `
         SELECT 
-            estado,
+            a.estado,
             COUNT(*) AS total
         FROM Alerta a
         JOIN Componente c ON a.fkComponente = c.idComponente
         WHERE c.fkMaquina = ${hostName}
-        AND a.dtHora >= ${intervalo}
-        GROUP BY estado;
+        AND a.dtHora >= NOW() - INTERVAL ${dias} DAY
+        ${componenteFiltro}
+        GROUP BY a.estado;
     `;
 
     return database.executar(instrucao);

@@ -15,7 +15,7 @@
 
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;disco1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet">
 
   <script src="../js/sessao.js"></script>
@@ -74,7 +74,8 @@
           <div class="btns-topbar">
             <div class="btn-padrao">
               <button class="btn-notificacao"></button>
-                <img id="fotoTopo" src="/assets/icon/icon-user.png" alt="Foto do usuário" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
+              <img id="fotoTopo" src="/assets/icon/icon-user.png" alt="Foto do usuário"
+                style="width:60px;height:60px;border-radius:50%;object-fit:cover;">
             </div>
           </div>
         </div>
@@ -154,8 +155,7 @@
                 <div class="titulo-actions">
                   <span class="info-tooltip">ℹ
                     <span class="info-text">
-                      <b>Neste gráfico, é exibida a variação da quantidade de alertas durante o período selecionado,
-                        de todos os componentes ou do componente selecionado.</b>
+                      <b>Este gráfico mostra os alertas agrupados. A janela desliza automaticamente conforme novos alertas chegam.</b>
                     </span>
                   </span>
                   <select class="filtro-componente">
@@ -208,9 +208,8 @@
           </div>
 
           <script>
-
-            let hostName = sessionStorage.HOSTNAME_USUARIO || 1598329989;
-
+            const params = new URLSearchParams(window.location.search);
+            const hostName = params.get("id");
             const selectPeriodo = document.querySelector(".periodo");
             const selectComponenteLinha = document.querySelectorAll(".filtro-componente")[0];
             const selectComponentePizza = document.querySelectorAll(".filtro-componente")[1];
@@ -224,6 +223,34 @@
                 case "mes": return "30 DAY";
                 default: return "1 DAY";
               }
+            }
+
+            function agruparPorHora(alertas) {
+              const agrupado = {};
+
+              alertas.forEach(alerta => {
+                const partes = alerta.momento.split(' ');
+                const horaCompleta = partes[0] + ' ' + partes[1].split(':')[0] + ':00';
+                
+                if (!agrupado[horaCompleta]) {
+                  agrupado[horaCompleta] = 0;
+                }
+                agrupado[horaCompleta]++;
+              });
+
+              const resultado = Object.keys(agrupado)
+                .map(hora => ({
+                  momento: hora,
+                  total: agrupado[hora]
+                }))
+                .sort((a, b) => {
+                  const [diaA, horaA] = a.momento.split(' ');
+                  const [diaB, horaB] = b.momento.split(' ');
+                  return new Date(`2024-${diaA.split('/').reverse().join('-')} ${horaA}`) - 
+                         new Date(`2024-${diaB.split('/').reverse().join('-')} ${horaB}`);
+                });
+
+              return resultado.slice(-5);
             }
 
             // KPIs
@@ -252,20 +279,30 @@
               data: {
                 labels: [],
                 datasets: [{
-                  label: "Alertas",
+                  label: "Alertas por Hora",
                   data: [],
                   borderWidth: 3,
                   borderColor: "#1abc9c",
+                  backgroundColor: "rgba(26, 188, 156, 0.1)",
                   fill: true,
                   tension: 0.3
                 }]
               },
               options: {
                 plugins: {
-                  legend: { display: false }
+                  legend: { display: true }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      stepSize: 1
+                    }
+                  }
                 }
               }
             });
+
             async function carregarGraficoLinha() {
               const periodo = traduzirPeriodo(selectPeriodo.value);
               let componente = selectComponenteLinha.value;
@@ -281,12 +318,20 @@
 
               const dados = await resposta.json();
 
-              const labels = dados.map(r => r.momento);
-              const valores = dados.map(r => r.total);
+              const dadosAgrupados = agruparPorHora(dados);
+
+              const labels = dadosAgrupados.map(r => r.momento);
+              const valores = dadosAgrupados.map(r => r.total);
 
               graficoLinha.data.labels = labels;
               graficoLinha.data.datasets[0].data = valores;
               graficoLinha.update();
+
+              console.log('Gráfico atualizado:', {
+                total_alertas: dados.length,
+                horas_exibidas: dadosAgrupados.length,
+                dados: dadosAgrupados
+              });
             }
 
             // gráfico Componentes
@@ -371,8 +416,12 @@
             selectComponenteLinha.addEventListener("change", carregarGraficoLinha);
             selectComponentePizza.addEventListener("change", carregarGraficoTipos);
 
+            setInterval(() => {
+              console.log('Atualizando dados automaticamente...');
+              atualizarTudo();
+            }, 30000);
+
             atualizarTudo();
           </script>
 </body>
-
 </html>

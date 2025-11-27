@@ -20,14 +20,17 @@ function kpis(req, res) {
         });
 }
 
-
 function graficoLinha(req, res) {
     var hostName = req.body.hostName;
     var periodo = req.body.periodo;
+    var componente = req.body.componente;
 
-    alertaModel.graficoLinha(hostName, periodo)
+    alertaModel.graficoLinha(hostName, periodo, componente)
         .then(r => res.json(r))
-        .catch(e => res.status(500).json(e));
+        .catch(e => {
+            console.log(e);
+            res.status(500).json(e);
+        });
 }
 
 function graficoComponentes(req, res) {
@@ -36,18 +39,24 @@ function graficoComponentes(req, res) {
 
     alertaModel.graficoComponentes(hostName, periodo)
         .then(r => res.json(r))
-        .catch(e => res.status(500).json(e));
+        .catch(e => {
+            console.log(e);
+            res.status(500).json(e);
+        });
 }
 
 function graficoTipos(req, res) {
     var hostName = req.body.hostName;
     var periodo = req.body.periodo;
+    var componente = req.body.componente; 
 
-    alertaModel.graficoTipos(hostName, periodo)
+    alertaModel.graficoTipos(hostName, periodo, componente)
         .then(r => res.json(r))
-        .catch(e => res.status(500).json(e));
+        .catch(e => {
+            console.log(e);
+            res.status(500).json(e);
+        });
 }
-
 
 module.exports = {
     kpis,
