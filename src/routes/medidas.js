@@ -59,4 +59,5 @@ router.post("/recomendacoesIA", function (req, res) {
     medidaController.recomendacoesIA(req, res);
 })
 
+
 module.exports = router;

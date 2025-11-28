@@ -28,21 +28,15 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/medidas", medidasRouter);
 app.use("/grafico", graficoRouter);
 app.use("/sustentabilidade", sustentabilidadeRoutes);
 app.use("/alertas", alertaRouter);
-
-
-//console.log('Registrando rotas UPS...');
-app.use('/api/ups', upsRoutes);
-//console.log('Rotas UPS registradas em /api/ups');
+app.use("/api/ups", upsRoutes);
 
 app.get('/api/ups/teste-simples', (req, res) => {
-  //  console.log('Rota /api/ups/teste-simples ACESSADA');
     res.json({ 
         message: 'Rota UPS funcionando!',
         timestamp: new Date().toISOString()
@@ -50,13 +44,13 @@ app.get('/api/ups/teste-simples', (req, res) => {
 });
 
 app.get('/api/ups/health', (req, res) => {
-    //console.log('Rota /api/ups/health ACESSADA');
     res.json({ 
         status: 'OK', 
         message: 'UPS API funcionando',
         timestamp: new Date().toISOString()
     });
 });
+
 app.get('/api/ups/routes', (req, res) => {
     const routes = [
         '/api/ups/health',
@@ -87,9 +81,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-
-
-
 app.get("/relatorio/pdf", async (req, res) => {
     try {
         console.log('Gerando PDF com pdf-lib...');
@@ -106,24 +97,19 @@ app.get("/relatorio/pdf", async (req, res) => {
 
         const analise = gerarAnaliseLocalSimples(processos);
 
-        // Criar novo documento PDF
         const pdfDoc = await PDFDocument.create();
-        const page = pdfDoc.addPage([595.28, 841.89]); // A4 em pontos
+        const page = pdfDoc.addPage([595.28, 841.89]);
 
-        // Configurações
         const { width, height } = page.getSize();
         const margin = 50;
         const maxWidth = width - (margin * 2);
         
-        // Carregar fontes
         const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
         const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
         let y = height - margin;
 
-        // Função auxiliar para desenhar texto - CORRIGIDA
         const drawText = (text, x, yPos, size = 10, isBold = false, color = rgb(0, 0, 0), maxWidth = width - (margin * 2)) => {
-            // CONVERTER PARA STRING sempre
             const textString = String(text);
             const currentFont = isBold ? fontBold : font;
             page.drawText(textString, {
@@ -137,13 +123,11 @@ app.get("/relatorio/pdf", async (req, res) => {
             return yPos - (size + 2);
         };
 
-        // Cabeçalho
         y = drawText('SolarData - Relatório de Monitoramento', margin, y, 16, true, rgb(0.173, 0.243, 0.314));
         y = drawText(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, margin, y, 8, false, rgb(0.5, 0.5, 0.5));
         
-        y -= 10; // Espaço
+        y -= 10;
 
-        // Linha divisória
         page.drawLine({
             start: { x: margin, y },
             end: { x: width - margin, y },
@@ -153,7 +137,6 @@ app.get("/relatorio/pdf", async (req, res) => {
 
         y -= 20;
 
-        // STATUS DO SISTEMA
         const statusColor = analise.status === 'Crítico' ? rgb(1, 0, 0) :
                            analise.status === 'Atenção' ? rgb(0.953, 0.612, 0.071) : 
                            rgb(0.153, 0.682, 0.376);
@@ -162,14 +145,13 @@ app.get("/relatorio/pdf", async (req, res) => {
 
         y -= 25;
 
-        // MÉTRICAS PRINCIPAIS - CORRIGIDO: converter valores para string
         y = drawText('Métricas Principais', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
 
         y -= 15;
 
         const metrics = [
-            { label: 'Processos Totais', value: String(processos.length) }, // CONVERTER
-            { label: 'Processos Ativos', value: String(analise.ativos) },   // CONVERTER
+            { label: 'Processos Totais', value: String(processos.length) },
+            { label: 'Processos Ativos', value: String(analise.ativos) },
             { label: 'Uso CPU Total', value: `${Math.min(analise.totalCPU, 100)?.toFixed(1) || 0}%` },
             { label: 'Uso RAM Total', value: `${Math.min(analise.totalRAM, 100)?.toFixed(1) || 0}%` }
         ];
@@ -184,7 +166,6 @@ app.get("/relatorio/pdf", async (req, res) => {
 
         y -= 40;
 
-        // ALERTAS
         if (analise.alertas?.length > 0) {
             y = drawText('Alertas', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
             y -= 15;
@@ -196,18 +177,15 @@ app.get("/relatorio/pdf", async (req, res) => {
             y -= 5;
         }
 
-        // TOP PROCESSOS CPU
         y = drawText('Top 5 - Maior Consumo de CPU', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
         y -= 15;
 
-        // Cabeçalho da tabela
         drawText('#', margin, y, 8, true, rgb(0.204, 0.286, 0.369));
         drawText('Processo', margin + 30, y, 8, true, rgb(0.204, 0.286, 0.369));
         drawText('Uso CPU', width - margin - 40, y, 8, true, rgb(0.204, 0.286, 0.369));
 
         y -= 10;
 
-        // Linha divisória
         page.drawLine({
             start: { x: margin, y },
             end: { x: width - margin, y },
@@ -217,10 +195,9 @@ app.get("/relatorio/pdf", async (req, res) => {
 
         y -= 8;
 
-        // Dados CPU - CORRIGIDO: converter números para string
         analise.topCPU.slice(0, 5).forEach((proc, index) => {
             const usage = Math.min(proc.cpuPorcentagem, 100);
-            drawText(String(index + 1) + '.', margin, y, 8, false, rgb(0.5, 0.5, 0.5)); // CONVERTER
+            drawText(String(index + 1) + '.', margin, y, 8, false, rgb(0.5, 0.5, 0.5));
             drawText((proc.nome || 'Processo').substring(0, 25), margin + 20, y, 8, false, rgb(0.5, 0.5, 0.5));
             drawText(`${usage?.toFixed(1) || 0}%`, width - margin - 40, y, 8, false, rgb(0.5, 0.5, 0.5));
             y -= 12;
@@ -228,18 +205,15 @@ app.get("/relatorio/pdf", async (req, res) => {
 
         y -= 10;
 
-        // TOP PROCESSOS RAM
         y = drawText('Top 5 - Maior Consumo de RAM', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
         y -= 15;
 
-        // Cabeçalho da tabela
         drawText('#', margin, y, 8, true, rgb(0.204, 0.286, 0.369));
         drawText('Processo', margin + 30, y, 8, true, rgb(0.204, 0.286, 0.369));
         drawText('Uso RAM', width - margin - 40, y, 8, true, rgb(0.204, 0.286, 0.369));
 
         y -= 10;
 
-        // Linha divisória
         page.drawLine({
             start: { x: margin, y },
             end: { x: width - margin, y },
@@ -249,10 +223,9 @@ app.get("/relatorio/pdf", async (req, res) => {
 
         y -= 8;
 
-        // Dados RAM - CORRIGIDO: converter números para string
         analise.topRAM.slice(0, 5).forEach((proc, index) => {
             const usage = Math.min(proc.ramPorcentagem, 100);
-            drawText(String(index + 1) + '.', margin, y, 8, false, rgb(0.5, 0.5, 0.5)); // CONVERTER
+            drawText(String(index + 1) + '.', margin, y, 8, false, rgb(0.5, 0.5, 0.5));
             drawText((proc.nome || 'Processo').substring(0, 25), margin + 20, y, 8, false, rgb(0.5, 0.5, 0.5));
             drawText(`${usage?.toFixed(1) || 0}%`, width - margin - 40, y, 8, false, rgb(0.5, 0.5, 0.5));
             y -= 12;
@@ -260,7 +233,6 @@ app.get("/relatorio/pdf", async (req, res) => {
 
         y -= 15;
 
-        // RECOMENDAÇÕES
         const recomendacoes = gerarRecomendacoes(analise.alertas);
         if (recomendacoes?.length > 0) {
             y = drawText('Recomendações', margin, y, 12, true, rgb(0.173, 0.243, 0.314));
@@ -272,15 +244,12 @@ app.get("/relatorio/pdf", async (req, res) => {
             });
         }
 
-        // Rodapé
         const footerY = 30;
         drawText('SolarData - Monitoramento de Servidores Sustentáveis', margin, footerY, 8, false, rgb(0.173, 0.243, 0.314));
         drawText('Relatório gerado automaticamente', width - margin - 120, footerY, 8, false, rgb(0.173, 0.243, 0.314));
 
-        // Gerar PDF
         const pdfBytes = await pdfDoc.save();
 
-        // Configurar resposta
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename="relatorio_solardata_${Date.now()}.pdf"`);
         
@@ -297,20 +266,6 @@ app.get("/relatorio/pdf", async (req, res) => {
         });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.get("/analisar-processos", async (req, res) => {
     try {
@@ -362,15 +317,6 @@ app.get("/analisar-processos", async (req, res) => {
     }
 });
 
-
-
-
-
-
-
-
-
-
 function gerarAnaliseLocalSimples(processos) {
     var ativos = processos.filter(proc => proc.nome !== 'Idle' && proc.nome);
 
@@ -384,7 +330,6 @@ function gerarAnaliseLocalSimples(processos) {
     var topCPU = [...ativos].sort((a, b) => (b.cpuPorcentagem || 0) - (a.cpuPorcentagem || 0)).slice(0, 5);
     var topRAM = [...ativos].sort((a, b) => (b.ramPorcentagem || 0) - (a.ramPorcentagem || 0)).slice(0, 5);
 
-    // Identificar processos críticos
     var criticos = ativos.filter(proc =>
         (proc.cpuPorcentagem || 0) > 10 ||
         (proc.ramPorcentagem || 0) > 5
