@@ -126,9 +126,9 @@
             </div>
 
             <div class="kpi-card">
-              <h3>Limites de Ociosidade
+              <h3>Alertas preventivos
                 <span class="info-tooltip">ℹ
-                  <span class="info-text">Este indicador exibe a quantidade de alertas gerados no limite de ociosidade
+                  <span class="info-text">Este indicador exibe a quantidade de alertas preventivos (antes de um alerta)
                     durante
                     o período selecionado.</span>
                 </span>
@@ -157,8 +157,8 @@
                 <div class="titulo-actions">
                   <span class="info-tooltip">ℹ
                     <span class="info-text">
-                      <b>Este gráfico mostra os alertas agrupados. A janela desliza automaticamente conforme novos
-                        alertas chegam.</b>
+                      <b>Este gráfico mostra a distrtibuição de alertas durante o período selecionado. A janela
+                         desliza automaticamente conforme novos alertas chegam. </b>
                     </span>
                   </span>
                   <select class="filtro-componente">
@@ -211,221 +211,256 @@
           </div>
 
           <script>
-            const params = new URLSearchParams(window.location.search);
-            const hostName = params.get("id");
-            const selectPeriodo = document.querySelector(".periodo");
-            const selectComponenteLinha = document.querySelectorAll(".filtro-componente")[0];
-            const selectComponentePizza = document.querySelectorAll(".filtro-componente")[1];
+  const params = new URLSearchParams(window.location.search);
+  const hostName = params.get("id");
+  
+  const selectPeriodo = document.querySelector(".periodo");
+  const selectComponenteLinha = document.querySelectorAll(".filtro-componente")[0];
+  const selectComponentePizza = document.querySelectorAll(".filtro-componente")[1];
 
+  function traduzirPeriodo(p) {
+    if (p === "hoje") return "1 DAY";
+    if (p === "semana") return "7 DAY";
+    if (p === "2semanas") return "15 DAY";
+    if (p === "mes") return "30 DAY";
+    return "1 DAY";
+  }
 
-            function traduzirPeriodo(p) {
-              switch (p) {
-                case "hoje": return "1 DAY";
-                case "semana": return "7 DAY";
-                case "2semanas": return "15 DAY";
-                case "mes": return "30 DAY";
-                default: return "1 DAY";
-              }
-            }
+  function agruparPorHora(alertas) {
+    let agrupado = {};
 
-            function agruparPorHora(alertas) {
-              const agrupado = {};
+    for (let i = 0; i < alertas.length; i++) {
+      let alerta = alertas[i];
+      let partes = alerta.momento.split(' ');
+      let hora = partes[0] + ' ' + partes[1].split(':')[0] + ':00';
 
-              alertas.forEach(alerta => {
-                const partes = alerta.momento.split(' ');
-                const horaCompleta = partes[0] + ' ' + partes[1].split(':')[0] + ':00';
+      if (!agrupado[hora]) {
+        agrupado[hora] = 0;
+      }
+      agrupado[hora]++;
+    }
 
-                if (!agrupado[horaCompleta]) {
-                  agrupado[horaCompleta] = 0;
-                }
-                agrupado[horaCompleta]++;
-              });
+    let resultado = [];
+    for (let hora in agrupado) {
+      resultado.push({
+        momento: hora,
+        total: agrupado[hora]
+      });
+    }
 
-              const resultado = Object.keys(agrupado)
-                .map(hora => ({
-                  momento: hora,
-                  total: agrupado[hora]
-                }))
-                .sort((a, b) => {
-                  const [diaA, horaA] = a.momento.split(' ');
-                  const [diaB, horaB] = b.momento.split(' ');
-                  return new Date(`2024-${diaA.split('/').reverse().join('-')} ${horaA}`) -
-                    new Date(`2024-${diaB.split('/').reverse().join('-')} ${horaB}`);
-                });
+    resultado.sort((a, b) => {
+      let diaA = a.momento.split(' ')[0];
+      let horaA = a.momento.split(' ')[1];
+      let diaB = b.momento.split(' ')[0];
+      let horaB = b.momento.split(' ')[1];
+      
+      let dataA = new Date(`2024-${diaA.split('/').reverse().join('-')} ${horaA}`);
+      let dataB = new Date(`2024-${diaB.split('/').reverse().join('-')} ${horaB}`);
+      
+      return dataA - dataB;
+    });
 
-              return resultado.slice(-5);
-            }
+    return resultado.slice(-5);
+  }
 
-            // KPIs
-            async function carregarKPIs() {
-              const periodo = traduzirPeriodo(selectPeriodo.value);
+  async function carregarKPIs() {
+    let periodo = traduzirPeriodo(selectPeriodo.value);
 
-              const resposta = await fetch("/alertas/kpis", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ hostName: hostName, periodo })
-              });
+    try {
+      let res = await fetch("/alertas/kpis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hostName: hostName, periodo: periodo })
+      });
 
-              if (!resposta.ok) return console.log("Erro ao carregar KPIs");
+      if (!res.ok) {
+        console.log("Erro ao carregar KPIs");
+        return;
+      }
 
-              const dados = await resposta.json();
+      let dados = await res.json();
 
-              document.querySelector(".kpi-card:nth-child(1) .kpi-value").innerText = dados.totalAlertas;
-              document.querySelector(".kpi-card:nth-child(2) .kpi-value").innerText = dados.criticos;
-              document.querySelector(".kpi-card:nth-child(3) .kpi-value").innerText = dados.ociosidade;
-              document.querySelector(".kpi-card:nth-child(4) .kpi-value").innerText = dados.componente;
-            }
+      document.querySelector(".kpi-card:nth-child(1) .kpi-value").innerText = dados.totalAlertas;
+      document.querySelector(".kpi-card:nth-child(2) .kpi-value").innerText = dados.criticos;
+      document.querySelector(".kpi-card:nth-child(3) .kpi-value").innerText = dados.ociosidade;
+      document.querySelector(".kpi-card:nth-child(4) .kpi-value").innerText = dados.componente;
+    } catch (erro) {
+      console.log("Erro:", erro);
+    }
+  }
 
-            // gráfico Linhas
-            let graficoLinha = new Chart(document.getElementById("graficoLinha"), {
-              type: "line",
-              data: {
-                labels: [],
-                datasets: [{
-                  label: "Alertas por Hora",
-                  data: [],
-                  borderWidth: 3,
-                  borderColor: "#1abc9c",
-                  backgroundColor: "rgba(26, 188, 156, 0.1)",
-                  fill: true,
-                  tension: 0.3
-                }]
-              },
-              options: {
-                plugins: {
-                  legend: { display: true }
-                },
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                    ticks: {
-                      stepSize: 1
-                    }
-                  }
-                }
-              }
-            });
+  // gráfico de linha
+  let graficoLinha = new Chart(document.getElementById("graficoLinha"), {
+    type: "line",
+    data: {
+      labels: [],
+      datasets: [{
+        label: "Alertas por Hora",
+        data: [],
+        borderWidth: 3,
+        borderColor: "#1abc9c",
+        backgroundColor: "rgba(26, 188, 156, 0.1)",
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: true }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1 }
+        }
+      }
+    }
+  });
 
-            async function carregarGraficoLinha() {
-              const periodo = traduzirPeriodo(selectPeriodo.value);
-              let componente = selectComponenteLinha.value;
-              componente = componente === "todos" ? null : componente.toUpperCase();
+  async function carregarGraficoLinha() {
+    let periodo = traduzirPeriodo(selectPeriodo.value);
+    let comp = selectComponenteLinha.value;
+    let componente = comp === "todos" ? null : comp.toUpperCase();
 
-              const resposta = await fetch("/alertas/graficoLinha", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ hostName: hostName, periodo, componente })
-              });
+    try {
+      let res = await fetch("/alertas/graficoLinha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hostName: hostName, periodo: periodo, componente: componente })
+      });
 
-              if (!resposta.ok) return console.log("Erro no gráfico de linha");
+      if (!res.ok) {
+        console.log("Erro no gráfico de linha");
+        return;
+      }
 
-              const dados = await resposta.json();
+      let dados = await res.json();
+      let dadosAgrupados = agruparPorHora(dados);
 
-              const dadosAgrupados = agruparPorHora(dados);
+      graficoLinha.data.labels = dadosAgrupados.map(r => r.momento);
+      graficoLinha.data.datasets[0].data = dadosAgrupados.map(r => r.total);
+      graficoLinha.update();
 
-              const labels = dadosAgrupados.map(r => r.momento);
-              const valores = dadosAgrupados.map(r => r.total);
+      console.log('Gráfico atualizado:', {
+        total_alertas: dados.length,
+        horas_exibidas: dadosAgrupados.length,
+        dados: dadosAgrupados
+      });
+    } catch (erro) {
+      console.log("Erro:", erro);
+    }
+  }
 
-              graficoLinha.data.labels = labels;
-              graficoLinha.data.datasets[0].data = valores;
-              graficoLinha.update();
+  // gráfico de barras 
+  let graficoComponentes = new Chart(document.getElementById("graficoComponentes"), {
+    type: "bar",
+    data: {
+      labels: [],
+      datasets: [{
+        label: "Quantidade de Alertas",
+        data: [],
+        backgroundColor: ["#3498db", "#D16D85", "#00C04B"]
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      indexAxis: "y"
+    }
+  });
 
-              console.log('Gráfico atualizado:', {
-                total_alertas: dados.length,
-                horas_exibidas: dadosAgrupados.length,
-                dados: dadosAgrupados
-              });
-            }
+  async function carregarGraficoComponentes() {
+    let periodo = traduzirPeriodo(selectPeriodo.value);
 
-            // gráfico Componentes
-            let graficoComponentes = new Chart(document.getElementById("graficoComponentes"), {
-              type: "bar",
-              data: {
-                labels: [],
-                datasets: [{
-                  label: "Quantidade de Alertas",
-                  data: [],
-                  backgroundColor: ["#3498db", "#D16D85", "#00C04B"]
-                }]
-              },
-              options: {
-                plugins: {
-                  legend: { display: false }
-                },
-                indexAxis: "y"
-              }
-            });
+    try {
+      let res = await fetch("/alertas/graficoComponentes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hostName: hostName, periodo: periodo })
+      });
 
-            async function carregarGraficoComponentes() {
-              const periodo = traduzirPeriodo(selectPeriodo.value);
+      if (!res.ok) {
+        console.log("Erro no gráfico de barras");
+        return;
+      }
 
-              const resposta = await fetch("/alertas/graficoComponentes", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ hostName: hostName, periodo })
-              });
+      let dados = await res.json();
 
-              if (!resposta.ok) return console.log("Erro no gráfico de barras");
+      graficoComponentes.data.labels = dados.map(d => d.componente);
+      graficoComponentes.data.datasets[0].data = dados.map(d => d.total);
+      graficoComponentes.update();
+    } catch (erro) {
+      console.log("Erro:", erro);
+    }
+  }
 
-              const dados = await resposta.json();
+  // gráfico pizza
+  let graficoTipos = new Chart(document.getElementById("graficoTipos"), {
+    type: "pie",
+    data: {
+      labels: ["Crítico", "Preventivo"],
+      datasets: [{
+        data: [0, 0],
+        backgroundColor: ["#d9534f", "#FFC04D"]
+      }]
+    }
+  });
 
-              graficoComponentes.data.labels = dados.map(d => d.componente);
-              graficoComponentes.data.datasets[0].data = dados.map(d => d.total);
-              graficoComponentes.update();
-            }
+  async function carregarGraficoTipos() {
+    let periodo = traduzirPeriodo(selectPeriodo.value);
+    let comp = selectComponentePizza.value;
+    let componente = comp === "todos" ? null : comp.toUpperCase();
 
-            // gráfico Tipos
-            let graficoTipos = new Chart(document.getElementById("graficoTipos"), {
-              type: "pie",
-              data: {
-                labels: ["Crítico", "Preventivo"],
-                datasets: [{
-                  data: [0, 0],
-                  backgroundColor: ["#d9534f", "#FFC04D"]
-                }]
-              }
-            });
+    try {
+      let res = await fetch("/alertas/graficoTipos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hostName: hostName, periodo: periodo, componente: componente })
+      });
 
-            async function carregarGraficoTipos() {
-              const periodo = traduzirPeriodo(selectPeriodo.value);
-              let componente = selectComponentePizza.value;
-              componente = componente === "todos" ? null : componente.toUpperCase();
+      if (!res.ok) {
+        console.log("Erro no gráfico de pizza");
+        return;
+      }
 
-              const resposta = await fetch("/alertas/graficoTipos", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ hostName: hostName, periodo, componente })
-              });
+      let dados = await res.json();
 
-              if (!resposta.ok) return console.log("Erro no gráfico de pizza");
+      let criticos = 0;
+      let preventivos = 0;
 
-              const dados = await resposta.json();
+      for (let i = 0; i < dados.length; i++) {
+        if (dados[i].estado === "CRITICO") {
+          criticos = dados[i].total;
+        }
+        if (dados[i].estado === "ALERTA") {
+          preventivos = dados[i].total;
+        }
+      }
 
-              const criticos = dados.find(d => d.estado === "CRITICO")?.total || 0;
-              const preventivos = dados.find(d => d.estado === "ALERTA")?.total || 0;
+      graficoTipos.data.datasets[0].data = [criticos, preventivos];
+      graficoTipos.update();
+    } catch (erro) {
+      console.log("Erro:", erro);
+    }
+  }
 
-              graficoTipos.data.datasets[0].data = [criticos, preventivos];
-              graficoTipos.update();
-            }
+  function atualizarTudo() {
+    carregarKPIs();
+    carregarGraficoLinha();
+    carregarGraficoComponentes();
+    carregarGraficoTipos();
+  }
 
-            function atualizarTudo() {
-              carregarKPIs();
-              carregarGraficoLinha();
-              carregarGraficoComponentes();
-              carregarGraficoTipos();
-            }
+  selectPeriodo.addEventListener("change", atualizarTudo);
+  selectComponenteLinha.addEventListener("change", carregarGraficoLinha);
+  selectComponentePizza.addEventListener("change", carregarGraficoTipos);
 
-            selectPeriodo.addEventListener("change", atualizarTudo);
-            selectComponenteLinha.addEventListener("change", carregarGraficoLinha);
-            selectComponentePizza.addEventListener("change", carregarGraficoTipos);
+  setInterval(function() {
+    console.log('Atualizando dados automaticamente...');
+    atualizarTudo();
+  }, 30000);
 
-            setInterval(() => {
-              console.log('Atualizando dados automaticamente...');
-              atualizarTudo();
-            }, 30000);
-
-            atualizarTudo();
-          </script>
+  atualizarTudo();
+</script>
 </body>
 
 </html>
