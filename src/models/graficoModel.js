@@ -10,7 +10,7 @@ function dadosGrafico(idComponente, hostName) {
         JOIN Maquina m ON c.fkMaquina = m.hostName
         WHERE c.idComponente = ${idComponente}
         AND m.hostName = '${hostName}'
-        ORDER BY r.idRegistro DESC LIMIT 10;
+        ORDER BY r.idRegistro DESC LIMIT 1;
     `;
     return database.executar(instrucao);
 }
@@ -18,14 +18,11 @@ function dadosGrafico(idComponente, hostName) {
 function leituraDisco(hostName) {
     var instrucao = `
         SELECT 
-            rd.taxaLeitura AS valor,
-            DATE_FORMAT(rd.dtRegistro, '%H:%i:%s') AS momento_grafico
-        FROM RegistroDisco rd
-        JOIN Componente c ON rd.fkComponente = c.idComponente
-        JOIN Maquina m ON c.fkMaquina = m.hostName
-        WHERE c.tipo = 'Leitura' 
-        AND m.hostName = '${hostName}'
-        ORDER BY rd.idRegistroDisco DESC LIMIT 1;
+            (taxaLeitura * 10) AS valor,
+            DATE_FORMAT(dtRegistro, '%H:%i:%s') AS momento_grafico
+        FROM RegistroDisco 
+        WHERE fkMaquina = '1598329989'
+        ORDER BY idRegistroDisco DESC LIMIT 10;
     `;
     return database.executar(instrucao);
 }
@@ -33,38 +30,31 @@ function leituraDisco(hostName) {
 function escritaDisco(hostName) {
     var instrucao = `
         SELECT 
-            rd.taxaEscrita AS valor,
-            DATE_FORMAT(rd.dtRegistro, '%H:%i:%s') AS momento_grafico
-        FROM RegistroDisco rd
-        JOIN Componente c ON rd.fkComponente = c.idComponente
-        JOIN Maquina m ON c.fkMaquina = m.hostName
-        WHERE c.tipo = 'Escrita' 
-        AND m.hostName = '${hostName}'
-        ORDER BY rd.idRegistroDisco DESC LIMIT 1;
+            (taxaEscrita * 500) AS valor,
+            DATE_FORMAT(dtRegistro, '%H:%i:%s') AS momento_grafico
+        FROM RegistroDisco 
+        WHERE fkMaquina = '1598329989'
+        ORDER BY idRegistroDisco DESC LIMIT 10;
     `;
     return database.executar(instrucao);
 }
 
 function top3(hostName) {
     var instrucao = `
-        SELECT rd.top1, rd.top1Valor, rd.top2, rd.top2Valor, rd.top3, rd.top3Valor
-        FROM RegistroDisco rd
-         JOIN Componente c ON rd.fkComponente = c.idComponente
-        JOIN Maquina m ON c.fkMaquina = m.hostName
-        WHERE m.hostName = '${hostName}'
-         ORDER BY rd.idRegistroDisco DESC LIMIT 1;
+        SELECT top1, top1Valor, top2, top2Valor, top3, top3Valor
+        FROM RegistroDisco 
+        WHERE fkMaquina = '1598329989'
+        ORDER BY idRegistroDisco DESC LIMIT 1;
     `;
     return database.executar(instrucao);
 }
 
 function maisLeitura(hostName) {
     var instrucao = `
-        SELECT rd.procMaisLeitura, rd.procMaisLeituraValor
-        FROM RegistroDisco rd
-        JOIN Componente c ON rd.fkComponente = c.idComponente
-        JOIN Maquina m ON c.fkMaquina = m.hostName
-        WHERE m.hostName = '${hostName}'
-        ORDER BY rd.idRegistroDisco DESC
+        SELECT procMaisLeitura, procMaisLeituraValor
+        FROM RegistroDisco 
+        WHERE fkMaquina = '1598329989'
+        ORDER BY idRegistroDisco DESC
         LIMIT 1;
     `;
     return database.executar(instrucao);
@@ -72,12 +62,10 @@ function maisLeitura(hostName) {
 
 function maisEscrita(hostName) {
     var instrucao = `
-        SELECT rd.procMaisEscrita, rd.procMaisEscritaValor
-        FROM RegistroDisco rd
-        JOIN Componente c ON rd.fkComponente = c.idComponente
-        JOIN Maquina m ON c.fkMaquina = m.hostName
-        WHERE m.hostName = '${hostName}'
-        ORDER BY rd.idRegistroDisco DESC
+        SELECT procMaisEscrita, procMaisEscritaValor
+        FROM RegistroDisco 
+        WHERE fkMaquina = '1598329989'
+        ORDER BY idRegistroDisco DESC
         LIMIT 1;
     `;
     return database.executar(instrucao);
@@ -95,7 +83,7 @@ function getRamUltimos7Dias(hostName) {
             FROM Registro r
             JOIN Componente c ON r.fkComponente = c.idComponente
             JOIN Maquina m ON c.fkMaquina = m.hostName
-            WHERE m.hostName = '${hostName}'
+            WHERE m.hostName = '1598329989'
               AND LOWER(c.nome) LIKE '%ram%'
               AND r.captura IS NOT NULL
               AND r.dtRegistro >= NOW() - INTERVAL 7 DAY

@@ -25,7 +25,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
 
     <!--FONT AWESOME-->
-    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script> -->
 </head>
 
 <!-- <body onload=" atualizarFeed()"> -->
@@ -47,7 +47,7 @@
                     </a>
                     <a href="dashboard-alto.html" class="dashboard-sidebar-btn">
                         <div class="icon-dashboard"></div>
-                        <h3>Painel de <br> Controle</h3>
+                        <h3>Painel de <br> Disco</h3>
                     </a>
                     <a href="suporte.html" class="dashboard-sidebar-btn">
                         <div class="icon-support"></div>
@@ -63,7 +63,7 @@
             <div class="dashboard-low-right-side">
                 <div class="dashboard-topbar">
                     <a href="dashboard-alto.html" class="btn-voltar">
-                        Painel de controle - Servidor
+                        Painel de controle - disco
                     </a>
 
                     <div class="btns-topbar">
@@ -94,11 +94,11 @@
                     </div>
 
                     <div class="kpi">
-                        <h3>Aplicativo com mais escrita</h3>
+                        <h3>Processo com mais escrita de disco</h3>
                         <h2 id="statusUps" style="color:rgb(96, 89, 89)"></h2>
                     </div>
                     <div class="kpi">
-                        <h3>Aplicativo com mais leitura</h3>
+                        <h3>Processo com mais leitura de disco</h3>
                         <h2 id="statusRam" style="color:rgb(96, 89, 89)"> </h2>
                     </div>
                     <div class="kpi-ranking">
@@ -161,7 +161,7 @@
                                 <h2>
                                     <div style=" background-color: #18B187; border-radius: 90px; height: 2vh; width:
                                             1vw; "></div><br>Armazenamento <br> utilizado
-                                    <h1 id=" h1_usoDisco">
+                                    <h1 id="h1_usoDisco">
 
                                         </h1>
                                     </h2>
@@ -183,7 +183,7 @@
 
     var usoDisco = 0;
     var usoLivre = 0;
-
+    const host = "1598329989";
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
 
@@ -371,7 +371,6 @@
 
 
 
-    // Gráfico CPU
     var ctxCpu = document.getElementById('graficoCpuCanvas').getContext('2d');
     var graficoCpu = new Chart(ctxCpu, {
         type: 'line',
@@ -544,7 +543,7 @@
         data: {
             // labels: [usoDisco + '%'],
             datasets: [{
-                // data: [usoDisco],
+                data: [usoDisco],
                 backgroundColor: 'transparent'
             }]
         },
@@ -571,7 +570,10 @@
                 ctx.save();
                 const area = graficoDisco.chartArea;
                 const meta = graficoDisco.getDatasetMeta(0);
+                console.log(meta)
+                console.log(meta.data[0])
                 const barra = meta.data[0];
+                console.log(barra)
 
                 const margemVertical = area.height * 0.025;
 
@@ -635,185 +637,169 @@
         }]
     });
 
-    function atualizarGraficos() {
-        const host = id;
+    
+function classificarStatusNormalidade() {
+    var leituraAtual = graficoCpu.data.datasets[0].data[graficoCpu.data.datasets[0].data.length - 1] || 0;
+    var escritaAtual = graficoRam.data.datasets[0].data[graficoRam.data.datasets[0].data.length - 1] || 0;
+    var usoDiscoAtual = usoDisco || 0;
 
-        // Leitura de Disco (%)
-        fetch(`/grafico/leituraDisco/${host}`)
-            .then(resposta => resposta.json())
-            .then(resposta => {
-                var valores = [];
-                var labels = [];
-                for (var i = resposta.length - 1; i >= 0; i--) {
-                    valores.push(resposta[i].valor);
-                    labels.push(resposta[i].momento_grafico);
-                }
-                graficoCpu.data.labels = labels;
-                graficoCpu.data.datasets[0].data = valores;
-                graficoCpu.update();
-            })
-            .catch(error => console.error("fetch de Leitura de Disco:", error));
+    var limites = {
+        critico: { leitura: 80, escrita: 75, disco: 85 },
+        alerta: { leitura: 60, escrita: 55, disco: 70 }
+    };
 
-        // Escrita de Disco (%)
-        fetch(`/grafico/escritaDisco/${host}`)
-            .then(resposta => resposta.json())
-            .then(resposta => {
-                var valores = [];
-                var labels = [];
-                for (var i = resposta.length - 1; i >= 0; i--) {
-                    valores.push(resposta[i].valor);
-                    labels.push(resposta[i].momento_grafico);
-                }
-                graficoRam.data.labels = labels;
-                graficoRam.data.datasets[0].data = valores;
-                graficoRam.update();
-            })
-            .catch(error => console.error("fetch de Escrita de Disco:", error));
+    var algumCritico = 
+        leituraAtual >= limites.critico.leitura ||
+        escritaAtual >= limites.critico.escrita ||
+        usoDiscoAtual >= limites.critico.disco;
 
-        // Uso total de Disco (%)
-        fetch(`/grafico/dadosGrafico/3/${host}`)
-            .then(resposta => resposta.json())
-            .then(resposta => {
-                if (resposta.length > 0) {
-                    usoDisco = resposta[0].valor;
-                    usoLivre = 100 - usoDisco;
-                    h1_usoDisco.innerHTML = usoDisco + "%";
-                    h1_usoLivre.innerHTML = usoLivre + "%";
+    var algumAlerta = 
+        leituraAtual >= limites.alerta.leitura ||
+        escritaAtual >= limites.alerta.escrita ||
+        usoDiscoAtual >= limites.alerta.disco;
+
+    var status, cor, texto;
+
+    if (algumCritico) {
+        status = "CRÍTICO";
+        cor = "rgb(200, 31, 31)";
+        texto = "Crítico - Ação imediata necessária";
+    } else if (algumAlerta) {
+        status = "ALERTA"; 
+        cor = "rgb(255, 165, 0)";
+        texto = "Alerta - Monitorar atentamente";
+    } else {
+        status = "NORMAL";
+        cor = "rgb(34, 187, 51)";
+        texto = "Normal - Operação dentro dos padrões";
+    }
+
+    var statusElement = document.querySelector('.kpi h3');
+    if (statusElement) {
+        statusElement.innerHTML = `Status de normalidade:<br> <span style="color: ${cor}; font-weight: bold;">${texto}</span>`;
+    }
+
+    return { status, cor, texto };
+}
+
+ function atualizarGraficos() {
+
+    fetch(`/grafico/dadosGrafico/3/${host}`)
+        .then(function(respostaDisco) {
+            return respostaDisco.json();
+        })
+        .then(function(dadosDiscoServidor) {
+            console.log("------------")
+            console.log(dadosDiscoServidor)
+            if (dadosDiscoServidor.length > 0) {
+                usoDisco = dadosDiscoServidor[0].valor;
+                usoLivre = 100 - usoDisco;
+
+                const h1_usoDisco = document.getElementById("h1_usoDisco");
+                const h1_usoLivre = document.getElementById("h1_usoLivre");
+                console.log("==================")
+                console.log(h1_usoDisco)
+                console.log(h1_usoLivre)
+                console.log(usoDisco)
+                console.log(usoLivre)
+                console.log("==================")
+                if (h1_usoDisco) h1_usoDisco.innerHTML = usoDisco.toFixed(0) + "%";
+                if (h1_usoLivre) h1_usoLivre.innerHTML = usoLivre.toFixed(0) + "%";
+                
+                if (graficoDisco) {
                     graficoDisco.data.datasets[0].data = [usoDisco];
+                    console.log(usoDisco)
+                    console.log(graficoDisco)
                     graficoDisco.update();
                 }
-            })
-            .catch(error => console.error("fetch de uso de Disco:", error));
-
-        // Aplicativo com mais escrita
-        fetch(`/grafico/maisEscrita/${host}`)
-            .then(resposta => resposta.json())
-            .then(resposta => {
-                if (resposta.length > 0) {
-                    statusUps.innerHTML = resposta[0].procMaisEscrita;
-                }
-            })
-            .catch(error => console.error("fetch de aplicativo com mais escrita:", error));
-
-        // Aplicativo com mais leitura
-        fetch(`/grafico/maisLeitura/${host}`)
-            .then(resposta => resposta.json())
-            .then(resposta => {
-                if (resposta.length > 0) {
-                    statusRam.innerHTML = resposta[0].procMaisLeitura;
-                }
-            })
-            .catch(error => console.error("fetch de aplicativo com mais leitura:", error));
-
-        // Top 3 aplicativos
-        fetch(`/grafico/top3/${host}`)
-            .then(resposta => resposta.json())
-            .then(resposta => {
-                if (resposta.length > 0) {
-                    top1.innerHTML = `1. ${resposta[0].top1} (${resposta[0].top1Valor}%)`;
-                    top2.innerHTML = `2. ${resposta[0].top2} (${resposta[0].top2Valor}%)`;
-                    top3.innerHTML = `3. ${resposta[0].top3} (${resposta[0].top3Valor}%)`;
-                }
-            })
-            .catch(error => console.error("fetch de Top 3 aplicativos:", error));
-    }
-
-
-
-
-    // Atualiza sozinho a cada 30s
-    setInterval(atualizarGraficos, 30000);
-
-    // Atualiza ao carregar página
-    window.onload = atualizarGraficos;
-
-
-
-
-    alertaPorComponente();
-    setInterval(alertaPorComponente, 15000);
-
-    const select = document.getElementById("selectKPI");
-    select.addEventListener("change", alertaPorComponente);
-
-    async function alertaPorComponente() {
-        try {
-            const params = new URLSearchParams(window.location.search);
-            const host = params.get("id");
-
-            const consumoComp = document.getElementById("consumoComp");
-
-            const resposta = await fetch("/medidas/alertaPorComponente", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ host }),
-            });
-
-            const alertas = await resposta.json();
-            var totalCPU = 0
-            var totalRAM = 0
-            var totalDISCO = 0;
-
-            for (let i = 0; i < alertas.length; i++) {
-                var nome = (alertas[i].componente || "").toUpperCase();
-                if (nome.includes("CPU")) {
-                    totalCPU++;
-                }
-                else if (nome.includes("RAM")) {
-                    totalRAM++;
-                }
-                else if (nome.includes("DISCO")) {
-                    totalDISCO++;
-                }
             }
-            let total = 0;
-            if (select.value == "alertaCPU") {
-                total = totalCPU;
+        })
+        .catch(function(error) {
+            console.error("fetch de uso de Disco:", error);
+        });
+
+
+
+    // Leitura de Disco
+    fetch(`/grafico/disco/leitura/${host}`)
+        .then(r => r.json())
+        .then(dados => {
+            console.log("Dados leitura:", dados);
+            if (dados.length > 0) {
+                // Atualizar gráfico de leitura
+                graficoCpu.data.datasets[0].data = dados.map(item => item.valor);
+
+
+                graficoCpu.update();
             }
-            else if (select.value == "alertaRAM") {
-                total = totalRAM;
+        })
+        .catch(error => console.error("Erro leitura:", error));
+    
+    // Escrita de Disco  
+    fetch(`/grafico/disco/escrita/${host}`)
+        .then(r => r.json())
+        .then(dados => {
+            console.log("Dados escrita:", dados);
+            if (dados.length > 0) {
+
+             graficoRam.data.datasets[0].data = dados.map(item => item.valor);
+
+
+                graficoRam.update();
             }
-            else if (select.value == "alertaDisco") {
-                total = totalDISCO;
+        })
+        .catch(error => console.error("Erro escrita:", error));
+    
+    // Top 3 aplicativos
+    fetch(`/grafico/disco/top3/${host}`)
+        .then(r => r.json())
+        .then(dados => {
+            console.log("Dados top3:", dados);
+            if (dados.length > 0) {
+                document.getElementById("top1").textContent = `1. ${dados[0].top1 || 'N/A'}`;
+                document.getElementById("top2").textContent = `2. ${dados[0].top2 || 'N/A'}`; 
+                document.getElementById("top3").textContent = `3. ${dados[0].top3 || 'N/A'}`;
             }
+        })
+        .catch(error => console.error("Erro top3:", error));
+        
+    // Aplicativo com mais escrita
+    fetch(`/grafico/disco/maisEscrita/${host}`)
+        .then(r => r.json())
+        .then(dados => {
+            console.log("Dados mais escrita:", dados);
+            if (dados.length > 0) {
+                document.getElementById("statusUps").textContent = dados[0].procMaisEscrita || 'N/A';
+            }
+        })
+        .catch(error => console.error("Erro mais escrita:", error));
+        
+    // Aplicativo com mais leitura
+    fetch(`/grafico/disco/maisLeitura/${host}`)
+        .then(r => r.json())
+        .then(dados => {
+            console.log("Dados mais leitura:", dados);
+            if (dados.length > 0) {
+                document.getElementById("statusRam").textContent = dados[0].procMaisLeitura || 'N/A';
+            }
+        })
+        .catch(error => console.error("Erro mais leitura:", error));
 
-            consumoComp.innerHTML = `<h2>${total}</h2>`;
-        } catch (erro) {
-            console.error("Erro:", erro);
-            consumoComp.innerHTML = "<h2>0</h2>";
-        }
-    }
+        setTimeout(function() {
+        classificarStatusNormalidade();
+    }, 500);
+}
+
+// Chama imediatamente
+atualizarGraficos();
+
+// Atualiza a cada 30s
+setInterval(atualizarGraficos, 30000);
+
+   
 
 
 
-
-
-
-
-    maiorProcessoCpu();
-    setInterval(maiorProcessoCpu, 15000);
-
-    async function maiorProcessoCpu() {
-        try {
-            const params = new URLSearchParams(window.location.search);
-            const host = params.get("id");
-
-            const statusUps = document.getElementById("statusUps");
-
-            const resposta = await fetch("/medidas/maiorProcessoCpu", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ host }),
-            });
-
-            const alertas = await resposta.json();
-
-            statusUps.innerHTML = `<h2>${alertas[0].nome}</h2>`;
-        } catch (erro) {
-            console.error("Erro:", erro);
-            statusUps.innerHTML = "<h2>0</h2>";
-        }
-    }
 
 
     function filtrarRelatorio() {
@@ -822,37 +808,6 @@
         const dropdownContainer = document.querySelector(".btn-relatorio-container");
 
         console.log("TESTE1");
-    }
-
-
-
-
-
-
-
-    maiorProcessoRam();
-    setInterval(maiorProcessoRam, 15000);
-
-    async function maiorProcessoRam() {
-        try {
-            const params = new URLSearchParams(window.location.search);
-            const host = params.get("id");
-
-            const statusRAM = document.getElementById("statusRam");
-
-            const resposta = await fetch("/medidas/maiorProcessoRam", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ host }),
-            });
-
-            const alertas = await resposta.json();
-
-            statusRAM.innerHTML = `<h2>${alertas[0].nome}</h2>`;
-        } catch (erro) {
-            console.error("Erro:", erro);
-            statusRAM.innerHTML = "<h2>0</h2>";
-        }
     }
 
 

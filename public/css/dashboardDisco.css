@@ -254,6 +254,10 @@ body {
 
   
 }
+
+.kpi h2{
+   font-size: 0.8rem !important; 
+}
 .kpi-ranking {
   background-color: white;
   width: 20vw;
@@ -371,6 +375,10 @@ body {
 .uso-livre-disco {
   font-family: "montserrat" sans-serif;
   color: rgba(0, 0, 0, 0.593);
+}
+.kpi span{
+  height: 2vh!important;
+  width: 100%!important ;
 }
 
 #h1_usoLivre {

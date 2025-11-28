@@ -3,8 +3,9 @@ var graficoModel = require("../models/graficoModel");
 function dadosGrafico(req, res) {
     var idComponente = req.params.idComponente;
     var hostName = req.params.hostName;
+    
 
-    graficoModel.dadosGrafico(idComponente, hostName, 10)
+    graficoModel.dadosGrafico(idComponente, hostName)
         .then(resposta => res.json(resposta))
         .catch(error => {
             res.status(500).json(error);
