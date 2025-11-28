@@ -66,13 +66,13 @@ function FiltroMaquina(maquina) {
         case "m1":
             return "1598329989";
         case "m2":
-            return "1598329993";
-        case "m3":
-             return "1598329992";
-        case "m4":
-             return "1598329991";
-        case "m5":
-             return "1598329995";
+            return "1598329990";
+        // case "m3":
+        //      return "1598329992";
+        // case "m4":
+        //      return "1598329991";
+        // case "m5":
+        //      return "1598329995";
         default:
             return "1598329989";
     }

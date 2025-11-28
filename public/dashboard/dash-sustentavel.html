@@ -122,7 +122,12 @@
                   <i class="fas fa-server"></i>
                 </div>
                 <div class="kpi-content">
-                  <h3>Consumo do Dia</h3>
+                  <h3>Consumo de Energia</h3>
+                <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                <div class="kpi-tooltip">
+                <strong>Consumo de Energia</strong><br>
+                  O consumo total de energia do período escolhido.
+                </div>
                   <div class="kpi-value" id="kpiConsumoDia" style="color: black;"></div>
                 </div>
               </div>
@@ -133,6 +138,12 @@
                 </div>
                 <div class="kpi-content">
                   <h3>Redução de CO₂</h3>
+                  <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                <div class="kpi-tooltip">
+                <strong>Redução de CO²</strong><br>
+                  O valor de emissão de CO² previsto da matriz energetica seleciona, 
+                  porém evitado.
+                </div>
                   <div class="kpi-value" id="kpiCO2" style="color: black;"></div>
                 </div>
               </div>
@@ -143,6 +154,11 @@
                 </div>
                 <div class="kpi-content">
                   <h3>Potência Máxima</h3>
+                <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                <div class="kpi-tooltip">
+                <strong>Potência Máxima</strong><br>
+                  Potência máxima registrada durante o perído.
+                </div>
                   <div class="kpi-value" id="kpiMaiorPotencia" style="color: black;"></div>
                 </div>
               </div>
@@ -153,6 +169,11 @@
                 </div>
                 <div class="kpi-content">
                   <h3>Máquina com mais consumo</h3>
+                <div class="info-icon-kpi" onclick="toggleKpiTooltip(this)">i</div>
+                <div class="kpi-tooltip">
+                <strong>Máquina com maior consumo</strong><br>
+                  Máquina que mais consumiu energia durante o período.
+                </div>
                   <div class="kpi-value" id="kpiNomeMaquina" style="color: black;"></div>
                 </div>
               </div>
@@ -161,12 +182,12 @@
             <div class="dash-consumo">
               <div class="dash-esquerda">
                 <div class="box-consumo-diario">
-                  <h2>Consumo de Energia - #definir</h2>
+                  <h2>Consumo de Energiar</h2>
                   <canvas id="graficoConsumoEnergia"></canvas>
                 </div>
 
                 <div class="box-emissao">
-                  <h2>Redução de Emissão - #definir</h2>
+                  <h2>Redução de Emissão</h2>
                   <canvas id="graficoPoluentes"></canvas>
                 </div>
               </div>
@@ -194,9 +215,9 @@
                     <select id="filtroMaquina" class="filtro-maquina" onchange="trocarMaquina()">
                       <option value="m1" selected>Máquina 1</option>
                       <option value="m2">Máquina 2</option>
-                      <option value="m3">Máquina 3</option>
+                      <!-- <option value="m3">Máquina 3</option>
                       <option value="m4">Máquina 4</option>
-                      <option value="m5">Máquina 5</option>
+                      <option value="m5">Máquina 5</option> -->
                     </select>
                   </div>
                   <div id="container"></div>
@@ -303,7 +324,7 @@
     data: {
       labels: [],
       datasets: [{
-        label: 'Consumo (kWh)',
+        label: 'Consumo (Wh)',
         data: [],
         backgroundColor: 'rgba(54, 162, 235, 0.5)',
         borderColor: 'rgba(54, 162, 235, 1)',
@@ -320,7 +341,6 @@
 
 
   carregarConsumoMensal();
-  setInterval(carregarConsumoMensal, 60000);
 
   async function carregarConsumoMensal() {
     const idEmpresa = sessionStorage.FK_EMPRESA;
@@ -370,7 +390,6 @@
 
 
   emissaoPoluentes();
-  setInterval(emissaoPoluentes, 60000);
 
   async function emissaoPoluentes() {
     const idEmpresa = sessionStorage.FK_EMPRESA;
@@ -492,7 +511,7 @@
     },
 
     title: {
-      text: 'Consumo Atual - Máquina #definir'
+      text: 'Consumo Atual'
     },
 
     legend: { enabled: false },
@@ -507,7 +526,7 @@
 
     yAxis: {
       min: 0,
-      max: 200,
+      max: 1000,
       tickPixelInterval: 100,
       tickPosition: 'inside',
       tickColor: 'var(--highcharts-background-color, #FFFFFF)',
@@ -523,19 +542,19 @@
       lineWidth: 0,
       plotBands: [{
         from: 0,
-        to: 120,
+        to: 150,
         color: '#55BF3B', // verde
         thickness: 20,
         borderRadius: '50%'
       }, {
-        from: 120,
-        to: 160,
+        from: 150,
+        to: 760,
         color: '#DDDF0D', // amarelo
         thickness: 20,
         borderRadius: '50%'
       }, {
-        from: 160,
-        to: 200,
+        from: 750,
+        to: 1000,
         color: '#DF5353', // vermelho
         thickness: 20,
         borderRadius: '50%'
@@ -549,7 +568,7 @@
         valueSuffix: ' km/h'
       },
       dataLabels: {
-        format: '{y} km/h',
+        format: '{W',
         borderWidth: 0,
         color: (
           Highcharts.defaultOptions.title &&
@@ -613,6 +632,14 @@
     // setInterval(MaiorConsumo, 60000);
     // setInterval(emissaoPoluentes, 60000);
   });
+
+    setInterval(() => {
+    carregarKPIS();
+    carregarConsumoMensal();
+    emissaoPoluentes();
+    MaiorConsumo();
+    atualizarPonteiro();
+}, 3000);
 
   const btnNotificacao = document.querySelector('.btn-notificacao');
   const modal = document.getElementById('modalNotificacoes');
@@ -700,6 +727,27 @@
       minute: "2-digit",
     });
   }
+
+      function toggleKpiTooltip(icon) {
+        const tooltip = icon.nextElementSibling;
+        const isShowing = tooltip.classList.contains('show');
+
+        document.querySelectorAll('.kpi-tooltip.show').forEach(t => {
+            t.classList.remove('show');
+        });
+
+        if (!isShowing) {
+            tooltip.classList.add('show');
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.classList.contains('info-icon-kpi')) {
+            document.querySelectorAll('.kpi-tooltip.show').forEach(tooltip => {
+                tooltip.classList.remove('show');
+            });
+        }
+    });
 
 
 </script>
